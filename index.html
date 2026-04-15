@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智囊团 · 问问他们</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      background: #fafaf8;
+      color: #1a1a1a;
+      font-family: 'Noto Sans SC', -apple-system, sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .wrap { max-width: 640px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── HEADER ── */
+    header {
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+    .logo {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #1a1a1a;
+    }
+    .logo span { color: #c4956a; }
+    .tagline {
+      font-size: 0.82rem;
+      color: #999;
+      margin-top: 8px;
+      letter-spacing: 0.12em;
+    }
+
+    /* ── INPUT SECTION ── */
+    .input-section {
+      padding: 40px 0 60px;
+    }
+    .input-label {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.1rem;
+      color: #444;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .input-box {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid #e8e8e6;
+      border-radius: 16px;
+      padding: 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: #1a1a1a;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      min-height: 120px;
+    }
+    .input-box:focus { border-color: #c4956a; }
+    .input-box::placeholder { color: #ccc; }
+    .char-count {
+      text-align: right;
+      font-size: 0.75rem;
+      color: #ccc;
+      margin-top: 8px;
+    }
+    .submit-btn {
+      width: 100%;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      padding: 18px;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 20px;
+      letter-spacing: 0.1em;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .submit-btn:hover { opacity: 0.85; }
+    .submit-btn:active { transform: scale(0.99); }
+    .submit-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ── CATEGORY CHIPS ── */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .chip {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      background: #fff;
+      border: 1px solid #e0e0de;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .chip:hover { border-color: #c4956a; color: #c4956a; }
+    .chip.selected { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 48px 0;
+      color: #ccc;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e8e8e6;
+    }
+
+    /* ── CARDS ── */
+    .cards { display: none; flex-direction: column; gap: 24px; padding-bottom: 80px; }
+    .cards.show { display: flex; }
+
+    .card {
+      background: #fff;
+      border: 1px solid #ebebea;
+      border-radius: 20px;
+      padding: 28px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.5s ease forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #f5f0eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .card-meta { flex: 1; }
+    .card-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .card-title {
+      font-size: 0.78rem;
+      color: #999;
+      margin-top: 2px;
+    }
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.7rem;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: #f5f0eb;
+      color: #a89080;
+    }
+
+    .card-question {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 16px;
+      padding-left: 12px;
+      border-left: 2px solid #e8e4e0;
+    }
+    .card-question em { color: #c4956a; font-style: normal; }
+
+    .card-quote {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .card-quote::before { content: '"'; color: #d4c4b4; font-size: 2rem; line-height: 0; vertical-align: -0.4em; margin-right: 4px; }
+    .card-quote::after { content: '"'; color: #d4c4b4; font-size: 2rem; line-height: 0; vertical-align: -0.4em; margin-left: 2px; }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid #f0f0ee;
+    }
+    .card-exp {
+      font-size: 0.75rem;
+      color: #bbb;
+    }
+    .card-exp strong { color: #c4956a; }
+    .card-action {
+      font-size: 0.75rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .card-action:hover { color: #c4956a; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 40px 0;
+      font-size: 0.72rem;
+      color: #ccc;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── LOADING ── */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 60px 0;
+    }
+    .loading.show { display: block; }
+    .loading-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #ddd;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse {
+      0%, 100% { background: #ddd; transform: scale(1); }
+      50% { background: #c4956a; transform: scale(1.3); }
+    }
+    .loading-text {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: #bbb;
+    }
+
+    /* ── SHARE ── */
+    .share-section {
+      display: none;
+      background: #fff;
+      border: 1px solid #ebebea;
+      border-radius: 20px;
+      padding: 24px;
+      margin-top: 32px;
+      text-align: center;
+    }
+    .share-section.show { display: block; }
+    .share-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .share-sub { font-size: 0.78rem; color: #ccc; margin-bottom: 16px; }
+    .share-btn {
+      background: #f5f0eb;
+      color: #1a1a1a;
+      border: none;
+      padding: 14px 32px;
+      font-size: 0.85rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .share-btn:hover { background: #ebe5de; }
+
+    /* ── RESET ── */
+    .reset-btn {
+      display: none;
+      width: 100%;
+      background: transparent;
+      border: 1px solid #e0e0de;
+      color: #999;
+      padding: 14px;
+      font-size: 0.85rem;
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.2s;
+    }
+    .reset-btn.show { display: block; }
+    .reset-btn:hover { border-color: #ccc; color: #666; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">智<span>囊</span>团</div>
+    <div class="tagline">问问他们 · 你会得到不一样的答案</div>
+  </header>
+
+  <!-- INPUT -->
+  <section class="input-section" id="inputSection">
+    <label class="input-label">你正在纠结什么？</label>
+    <textarea class="input-box" id="questionInput" placeholder="比如：该不该离开北京回老家？" maxlength="200"></textarea>
+    <div class="char-count"><span id="charCount">0</span> / 200</div>
+
+    <div class="chips" id="chips">
+      <div class="chip" data-cat="职场">💼 职场发展</div>
+      <div class="chip" data-cat="财务">💰 财务决策</div>
+      <div class="chip" data-cat="情感">💕 情感关系</div>
+      <div class="chip" data-cat="方向">🧭 人生方向</div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" disabled>穿越时空 · 寻找答案</button>
+  </section>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading">
+    <div class="loading-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="loading-text">智囊团正在赶来的路上...</div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards" id="cards"></div>
+
+  <!-- SHARE -->
+  <div class="share-section" id="shareSection">
+    <div class="share-title">📢 分享你的困惑</div>
+    <div class="share-sub">看看苏格拉底和马马斯克会怎么说</div>
+    <button class="share-btn" onclick="alert('截图分享更美观哦～')">生成分享图</button>
+  </div>
+
+  <!-- RESET -->
+  <button class="reset-btn" id="resetBtn" onclick="resetAll()">重新提问 ↺</button>
+
+  <div class="divider">or</div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    智囊团 · 纯属娱乐 · 切勿当真
+  </div>
+
+</div>
+
+<script>
+// ─── CELEBRITY DATABASE ───
+const CELEBRITIES = {
+  苏格拉底: {
+    emoji: '🧔',
+    title: '古希腊哲学家 · 追问一切的人',
+    tags: ['哲学', '追问', '理性'],
+    style: '先追问问题本身，再给建议',
+    exp: '「未经审视的人生不值得过」',
+    advice: {
+      default: '在回答你的问题之前，我想先问你一个问题——你所说的"该不该"，是基于理性的计算，还是基于情感的逃避？很多时候，我们以为在思考，实际上只是在感受。先把问题的前提想清楚，答案自会浮现。',
+      职场: '一份工作是否值得，不在于它能给你什么，而在于它能否让你成为更好的人。金钱是副产品，不是目标。问问自己：五年后，你愿意因为这段经历成为什么样的人？',
+      财务: '财富是美德实践之后的自然结果，不是追逐的对象。你拥有的钱，最终是为了让你不需要为钱而活。如果理财让你夜不能寐，那你已经输了。',
+      情感: '爱不是占有，不是依赖，而是让你更完整。去爱，但不要占有；去关怀，但不要束缚。',
+      方向: '你知道吗，你问这个问题本身，说明你已经在路上了。真正的迷茫不是停滞，而是觉醒的开始。'
+    }
+  },
+  苏轼: {
+    emoji: '🍜',
+    title: '北宋文学家 · 资深吃货 · 颠沛流离爱好者',
+    tags: ['文学', '豁达', '美食'],
+    style: '先讲个故事，再给建议',
+    exp: '「竹杖芒鞋轻胜马，谁怕？」',
+    advice: {
+      default: '乌台诗案后我被贬到黄州，那是我这辈子最苦的时候，也是我写出《念奴娇》的时候。有时候啊，你以为是路走绝了，其实是路刚开始。',
+      职场: '我在朝堂上被小人陷害过，也被发配到过海南岛的鬼地方。但你猜怎么着？我在黄州发明了东坡肉，在海南学会了生蚝的100种吃法。职场失意？很正常，重要的是别让胃也失意。',
+      财务: '我的工资经常被砍半，但我发现一个道理：真正的好东西其实都不贵。一碗阳春面，一盘豆腐，远比山珍海味实在。钱少有少的活法，关键是对生活的热爱不能少。',
+      情感: '我第一任妻子王弗走了十年，我写了"十年生死两茫茫"。但后来我又娶了朝云，她陪我走过了最艰难的岁月。有些人的离开不是终点，是让你学会珍惜眼前人。',
+      方向: '我在好几个地方都生活过：黄州、惠州、儋州。按理说一次比一次惨，但我一次比一次开心。离开未必是逃避，也可能是重生。你怕的其实不是离开，是未知。但未知才是最好玩的啊。'
+    }
+  },
+  马斯克: {
+    emoji: '🚀',
+    title: 'SpaceX创始人 · 特斯拉CEO · 冒险爱好者',
+    tags: ['创业', '冒险', '第一性原理'],
+    style: '直接给答案，废话少说',
+    exp: '「失败是一种选项，如果一切都没有失败，那你可能还不够创新」',
+    advice: {
+      default: '我来给你一个不一样的视角。如果你做这件事，十年后你会后悔吗？如果不会，那就去做。人生的终局思维很重要。',
+      职场: '我从不关心别人怎么看我的职业路径。我在银行工作了三天就辞职了，因为我觉得那是在浪费生命。判断一份工作要不要继续的标准只有一个：它能不能让你离你的目标更近。',
+      财务: '钱是用来实现梦想的工具，不是目标。我第一次创业差点破产，第二次也是。但如果你相信自己在做的事，财务问题只是时间问题。专注于创造价值，金钱会随之而来。',
+      情感: '我把所有精力都投入工作了，这让我付出了一些代价。但我现在明白了：人生不是只有工作。找到一个能理解你的人，比任何商业成功都重要。',
+      方向: '离开一个熟悉的地方去新的地方，这是我经常做的事。舒适区是创新杀手。如果你的目标足够大，你住在哪里其实不重要。重要的是你在朝目标前进。'
+    }
+  },
+  曾国藩: {
+    emoji: '📖',
+    title: '晚清名臣 · 笨人的成功学',
+    tags: ['政治', '实用主义', '笨功夫'],
+    style: '给你最实在的建议，不整虚的',
+    exp: '「天下之才人，皆以一傲字致败；天下之庸人，皆以一惰字致败」',
+    advice: {
+      default: '我资质平庸，能走到今天，靠的不是聪明，是每天扎扎实实做事的笨功夫。你的问题，我建议你先从最笨的方法开始想。',
+      职场: '在官场混了几十年，我的经验是：少说多做，先让人看到你的成果。抱怨、比较、站队，都是最蠢的做法。把时间花在提升自己上，比花在研究别人上值一万倍。',
+      财务: '我这一生的财富观是：钱要花在刀刃上，花在人才和正事上。日常花销要省，人情往来要大方，学习投资更不能省。量入为出，细水长流。',
+      情感: '我年轻时性子很冲，得罪了很多人，吃了不少亏。后来学会了"浑"字诀——不是让你圆滑，是让你不要太计较。人与人之间，留有余地，日后好相见。',
+      方向: '做大事最重要的是"久"字。一时冲动不算什么，难的是持续做下去。选择在哪里不是最重要的，重要的是你选择了之后能坚持多久。'
+    }
+  },
+  乔布斯: {
+    emoji: '🍎',
+    title: '苹果创始人 · 完美主义者 · 简约派',
+    tags: ['产品', '设计', '简约'],
+    style: '先否定你，再给建议',
+    exp: '「Stay hungry, Stay foolish」',
+    advice: {
+      default: '你的问题说明你还没想清楚你要什么。在你明确想要什么之前，所有的答案都是噪音。先问自己：什么是你真正想要拒绝的？',
+      职场: '我在苹果的成功，来自于不停地做减法，而不是加法。职场发展也一样：你不需要擅长所有事情，你只需要在一件事上做到极致。找到那件事，比任何技巧都重要。',
+      财务: '我对钱的态度是：够用就行，然后全部投入到我热爱的事情上。苹果从不打价格战，因为我们卖的不是商品，是价值观和体验。钱是结果，不是目的。',
+      情感: '我年轻时觉得情感是干扰，后来才明白：正是那些我忽视的人际关系，让我付出了代价。爱会让你脆弱，但正是脆弱让产品有灵魂，让人生有重量。',
+      方向: 'connecting the dots。我当年退学学字体设计时，绝对想不到这后来影响了苹果的设计语言。你现在的每一个选择，都会在未来某个时刻连成一条线。相信你的直觉。'
+    }
+  },
+  王阳明: {
+    emoji: '⚡',
+    title: '明代哲学家 · 知行合一创始人 · 龙场悟道',
+    tags: ['哲学', '行动', '心学'],
+    style: '直接戳你痛处',
+    exp: '「此心光明，亦复何言」',
+    advice: {
+      default: '你知道你的问题出在哪吗？是想得太多，做得太少。知而不行，等于不知。给我先做起来，在行动中调整，比你在脑子里推演一万遍都有用。',
+      职场: '我在龙场贬谪时悟出一个道理：做事就是修行，修行就是做事。不要把工作当成养家糊口的工具，把每一件事都当成修炼心性的道场。你对工作的态度，就是你对自己的态度。',
+      财务: '钱是工具，不是主人。被钱驾驭的人，永远不会快乐。你驾驭钱，钱才会为你所用。学会知足，知足者富。',
+      情感: '情感之事，最怕的是"私"字当头。什么是私？计算得失、患得患失、爱恨交织。你对一个感情如果只剩下占有和恐惧，那你已经失去它了。',
+      方向: '我走过很多弯路，被小人陷害，被命运捉弄，但我从来没放弃过"致良知"。知道什么是对的，然后去做，就这么简单。选择本身不重要，选择之后你怎么做才重要。'
+    }
+  },
+  芒格: {
+    emoji: '📚',
+    title: '伯克希尔·哈撒韦副主席 · 行走的图书馆',
+    tags: ['投资', '逆向思维', '多元思维'],
+    style: '给你模型，然后推演',
+    exp: '「反过来想，永远是反过来想」',
+    advice: {
+      default: '你的问题，我建议你先想清楚它的反面是什么。如果你害怕做一件事，那先想想：不做这件事的代价是什么？往往反面想清楚了，正面的答案就清晰了。',
+      职场: '我投资了一辈子，核心原则只有一个：不投自己看不懂的。职业选择也一样：不要做你不理解、不认同、没热情的事。哪怕钱少一点，也要选对的方向。',
+      财务: '大多数人投资亏钱，是因为他们把运气当能力，把牛市当智慧。财务决策的第一原则是：永远不要亏损。第二原则是：记住第一条。',
+      情感: '我见过很多人婚姻失败，不是因为不爱，是因为双方都太自我。好的关系需要的是让步和智慧，不是正确和强势。娶一个好老婆，嫁一个好老公，是人生最重要的投资。',
+      方向: '我的方法是：找到一个你敬佩的人，研究他是怎么思考问题的，然后模仿。如果你在人生的某个阶段遇到了瓶颈，最好的办法不是继续撞墙，而是去看看别人是怎么翻过去的。'
+    }
+  }
+};
+
+// ─── STATE ───
+let question = '';
+let category = '';
+
+// ─── DOM ───
+const input = document.getElementById('questionInput');
+const charCount = document.getElementById('charCount');
+const chips = document.querySelectorAll('.chip');
+const submitBtn = document.getElementById('submitBtn');
+const inputSection = document.getElementById('inputSection');
+const loading = document.getElementById('loading');
+const cardsEl = document.getElementById('cards');
+const shareSection = document.getElementById('shareSection');
+const resetBtn = document.getElementById('resetBtn');
+
+// ─── INPUT ───
+input.addEventListener('input', function() {
+  question = this.value;
+  charCount.textContent = question.length;
+  submitBtn.disabled = question.trim().length < 5;
+});
+
+chips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    category = chip.dataset.cat;
+  });
+});
+
+submitBtn.addEventListener('click', generateCards);
+
+function generateCards() {
+  if (question.trim().length < 5) return;
+
+  inputSection.style.display = 'none';
+  loading.classList.add('show');
+
+  // Select 3-4 celebrities based on category or random
+  const keys = Object.keys(CELEBRITIES);
+  const shuffled = keys.sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, 4);
+
+  setTimeout(() => {
+    loading.classList.remove('show');
+    renderCards(selected);
+    cardsEl.classList.add('show');
+    shareSection.classList.add('show');
+    resetBtn.classList.add('show');
+  }, 1800);
+}
+
+function renderCards(names) {
+  cardsEl.innerHTML = names.map((name, i) => {
+    const p = CELEBRITIES[name];
+    const advice = p.advice[category] || p.advice.default;
+    const delay = i * 0.15;
+
+    return `
+      <div class="card" style="animation-delay: ${delay}s">
+        <div class="card-header">
+          <div class="avatar">${p.emoji}</div>
+          <div class="card-meta">
+            <div class="card-name">${name}</div>
+            <div class="card-title">${p.title}</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>
+        <div class="card-question">你问：<em>${question}</em></div>
+        <div class="card-quote">${advice}</div>
+        <div class="card-footer">
+          <div class="card-exp">${p.exp}</div>
+          <div class="card-action">💬 追问</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function resetAll() {
+  question = '';
+  category = '';
+  input.value = '';
+  charCount.textContent = '0';
+  chips.forEach(c => c.classList.remove('selected'));
+  submitBtn.disabled = true;
+  cardsEl.innerHTML = '';
+  cardsEl.classList.remove('show');
+  shareSection.classList.remove('show');
+  resetBtn.classList.remove('show');
+  inputSection.style.display = 'block';
+}
+</script>
+</body>
+</html>
