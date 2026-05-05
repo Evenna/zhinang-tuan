@@ -4,333 +4,637 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>智囊团 · 问问他们</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #fafaf8;
+      --ink: #1a1a1a;
+      --muted: #b0b0a8;
+      --line: #e8e8e4;
+      --accent: #c4956a;
+      --accent-light: #f0e8df;
+      --card-bg: rgba(255,255,255,0.72);
+      --font-serif: 'Noto Serif SC', 'STSong', 'SimSun', serif;
+      --font-sans: 'Noto Sans SC', 'PingFang SC', sans-serif;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { height: 100%; }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      background: #fafaf8;
-      color: #1a1a1a;
-      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
       min-height: 100vh;
-      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    .wrap { max-width: 640px; margin: 0 auto; padding: 0 24px; }
+    /* ── DECORATIVE CANVAS ── */
+    .deco-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .deco-canvas svg { width: 100%; height: 100%; }
+
+    /* ── FLOATING ORBS ── */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--accent); top: -100px; right: -100px; animation-duration: 25s; }
+    .orb-2 { width: 300px; height: 300px; background: #e8d4c0; bottom: 10%; left: -80px; animation-duration: 18s; animation-delay: -5s; }
+    @keyframes drift {
+      0%   { transform: translate(0,0) scale(1); }
+      100% { transform: translate(30px, 40px) scale(1.08); }
+    }
+
+    /* ── MAIN WRAP ── */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
 
     /* ── HEADER ── */
     header {
-      padding: 48px 0 32px;
+      padding: 72px 0 56px;
       text-align: center;
     }
+    .logo-wrap { position: relative; display: inline-block; }
     .logo {
-      font-family: 'PingFang SC', 'Hiragino Sans GB', 'STSong', 'SimSun', serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: #1a1a1a;
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      color: var(--ink);
+      position: relative;
     }
-    .logo span { color: #c4956a; }
+    .logo em {
+      font-style: normal;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .logo-punctuation {
+      position: absolute;
+      font-family: var(--font-serif);
+      font-size: 5rem;
+      color: var(--accent);
+      opacity: 0.08;
+      line-height: 1;
+      top: -1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      user-select: none;
+    }
     .tagline {
-      font-size: 0.82rem;
-      color: #999;
-      margin-top: 8px;
-      letter-spacing: 0.12em;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 14px;
+      letter-spacing: 0.3em;
+      font-weight: 300;
+    }
+
+    /* ── DECORATIVE LINE ── */
+    .deco-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto 48px;
+      width: 120px;
+    }
+    .deco-line span {
+      display: block;
+      height: 1px;
+      background: var(--line);
+      flex: 1;
+    }
+    .deco-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.6;
     }
 
     /* ── INPUT SECTION ── */
-    .input-section {
-      padding: 40px 0 60px;
-    }
+    .input-section { padding-bottom: 80px; }
+
     .input-label {
-      font-family: 'PingFang SC', 'Hiragino Sans GB', 'STSong', 'SimSun', serif;
-      font-size: 1.1rem;
-      color: #444;
-      margin-bottom: 16px;
+      font-family: var(--font-serif);
+      font-size: 0.88rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
       display: block;
+      margin-bottom: 20px;
     }
     .input-box {
       width: 100%;
-      background: #fff;
-      border: 1.5px solid #e8e8e6;
-      border-radius: 16px;
-      padding: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 22px 24px;
       font-size: 1rem;
-      font-family: inherit;
-      color: #1a1a1a;
+      font-family: var(--font-sans);
+      color: var(--ink);
       resize: none;
       outline: none;
-      transition: border-color 0.2s;
-      min-height: 120px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      min-height: 130px;
+      line-height: 1.7;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
-    .input-box:focus { border-color: #c4956a; }
+    .input-box:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(196,149,106,0.08);
+    }
     .input-box::placeholder { color: #ccc; }
     .char-count {
       text-align: right;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #ccc;
       margin-top: 8px;
+      font-weight: 300;
     }
-    .submit-btn {
-      width: 100%;
-      background: #1a1a1a;
-      color: #fff;
-      border: none;
-      padding: 18px;
-      font-size: 1rem;
-      font-weight: 500;
-      border-radius: 14px;
-      cursor: pointer;
-      margin-top: 20px;
-      letter-spacing: 0.1em;
-      transition: opacity 0.2s, transform 0.1s;
-    }
-    .submit-btn:hover { opacity: 0.85; }
-    .submit-btn:active { transform: scale(0.99); }
-    .submit-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
     /* ── CATEGORY CHIPS ── */
     .chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 20px;
+      gap: 10px;
+      margin-top: 24px;
     }
     .chip {
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      background: #fff;
-      border: 1px solid #e0e0de;
-      color: #888;
+      padding: 9px 18px;
+      border-radius: 24px;
+      font-size: 0.78rem;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      color: var(--muted);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
       user-select: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      letter-spacing: 0.03em;
     }
-    .chip:hover { border-color: #c4956a; color: #c4956a; }
-    .chip.selected { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+    .chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.04);
+    }
+    .chip.selected {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+      transform: scale(1.04);
+    }
+    .chip svg { margin-right: 5px; vertical-align: -2px; }
+
+    /* ── SUBMIT ── */
+    .submit-btn {
+      width: 100%;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      padding: 20px;
+      font-size: 0.92rem;
+      font-weight: 400;
+      font-family: var(--font-sans);
+      border-radius: 16px;
+      cursor: pointer;
+      margin-top: 28px;
+      letter-spacing: 0.2em;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .submit-btn:hover { transform: scale(1.015); box-shadow: 0 8px 32px rgba(26,26,26,0.18); }
+    .submit-btn:hover::after { opacity: 1; }
+    .submit-btn:active { transform: scale(0.985); }
+    .submit-btn:disabled { opacity: 0.28; cursor: not-allowed; transform: none; box-shadow: none; }
 
     /* ── DIVIDER ── */
-    .divider {
+    .divider-wrap {
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin: 48px 0;
-      color: #ccc;
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
+      gap: 20px;
+      margin: 64px 0 48px;
     }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e8e8e6;
+    .divider-line { flex: 1; height: 1px; background: var(--line); }
+    .divider-text {
+      font-size: 0.68rem;
+      color: #ccc;
+      letter-spacing: 0.25em;
+      font-weight: 300;
     }
 
     /* ── CARDS ── */
-    .cards { display: none; flex-direction: column; gap: 24px; padding-bottom: 80px; }
+    .cards { display: none; flex-direction: column; gap: 20px; padding-bottom: 100px; }
     .cards.show { display: flex; }
 
     .card {
-      background: #fff;
-      border: 1px solid #ebebea;
-      border-radius: 20px;
-      padding: 28px;
+      background: var(--card-bg);
+      border: 1px solid rgba(232,232,228,0.8);
+      border-radius: 24px;
+      padding: 30px 28px 26px;
       opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.5s ease forwards;
+      transform: translateY(28px);
+      animation: cardReveal 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      position: relative;
+      overflow: hidden;
     }
-    @keyframes fadeUp {
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    }
+    @keyframes cardReveal {
       to { opacity: 1; transform: translateY(0); }
     }
 
     .card-header {
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 20px;
+      gap: 18px;
+      margin-bottom: 18px;
     }
-    .avatar {
-      width: 52px;
-      height: 52px;
+
+    /* ── AVATAR ── */
+    .avatar-wrap {
+      width: 56px; height: 56px;
       border-radius: 50%;
-      background: #f5f0eb;
+      background: var(--accent-light);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
       flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
     }
+    .avatar-wrap svg {
+      width: 40px; height: 40px;
+    }
+    .avatar-ring {
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 1px solid rgba(196,149,106,0.25);
+      animation: ringPulse 3s ease-in-out infinite;
+    }
+    @keyframes ringPulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.08); opacity: 0.2; }
+    }
+
     .card-meta { flex: 1; }
     .card-name {
-      font-family: 'PingFang SC', 'Hiragino Sans GB', 'STSong', 'SimSun', serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1a1a1a;
+      font-family: var(--font-serif);
+      font-size: 1.08rem;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 0.05em;
     }
     .card-title {
-      font-size: 0.78rem;
-      color: #999;
-      margin-top: 2px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 3px;
+      letter-spacing: 0.02em;
+      font-weight: 300;
     }
+
     .card-tags {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+      margin-bottom: 18px;
     }
     .tag {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       padding: 3px 10px;
-      border-radius: 12px;
-      background: #f5f0eb;
-      color: #a89080;
+      border-radius: 10px;
+      background: var(--accent-light);
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      opacity: 0.8;
     }
 
     .card-question {
-      font-size: 0.85rem;
-      color: #888;
+      font-size: 0.82rem;
+      color: var(--muted);
       margin-bottom: 16px;
-      padding-left: 12px;
-      border-left: 2px solid #e8e4e0;
+      padding-left: 14px;
+      border-left: 1.5px solid var(--line);
+      line-height: 1.6;
     }
-    .card-question em { color: #c4956a; font-style: normal; }
+    .card-question em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 500;
+    }
 
     .card-quote {
-      font-family: 'PingFang SC', 'Hiragino Sans GB', 'STSong', 'SimSun', serif;
-      font-size: 1.05rem;
-      line-height: 1.9;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      line-height: 2;
       color: #333;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
+      position: relative;
+      font-weight: 300;
     }
-    .card-quote::before { content: '"'; color: #d4c4b4; font-size: 2rem; line-height: 0; vertical-align: -0.4em; margin-right: 4px; }
-    .card-quote::after { content: '"'; color: #d4c4b4; font-size: 2rem; line-height: 0; vertical-align: -0.4em; margin-left: 2px; }
+    .quote-mark-open {
+      font-size: 2.5rem;
+      color: var(--accent);
+      opacity: 0.15;
+      line-height: 0;
+      vertical-align: -0.5em;
+      margin-right: 2px;
+      font-family: var(--font-serif);
+    }
+    .quote-mark-close {
+      font-size: 2.5rem;
+      color: var(--accent);
+      opacity: 0.15;
+      line-height: 0;
+      vertical-align: -0.5em;
+      margin-left: 2px;
+      font-family: var(--font-serif);
+    }
 
     .card-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding-top: 16px;
-      border-top: 1px solid #f0f0ee;
+      border-top: 1px solid var(--line);
     }
     .card-exp {
-      font-size: 0.75rem;
-      color: #bbb;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: var(--font-serif);
+      font-style: italic;
     }
-    .card-exp strong { color: #c4956a; }
     .card-action {
-      font-size: 0.75rem;
-      color: #ccc;
+      font-size: 0.72rem;
+      color: var(--muted);
       cursor: pointer;
       transition: color 0.2s;
+      letter-spacing: 0.03em;
     }
-    .card-action:hover { color: #c4956a; }
-
-    /* ── FOOTER ── */
-    .footer {
-      text-align: center;
-      padding: 40px 0;
-      font-size: 0.72rem;
-      color: #ccc;
-      letter-spacing: 0.05em;
-    }
+    .card-action:hover { color: var(--accent); }
 
     /* ── LOADING ── */
     .loading {
       display: none;
       text-align: center;
-      padding: 60px 0;
+      padding: 80px 0;
     }
     .loading.show { display: block; }
-    .loading-dots {
+    .loading-orbs {
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
+      margin-bottom: 24px;
     }
-    .dot {
-      width: 8px; height: 8px;
+    .loader-dot {
+      width: 6px; height: 6px;
       border-radius: 50%;
-      background: #ddd;
-      animation: pulse 1.4s ease-in-out infinite;
+      background: var(--accent);
+      opacity: 0.3;
+      animation: loaderBounce 1.2s ease-in-out infinite;
     }
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes pulse {
-      0%, 100% { background: #ddd; transform: scale(1); }
-      50% { background: #c4956a; transform: scale(1.3); }
+    .loader-dot:nth-child(2) { animation-delay: 0.18s; }
+    .loader-dot:nth-child(3) { animation-delay: 0.36s; }
+    .loader-dot:nth-child(4) { animation-delay: 0.54s; }
+    @keyframes loaderBounce {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+      50% { transform: translateY(-14px) scale(1.5); opacity: 1; }
     }
     .loading-text {
-      margin-top: 16px;
-      font-size: 0.82rem;
-      color: #bbb;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      font-weight: 300;
+    }
+    .loading-sub {
+      font-size: 0.72rem;
+      color: #ccc;
+      margin-top: 6px;
+      letter-spacing: 0.1em;
     }
 
     /* ── SHARE ── */
     .share-section {
       display: none;
-      background: #fff;
-      border: 1px solid #ebebea;
-      border-radius: 20px;
-      padding: 24px;
-      margin-top: 32px;
       text-align: center;
+      margin-top: 40px;
+      padding: 32px;
+      background: var(--card-bg);
+      border: 1px solid rgba(232,232,228,0.6);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
-    .share-section.show { display: block; }
+    .share-section.show { display: block; animation: cardReveal 0.5s ease forwards; }
     .share-title {
-      font-family: 'PingFang SC', 'Hiragino Sans GB', 'STSong', 'SimSun', serif;
-      font-size: 1rem;
-      color: #333;
-      margin-bottom: 8px;
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--ink);
+      margin-bottom: 6px;
+      font-weight: 400;
     }
-    .share-sub { font-size: 0.78rem; color: #ccc; margin-bottom: 16px; }
+    .share-sub { font-size: 0.75rem; color: var(--muted); margin-bottom: 20px; font-weight: 300; }
     .share-btn {
-      background: #f5f0eb;
-      color: #1a1a1a;
-      border: none;
-      padding: 14px 32px;
-      font-size: 0.85rem;
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 12px 28px;
+      font-size: 0.78rem;
       border-radius: 30px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.25s;
+      font-family: var(--font-sans);
+      letter-spacing: 0.1em;
     }
-    .share-btn:hover { background: #ebe5de; }
+    .share-btn:hover {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
 
     /* ── RESET ── */
     .reset-btn {
       display: none;
       width: 100%;
       background: transparent;
-      border: 1px solid #e0e0de;
-      color: #999;
-      padding: 14px;
-      font-size: 0.85rem;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 15px;
+      font-size: 0.8rem;
       border-radius: 14px;
       cursor: pointer;
       margin-top: 16px;
-      transition: all 0.2s;
+      transition: all 0.25s;
+      font-family: var(--font-sans);
+      letter-spacing: 0.1em;
     }
     .reset-btn.show { display: block; }
-    .reset-btn:hover { border-color: #ccc; color: #666; }
+    .reset-btn:hover { border-color: var(--muted); color: var(--ink); }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 56px 0 48px;
+      font-size: 0.68rem;
+      color: #ccc;
+      letter-spacing: 0.12em;
+      font-weight: 300;
+    }
+
+    /* ── DECORATIVE CARDS CORNER ── */
+    .card-deco-corner {
+      position: absolute;
+      width: 60px; height: 60px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .card-deco-corner.top-right { top: 12px; right: 12px; }
+    .card-deco-corner.bottom-left { bottom: 12px; left: 12px; transform: rotate(180deg); }
   </style>
 </head>
 <body>
+
+<!-- DECORATIVE LAYER -->
+<div class="deco-canvas" aria-hidden="true">
+  <!-- Floating orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- SVG decorative elements -->
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+        <circle cx="1" cy="1" r="0.8" fill="#c4956a" opacity="0.12"/>
+      </pattern>
+      <pattern id="grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+        <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#c4956a" stroke-width="0.3" opacity="0.06"/>
+      </pattern>
+    </defs>
+
+    <!-- Background patterns -->
+    <rect width="100%" height="100%" fill="url(#dots)"/>
+    <rect width="100%" height="100%" fill="url(#grid)"/>
+
+    <!-- Top-right corner arc -->
+    <path d="M 1200,0 Q 1440,0 1440,240" fill="none" stroke="#c4956a" stroke-width="0.8" opacity="0.08"/>
+    <path d="M 1180,0 Q 1440,0 1440,260" fill="none" stroke="#c4956a" stroke-width="0.4" opacity="0.05"/>
+
+    <!-- Bottom-left corner arc -->
+    <path d="M 0,660 Q 0,900 240,900" fill="none" stroke="#c4956a" stroke-width="0.8" opacity="0.08"/>
+    <path d="M 0,640 Q 0,900 260,900" fill="none" stroke="#c4956a" stroke-width="0.4" opacity="0.05"/>
+
+    <!-- Floating horizontal lines -->
+    <line x1="80" y1="200" x2="280" y2="200" stroke="#c4956a" stroke-width="0.5" opacity="0.06"/>
+    <line x1="60" y1="204" x2="180" y2="204" stroke="#c4956a" stroke-width="0.5" opacity="0.04"/>
+    <line x1="1100" y1="680" x2="1360" y2="680" stroke="#c4956a" stroke-width="0.5" opacity="0.06"/>
+    <line x1="1200" y1="684" x2="1380" y2="684" stroke="#c4956a" stroke-width="0.5" opacity="0.04"/>
+
+    <!-- Scattered small circles -->
+    <circle cx="320" cy="140" r="2" fill="#c4956a" opacity="0.07"/>
+    <circle cx="324" cy="144" r="1" fill="#c4956a" opacity="0.05"/>
+    <circle cx="1100" cy="820" r="2" fill="#c4956a" opacity="0.07"/>
+    <circle cx="1104" cy="824" r="1" fill="#c4956a" opacity="0.05"/>
+    <circle cx="1350" cy="300" r="1.5" fill="#c4956a" opacity="0.06"/>
+    <circle cx="200" cy="780" r="1.5" fill="#c4956a" opacity="0.06"/>
+
+    <!-- Diagonal accent lines -->
+    <line x1="1300" y1="100" x2="1400" y2="200" stroke="#c4956a" stroke-width="0.4" opacity="0.05"/>
+    <line x1="1310" y1="90" x2="1350" y2="130" stroke="#c4956a" stroke-width="0.4" opacity="0.04"/>
+    <line x1="50" y1="600" x2="150" y2="700" stroke="#c4956a" stroke-width="0.4" opacity="0.05"/>
+  </svg>
+</div>
+
 <div class="wrap">
 
   <!-- HEADER -->
   <header>
-    <div class="logo">智<span>囊</span>团</div>
+    <div class="logo-wrap">
+      <span class="logo-punctuation" aria-hidden="true">"</span>
+      <div class="logo">智<em>囊</em>团</div>
+    </div>
     <div class="tagline">问问他们 · 你会得到不一样的答案</div>
+
+    <!-- Decorative line -->
+    <div class="deco-line" aria-hidden="true">
+      <span></span>
+      <div class="deco-dot"></div>
+      <span></span>
+    </div>
   </header>
 
   <!-- INPUT -->
   <section class="input-section" id="inputSection">
     <label class="input-label">你正在纠结什么？</label>
-    <textarea class="input-box" id="questionInput" placeholder="比如：该不该离开北京回老家？" maxlength="200"></textarea>
+    <textarea
+      class="input-box"
+      id="questionInput"
+      placeholder="比如：该不该离开北京回老家？"
+      maxlength="200"
+    ></textarea>
     <div class="char-count"><span id="charCount">0</span> / 200</div>
 
     <div class="chips" id="chips">
-      <div class="chip" data-cat="职场">💼 职场发展</div>
-      <div class="chip" data-cat="财务">💰 财务决策</div>
-      <div class="chip" data-cat="情感">💕 情感关系</div>
-      <div class="chip" data-cat="方向">🧭 人生方向</div>
+      <div class="chip" data-cat="职场">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="1.5" y="4" width="9" height="7" rx="1"/>
+          <path d="M4 4V3a2 2 0 0 1 4 0v1"/>
+        </svg>
+        职场发展
+      </div>
+      <div class="chip" data-cat="财务">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="6" cy="6" r="4.5"/>
+          <path d="M6 4.5v3M5 7.5h2"/>
+        </svg>
+        财务决策
+      </div>
+      <div class="chip" data-cat="情感">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M6 10.5C6 10.5 2 8 2 5a3 3 0 0 1 5-2.24A3 3 0 0 1 10 5c0 3-4 5-4 5.5z"/>
+        </svg>
+        情感关系
+      </div>
+      <div class="chip" data-cat="方向">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2">
+          <circle cx="6" cy="6" r="4.5"/>
+          <path d="M6 2v4l2.5 2.5"/>
+        </svg>
+        人生方向
+      </div>
     </div>
 
     <button class="submit-btn" id="submitBtn" disabled>穿越时空 · 寻找答案</button>
@@ -338,12 +642,14 @@
 
   <!-- LOADING -->
   <div class="loading" id="loading">
-    <div class="loading-dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+    <div class="loading-orbs">
+      <div class="loader-dot"></div>
+      <div class="loader-dot"></div>
+      <div class="loader-dot"></div>
+      <div class="loader-dot"></div>
     </div>
-    <div class="loading-text">智囊团正在赶来的路上...</div>
+    <div class="loading-text">智囊团正在赶来的路上</div>
+    <div class="loading-sub">正在连接历史...</div>
   </div>
 
   <!-- CARDS -->
@@ -352,30 +658,98 @@
   <!-- SHARE -->
   <div class="share-section" id="shareSection">
     <div class="share-title">📢 分享你的困惑</div>
-    <div class="share-sub">看看苏格拉底和马马斯克会怎么说</div>
-    <button class="share-btn" onclick="alert('截图分享更美观哦～')">生成分享图</button>
+    <div class="share-sub">看看先哲们会怎么说</div>
+    <button class="share-btn" onclick="captureShare()">生成分享图</button>
   </div>
 
   <!-- RESET -->
   <button class="reset-btn" id="resetBtn" onclick="resetAll()">重新提问 ↺</button>
 
-  <div class="divider">or</div>
+  <div class="divider-wrap">
+    <div class="divider-line"></div>
+    <div class="divider-text">or</div>
+    <div class="divider-line"></div>
+  </div>
 
   <!-- FOOTER -->
   <div class="footer">
     智囊团 · 纯属娱乐 · 切勿当真
   </div>
-
 </div>
 
 <script>
+// ─── LINE AVATAR SVGs ───
+// Each person has a unique minimalist line-art face silhouette
+const AVATARS = {
+  苏格拉底: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="16" r="9" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M12 24 Q20 32 28 24" stroke="#c4956a" stroke-width="1.2" fill="none"/>
+    <path d="M11 14 Q14 11 17 14" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M23 14 Q26 11 29 14" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M17 19 Q20 21 23 19" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+  </svg>`,
+
+  苏轼: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="20" cy="17" rx="8" ry="9" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M12 15 Q15 12 18 15" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M22 15 Q25 12 28 15" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M16 20 Q20 23 24 20" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M13 9 Q20 2 27 9" stroke="#c4956a" stroke-width="1.2" fill="none"/>
+    <path d="M14 26 Q20 29 26 26" stroke="#c4956a" stroke-width="1.2" fill="none"/>
+  </svg>`,
+
+  马斯克: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="20" cy="17" rx="7" ry="8.5" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M13 15 L17 15" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M23 15 L27 15" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M17 21 Q20 23 23 21" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M11 8 Q16 4 20 6 Q24 4 29 8" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M30 10 L34 7" stroke="#c4956a" stroke-width="0.8"/>
+    <path d="M33 6 L35 3" stroke="#c4956a" stroke-width="0.8"/>
+  </svg>`,
+
+  曾国藩: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="11" y="10" width="18" height="22" rx="4" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M15 15 L16 14.5 M18 15 L17 14.5 M22 15 L23 14.5 M25 15 L24 14.5" stroke="#c4956a" stroke-width="0.8"/>
+    <path d="M16 21 Q20 23 24 21" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <line x1="14" y1="26" x2="26" y2="26" stroke="#c4956a" stroke-width="0.8"/>
+    <line x1="11" y1="7" x2="29" y2="7" stroke="#c4956a" stroke-width="1.2"/>
+  </svg>`,
+
+  乔布斯: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="20" cy="17" rx="7.5" ry="8" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M13 15 L17 15" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M23 15 L27 15" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M17 21 Q20 23 23 21" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M12 8 Q14 3 20 3 Q26 3 28 8" stroke="#c4956a" stroke-width="1" fill="none"/>
+    <circle cx="33" cy="12" r="3.5" stroke="#c4956a" stroke-width="0.8"/>
+    <path d="M33 14 L33 20 M30 17 L36 17" stroke="#c4956a" stroke-width="0.5" opacity="0.5"/>
+  </svg>`,
+
+  王阳明: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 28 Q20 34 28 28 Q28 16 20 10 Q12 16 12 28Z" stroke="#c4956a" stroke-width="1.2" fill="none"/>
+    <path d="M15 17 L17 16.5 M23 16.5 L25 17" stroke="#c4956a" stroke-width="0.9"/>
+    <path d="M17 21 Q20 23 23 21" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M16 6 L20 2 L24 6" stroke="#c4956a" stroke-width="1.2" fill="none"/>
+  </svg>`,
+
+  芒格: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="9" y="10" width="22" height="24" rx="3" stroke="#c4956a" stroke-width="1.2"/>
+    <path d="M13 16 Q16 13 20 16 Q24 13 27 16" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <path d="M16 22 Q20 25 24 22" stroke="#c4956a" stroke-width="0.9" fill="none"/>
+    <line x1="13" y1="27" x2="27" y2="27" stroke="#c4956a" stroke-width="0.8"/>
+    <line x1="13" y1="29" x2="27" y2="29" stroke="#c4956a" stroke-width="0.8"/>
+    <line x1="13" y1="31" x2="22" y2="31" stroke="#c4956a" stroke-width="0.8"/>
+    <rect x="14" y="6" width="12" height="4" rx="1" stroke="#c4956a" stroke-width="0.8"/>
+  </svg>`
+};
+
 // ─── CELEBRITY DATABASE ───
 const CELEBRITIES = {
   苏格拉底: {
-    emoji: '🧔',
+    avatar: AVATARS['苏格拉底'],
     title: '古希腊哲学家 · 追问一切的人',
     tags: ['哲学', '追问', '理性'],
-    style: '先追问问题本身，再给建议',
     exp: '「未经审视的人生不值得过」',
     advice: {
       default: '在回答你的问题之前，我想先问你一个问题——你所说的"该不该"，是基于理性的计算，还是基于情感的逃避？很多时候，我们以为在思考，实际上只是在感受。先把问题的前提想清楚，答案自会浮现。',
@@ -386,10 +760,9 @@ const CELEBRITIES = {
     }
   },
   苏轼: {
-    emoji: '🍜',
-    title: '北宋文学家 · 资深吃货 · 颠沛流离爱好者',
+    avatar: AVATARS['苏轼'],
+    title: '北宋文学家 · 资深吃货 · 颠沛流流爱好者',
     tags: ['文学', '豁达', '美食'],
-    style: '先讲个故事，再给建议',
     exp: '「竹杖芒鞋轻胜马，谁怕？」',
     advice: {
       default: '乌台诗案后我被贬到黄州，那是我这辈子最苦的时候，也是我写出《念奴娇》的时候。有时候啊，你以为是路走绝了，其实是路刚开始。',
@@ -400,10 +773,9 @@ const CELEBRITIES = {
     }
   },
   马斯克: {
-    emoji: '🚀',
+    avatar: AVATARS['马斯克'],
     title: 'SpaceX创始人 · 特斯拉CEO · 冒险爱好者',
     tags: ['创业', '冒险', '第一性原理'],
-    style: '直接给答案，废话少说',
     exp: '「失败是一种选项，如果一切都没有失败，那你可能还不够创新」',
     advice: {
       default: '我来给你一个不一样的视角。如果你做这件事，十年后你会后悔吗？如果不会，那就去做。人生的终局思维很重要。',
@@ -414,24 +786,22 @@ const CELEBRITIES = {
     }
   },
   曾国藩: {
-    emoji: '📖',
+    avatar: AVATARS['曾国藩'],
     title: '晚清名臣 · 笨人的成功学',
     tags: ['政治', '实用主义', '笨功夫'],
-    style: '给你最实在的建议，不整虚的',
     exp: '「天下之才人，皆以一傲字致败；天下之庸人，皆以一惰字致败」',
     advice: {
       default: '我资质平庸，能走到今天，靠的不是聪明，是每天扎扎实实做事的笨功夫。你的问题，我建议你先从最笨的方法开始想。',
       职场: '在官场混了几十年，我的经验是：少说多做，先让人看到你的成果。抱怨、比较、站队，都是最蠢的做法。把时间花在提升自己上，比花在研究别人上值一万倍。',
       财务: '我这一生的财富观是：钱要花在刀刃上，花在人才和正事上。日常花销要省，人情往来要大方，学习投资更不能省。量入为出，细水长流。',
       情感: '我年轻时性子很冲，得罪了很多人，吃了不少亏。后来学会了"浑"字诀——不是让你圆滑，是让你不要太计较。人与人之间，留有余地，日后好相见。',
-      方向: '做大事最重要的是"久"字。一时冲动不算什么，难的是持续做下去。选择在哪里不是最重要的，重要的是你选择了之后能坚持多久。'
+      direction: '做大事最重要的是"久"字。一时冲动不算什么，难的是持续做下去。选择在哪里不是最重要的，重要的是你选择了之后能坚持多久。'
     }
   },
   乔布斯: {
-    emoji: '🍎',
+    avatar: AVATARS['乔布斯'],
     title: '苹果创始人 · 完美主义者 · 简约派',
     tags: ['产品', '设计', '简约'],
-    style: '先否定你，再给建议',
     exp: '「Stay hungry, Stay foolish」',
     advice: {
       default: '你的问题说明你还没想清楚你要什么。在你明确想要什么之前，所有的答案都是噪音。先问自己：什么是你真正想要拒绝的？',
@@ -442,10 +812,9 @@ const CELEBRITIES = {
     }
   },
   王阳明: {
-    emoji: '⚡',
+    avatar: AVATARS['王阳明'],
     title: '明代哲学家 · 知行合一创始人 · 龙场悟道',
     tags: ['哲学', '行动', '心学'],
-    style: '直接戳你痛处',
     exp: '「此心光明，亦复何言」',
     advice: {
       default: '你知道你的问题出在哪吗？是想得太多，做得太少。知而不行，等于不知。给我先做起来，在行动中调整，比你在脑子里推演一万遍都有用。',
@@ -456,10 +825,9 @@ const CELEBRITIES = {
     }
   },
   芒格: {
-    emoji: '📚',
+    avatar: AVATARS['芒格'],
     title: '伯克希尔·哈撒韦副主席 · 行走的图书馆',
     tags: ['投资', '逆向思维', '多元思维'],
-    style: '给你模型，然后推演',
     exp: '「反过来想，永远是反过来想」',
     advice: {
       default: '你的问题，我建议你先想清楚它的反面是什么。如果你害怕做一件事，那先想想：不做这件事的代价是什么？往往反面想清楚了，正面的答案就清晰了。',
@@ -509,7 +877,7 @@ function generateCards() {
   inputSection.style.display = 'none';
   loading.classList.add('show');
 
-  // Select 3-4 celebrities based on category or random
+  // Select 3-4 celebrities
   const keys = Object.keys(CELEBRITIES);
   const shuffled = keys.sort(() => Math.random() - 0.5);
   const selected = shuffled.slice(0, 4);
@@ -520,29 +888,53 @@ function generateCards() {
     cardsEl.classList.add('show');
     shareSection.classList.add('show');
     resetBtn.classList.add('show');
-  }, 1800);
+
+    // Scroll to first card
+    setTimeout(() => {
+      cardsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }, 2000);
 }
 
 function renderCards(names) {
   cardsEl.innerHTML = names.map((name, i) => {
     const p = CELEBRITIES[name];
     const advice = p.advice[category] || p.advice.default;
-    const delay = i * 0.15;
+    const delay = i * 0.12;
 
     return `
       <div class="card" style="animation-delay: ${delay}s">
+        <!-- Corner decoration -->
+        <svg class="card-deco-corner top-right" viewBox="0 0 60 60" fill="none">
+          <path d="M0 0 L60 0 L60 10 Q30 10 10 60 L0 60 Z" fill="#c4956a"/>
+        </svg>
+        <svg class="card-deco-corner bottom-left" viewBox="0 0 60 60" fill="none">
+          <path d="M0 0 L60 0 L60 10 Q30 10 10 60 L0 60 Z" fill="#c4956a"/>
+        </svg>
+
         <div class="card-header">
-          <div class="avatar">${p.emoji}</div>
+          <div class="avatar-wrap">
+            ${p.avatar}
+            <div class="avatar-ring"></div>
+          </div>
           <div class="card-meta">
             <div class="card-name">${name}</div>
             <div class="card-title">${p.title}</div>
           </div>
         </div>
+
         <div class="card-tags">
           ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
         </div>
-        <div class="card-question">你问：<em>${question}</em></div>
-        <div class="card-quote">${advice}</div>
+
+        <div class="card-question">
+          你问：<em>${question}</em>
+        </div>
+
+        <div class="card-quote">
+          <span class="quote-mark-open">"</span>${advice}<span class="quote-mark-close">"</span>
+        </div>
+
         <div class="card-footer">
           <div class="card-exp">${p.exp}</div>
           <div class="card-action">💬 追问</div>
@@ -564,6 +956,11 @@ function resetAll() {
   shareSection.classList.remove('show');
   resetBtn.classList.remove('show');
   inputSection.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function captureShare() {
+  alert('截图分享更美观哦～ 快捷键：Mac 按 ⌘⇧4 / Windows 按 Win+Shift+S');
 }
 </script>
 </body>
