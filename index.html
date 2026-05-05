@@ -249,32 +249,188 @@
       font-weight: 300;
     }
 
-    /* ── CARDS ── */
-    .cards { display: none; flex-direction: column; gap: 20px; padding-bottom: 100px; }
-    .cards.show { display: flex; }
+    /* ── CARDS (Horizontal Stack) ── */
+    .cards {
+      display: none;
+      padding-bottom: 100px;
+      perspective: 1200px;
+    }
+    .cards.show { display: block; }
 
+    .cards-track {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      gap: 0;
+      padding: 40px 20px 60px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .cards-track::-webkit-scrollbar { display: none; }
+
+    /* Horizontal card deck — each card overlaps like stacked playing cards */
     .card {
+      flex-shrink: 0;
+      width: 280px;
       background: var(--card-bg);
       border: 1px solid rgba(232,232,228,0.8);
       border-radius: 24px;
-      padding: 30px 28px 26px;
-      opacity: 0;
-      transform: translateY(28px);
-      animation: cardReveal 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+      padding: 30px 26px 26px;
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       position: relative;
-      overflow: hidden;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition:
+        transform 0.55s cubic-bezier(0.34,1.2,0.64,1),
+        box-shadow 0.4s ease,
+        z-index 0s;
+      /* Staggered stack offset */
+      margin-left: -60px;
+      box-shadow:
+        0 2px 16px rgba(26,26,26,0.06),
+        0 1px 4px rgba(26,26,26,0.04);
     }
+    .card:first-child { margin-left: 0; }
+
+    /* Glass shine overlay */
     .card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      inset: 0;
+      border-radius: 24px;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.18) 0%,
+        rgba(255,255,255,0.04) 40%,
+        transparent 70%
+      );
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
-    @keyframes cardReveal {
-      to { opacity: 1; transform: translateY(0); }
+    /* Top shimmer line */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+      border-radius: 1px;
+    }
+
+    /* Hover — card floats up with 3D tilt based on mouse position */
+    .card:hover {
+      transform: translateY(-18px) scale(1.04) rotateY(var(--tiltY, 0deg)) rotateX(var(--tiltX, 0deg));
+      box-shadow:
+        0 24px 60px rgba(26,26,26,0.14),
+        0 8px 24px rgba(196,149,106,0.12),
+        0 0 0 1px rgba(196,149,106,0.15);
+      z-index: 10;
+    }
+    .card:hover::before { opacity: 1; }
+
+    /* Card reveal animation — fan in from right */
+    .card {
+      animation: cardFanIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.18s; }
+    .card:nth-child(3) { animation-delay: 0.31s; }
+    .card:nth-child(4) { animation-delay: 0.44s; }
+    .card:nth-child(5) { animation-delay: 0.57s; }
+    .card:nth-child(6) { animation-delay: 0.70s; }
+    .card:nth-child(7) { animation-delay: 0.83s; }
+    .card:nth-child(8) { animation-delay: 0.96s; }
+    .card:nth-child(9) { animation-delay: 1.09s; }
+    .card:nth-child(10) { animation-delay: 1.22s; }
+
+    @keyframes cardFanIn {
+      from {
+        opacity: 0;
+        transform: translateX(80px) rotateY(-20deg) scale(0.92);
+        filter: blur(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) rotateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    /* Card index number — decorative */
+    .card-index {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      font-family: var(--font-serif);
+      font-size: 0.65rem;
+      color: var(--accent);
+      opacity: 0.2;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+
+    /* Corner decoration triangles */
+    .card-corner {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .card-corner.tl { top: 8px; left: 8px; }
+    .card-corner.br { bottom: 8px; right: 8px; transform: rotate(180deg); }
+
+    /* Glow ring behind avatar */
+    .avatar-glow {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(196,149,106,0.15) 0%, transparent 70%);
+      animation: glowPulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes glowPulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 0.3; }
+    }
+
+    /* Card entrance progress line */
+    .card-progress {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #e8c9a8);
+      border-radius: 0 0 24px 24px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+      transition-delay: 0.3s;
+    }
+    .card:hover .card-progress { transform: scaleX(1); }
+
+    /* Scroll hint */
+    .scroll-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 0 20px;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      font-weight: 300;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+    .scroll-hint.show { opacity: 0.5; }
+    .scroll-hint svg { animation: scrollBounce 2s ease-in-out infinite; }
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(6px); }
     }
 
     .card-header {
@@ -897,51 +1053,98 @@ function generateCards() {
 }
 
 function renderCards(names) {
-  cardsEl.innerHTML = names.map((name, i) => {
-    const p = CELEBRITIES[name];
-    const advice = p.advice[category] || p.advice.default;
-    const delay = i * 0.12;
+  // Add scroll hint if more than 3 cards
+  const showHint = names.length > 3;
 
-    return `
-      <div class="card" style="animation-delay: ${delay}s">
-        <!-- Corner decoration -->
-        <svg class="card-deco-corner top-right" viewBox="0 0 60 60" fill="none">
-          <path d="M0 0 L60 0 L60 10 Q30 10 10 60 L0 60 Z" fill="#c4956a"/>
-        </svg>
-        <svg class="card-deco-corner bottom-left" viewBox="0 0 60 60" fill="none">
-          <path d="M0 0 L60 0 L60 10 Q30 10 10 60 L0 60 Z" fill="#c4956a"/>
-        </svg>
+  cardsEl.innerHTML = `
+    <div class="scroll-hint${showHint ? ' show' : ''}" id="scrollHint">
+      <span>滑动探索</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 8h10M9 4l4 4-4 4"/>
+      </svg>
+    </div>
+    <div class="cards-track" id="cardsTrack">
+      ${names.map((name, i) => {
+        const p = CELEBRITIES[name];
+        const advice = p.advice[category] || p.advice.default;
 
-        <div class="card-header">
-          <div class="avatar-wrap">
-            ${p.avatar}
-            <div class="avatar-ring"></div>
+        return `
+        <div class="card" data-index="${i}" style="--i:${i}">
+          <!-- Decorative index number -->
+          <span class="card-index">0${i + 1}</span>
+
+          <!-- Corner decorations -->
+          <svg class="card-corner tl" viewBox="0 0 48 48" fill="none">
+            <path d="M0 0 L48 0 L48 6 Q24 6 6 48 L0 48 Z" fill="#c4956a"/>
+          </svg>
+          <svg class="card-corner br" viewBox="0 0 48 48" fill="none">
+            <path d="M0 0 L48 0 L48 6 Q24 6 6 48 L0 48 Z" fill="#c4956a"/>
+          </svg>
+
+          <div class="card-header">
+            <div class="avatar-wrap">
+              <div class="avatar-glow"></div>
+              ${p.avatar}
+              <div class="avatar-ring"></div>
+            </div>
+            <div class="card-meta">
+              <div class="card-name">${name}</div>
+              <div class="card-title">${p.title}</div>
+            </div>
           </div>
-          <div class="card-meta">
-            <div class="card-name">${name}</div>
-            <div class="card-title">${p.title}</div>
+
+          <div class="card-tags">
+            ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
           </div>
-        </div>
 
-        <div class="card-tags">
-          ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-        </div>
+          <div class="card-question">
+            你问：<em>${question}</em>
+          </div>
 
-        <div class="card-question">
-          你问：<em>${question}</em>
-        </div>
+          <div class="card-quote">
+            <span class="quote-mark-open">"</span>${advice}<span class="quote-mark-close">"</span>
+          </div>
 
-        <div class="card-quote">
-          <span class="quote-mark-open">"</span>${advice}<span class="quote-mark-close">"</span>
-        </div>
+          <div class="card-footer">
+            <div class="card-exp">${p.exp}</div>
+            <div class="card-action">💬 追问</div>
+          </div>
 
-        <div class="card-footer">
-          <div class="card-exp">${p.exp}</div>
-          <div class="card-action">💬 追问</div>
+          <!-- Progress bar on hover -->
+          <div class="card-progress"></div>
         </div>
-      </div>
-    `;
-  }).join('');
+      `}).join('')}
+    </div>
+  `;
+
+  // 3D tilt effect on mouse move
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / (rect.width / 2);
+      const dy = (e.clientY - cy) / (rect.height / 2);
+      const tiltX = dy * -8;
+      const tiltY = dx * 8;
+      card.style.setProperty('--tiltX', tiltX + 'deg');
+      card.style.setProperty('--tiltY', tiltY + 'deg');
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--tiltX', '0deg');
+      card.style.setProperty('--tiltY', '0deg');
+    });
+  });
+
+  // Center first card after render
+  setTimeout(() => {
+    const track = document.getElementById('cardsTrack');
+    if (track && track.firstElementChild) {
+      track.firstElementChild.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }, 800);
 }
 
 function resetAll() {
