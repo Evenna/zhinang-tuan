@@ -256,62 +256,118 @@
     }
     .cards.show { display: block; }
 
-    /* Stage: full width, horizontal scroll, generous vertical padding */
+    /* Stage: full width, perspective container */
     .cards-stage {
       position: relative;
       width: 100vw;
       margin-left: calc(-50vw + 50%);
       padding: 60px 0 80px;
       overflow: hidden;
+      cursor: pointer;
     }
 
-    /* Scroll container */
+    /* 3D deck container — cards fan around this */
+    .cards-deck {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      perspective: 1400px;
+      perspective-origin: 50% 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Scroll container — used when spread for horizontal scroll */
     .cards-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 20px;
-      padding: 0 calc(50vw - 160px);
-      overflow-x: auto;
-      overflow-y: hidden;
+      justify-content: center;
+      gap: 16px;
+      overflow: hidden;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      scroll-behavior: smooth;
-      min-height: 520px;
     }
     .cards-track::-webkit-scrollbar { display: none; }
 
-    /* ── CARD — Premium style with rich interaction ── */
+    /* ── CARD — 3D stacked deck style ── */
     .card {
       flex-shrink: 0;
-      width: 320px;
-      min-height: 440px;
-      background: rgba(255,255,255,0.85);
+      width: 300px;
+      min-height: 420px;
+      background: rgba(255,255,255,0.88);
       border: 1px solid rgba(232,228,224,0.6);
-      border-radius: 28px;
+      border-radius: 20px;
       padding: 0;
       backdrop-filter: blur(28px) saturate(1.4);
       -webkit-backdrop-filter: blur(28px) saturate(1.4);
-      position: relative;
+      position: absolute;
       cursor: pointer;
       transform-style: preserve-3d;
-      will-change: transform, box-shadow;
+      will-change: transform;
       transition:
-        transform 0.5s cubic-bezier(0.34,1.15,0.64,1),
-        box-shadow 0.4s cubic-bezier(0.22,1,0.36,1),
-        border-color 0.3s ease;
+        transform 0.6s cubic-bezier(0.34,1.15,0.64,1),
+        box-shadow 0.5s cubic-bezier(0.22,1,0.36,1),
+        opacity 0.4s ease;
       box-shadow:
-        0 4px 24px rgba(26,26,26,0.07),
-        0 1px 6px rgba(26,26,26,0.04),
-        inset 0 1px 0 rgba(255,255,255,0.8);
-      overflow: visible;
-      /* Center card vertically in the stage */
-      align-self: center;
+        0 8px 32px rgba(26,26,26,0.10),
+        0 2px 8px rgba(26,26,26,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      /* Centered initially, will be offset per card */
+      left: 50%;
+      top: 50%;
+      margin-left: -150px;
+      margin-top: -210px;
     }
 
-    /* Card inner: allows content to scroll or layout */
+    /* Stacked state: cards overlap with subtle rotation */
+    .card:nth-child(1) {
+      transform: translateX(-50%) translateY(-50%) rotateZ(-18deg) rotateY(8deg);
+      z-index: 4;
+    }
+    .card:nth-child(2) {
+      transform: translateX(-50%) translateY(-50%) rotateZ(-10deg) rotateY(4deg);
+      z-index: 3;
+    }
+    .card:nth-child(3) {
+      transform: translateX(-50%) translateY(-50%) rotateZ(-2deg) rotateY(0deg);
+      z-index: 2;
+    }
+    .card:nth-child(4) {
+      transform: translateX(-50%) translateY(-50%) rotateZ(6deg) rotateY(-4deg);
+      z-index: 1;
+    }
+
+    /* Spread state: cards fan out horizontally */
+    .cards-stage.spread {
+      overflow-x: auto;
+    }
+    .cards-stage.spread .cards-track {
+      position: relative;
+      justify-content: flex-start;
+      padding: 0 10vw;
+      overflow-x: auto;
+    }
+    .cards-stage.spread .card {
+      position: relative;
+      left: auto;
+      top: auto;
+      margin-left: 0;
+      margin-top: 0;
+    }
+    .cards-stage.spread .card:nth-child(1) { transform: rotateZ(-20deg) rotateY(12deg) translateX(-25vw); z-index: 4; }
+    .cards-stage.spread .card:nth-child(2) { transform: rotateZ(-8deg) rotateY(6deg)  translateX(-8vw);  z-index: 3; }
+    .cards-stage.spread .card:nth-child(3) { transform: rotateZ(2deg)  rotateY(0deg)  translateX(8vw);   z-index: 2; }
+    .cards-stage.spread .card:nth-child(4) { transform: rotateZ(14deg) rotateY(-8deg) translateX(24vw);  z-index: 1; }
+
     .card-inner {
-      padding: 32px 28px 28px;
+      padding: 30px 26px 26px;
       position: relative;
       z-index: 1;
       height: 100%;
@@ -322,9 +378,9 @@
     /* Top shimmer line */
     .card-shimmer {
       position: absolute;
-      top: 0; left: 8%; right: 8%;
+      top: 0; left: 6%; right: 6%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent);
       border-radius: 1px;
       z-index: 2;
       pointer-events: none;
@@ -335,52 +391,48 @@
       content: '';
       position: absolute;
       inset: 0;
-      border-radius: 28px;
+      border-radius: 20px;
       background: linear-gradient(
-        145deg,
-        rgba(255,255,255,0.32) 0%,
-        rgba(255,255,255,0.06) 35%,
-        transparent 65%
+        148deg,
+        rgba(255,255,255,0.36) 0%,
+        rgba(255,255,255,0.08) 30%,
+        transparent 60%
       );
       pointer-events: none;
       z-index: 3;
       opacity: 0;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.45s ease;
     }
     .card:hover::before { opacity: 1; }
 
-    /* ── Shimmer sweep on hover (follows mouse) ── */
+    /* ── Mouse-follow glow spot ── */
     .card::after {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      border-radius: 28px;
+      border-radius: 20px;
       background: radial-gradient(
-        circle 120px at var(--mx, 50%) var(--my, 50%),
-        rgba(196,149,106,0.10) 0%,
-        transparent 60%
+        circle 100px at var(--mx, 50%) var(--my, 50%),
+        rgba(196,149,106,0.12) 0%,
+        transparent 65%
       );
       pointer-events: none;
       z-index: 1;
       opacity: 0;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.35s ease;
     }
     .card:hover::after { opacity: 1; }
 
-    /* ── Hover: float + spring scale + 3D tilt ── */
+    /* ── Hover: lift + scale (base transform from stacked/spread state preserved) ── */
     .card:hover {
-      transform:
-        translateY(-24px)
-        scale(1.05)
-        rotateX(var(--rx, 0deg))
-        rotateY(var(--ry, 0deg));
+      transform: var(--base-transform, none) translateY(-20px) scale(1.06);
       box-shadow:
-        0 32px 80px rgba(26,26,26,0.14),
-        0 12px 32px rgba(196,149,106,0.16),
-        inset 0 1px 0 rgba(255,255,255,0.9),
-        0 0 0 1.5px rgba(196,149,106,0.20);
-      border-color: rgba(196,149,106,0.25);
-      z-index: 20;
+        0 36px 80px rgba(26,26,26,0.15),
+        0 14px 36px rgba(196,149,106,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.95),
+        0 0 0 1.5px rgba(196,149,106,0.22);
+      border-color: rgba(196,149,106,0.30);
+      z-index: 30 !important;
     }
 
     /* Card index badge */
@@ -576,33 +628,52 @@
     }
     .card:hover .card-progress { transform: scaleX(1); }
 
-    /* Card reveal: spring in from below with slight rotation */
+    /* Card reveal: spring in — each card fades and scales in */
     .card {
-      animation: cardSpringIn 0.75s cubic-bezier(0.22,1.4,0.64,1) both;
+      animation: cardReveal 0.7s cubic-bezier(0.22,1.4,0.64,1) both;
+      opacity: 0;
     }
     .card:nth-child(1) { animation-delay: 0.05s; }
-    .card:nth-child(2) { animation-delay: 0.16s; }
-    .card:nth-child(3) { animation-delay: 0.27s; }
-    .card:nth-child(4) { animation-delay: 0.38s; }
-    .card:nth-child(5) { animation-delay: 0.49s; }
-    .card:nth-child(6) { animation-delay: 0.60s; }
-    .card:nth-child(7) { animation-delay: 0.71s; }
-    .card:nth-child(8) { animation-delay: 0.82s; }
-    .card:nth-child(9) { animation-delay: 0.93s; }
-    .card:nth-child(10) { animation-delay: 1.04s; }
+    .card:nth-child(2) { animation-delay: 0.18s; }
+    .card:nth-child(3) { animation-delay: 0.31s; }
+    .card:nth-child(4) { animation-delay: 0.44s; }
+    .card:nth-child(5) { animation-delay: 0.57s; }
+    .card:nth-child(6) { animation-delay: 0.70s; }
+    .card:nth-child(7) { animation-delay: 0.83s; }
+    .card:nth-child(8) { animation-delay: 0.96s; }
+    .card:nth-child(9) { animation-delay: 1.09s; }
+    .card:nth-child(10) { animation-delay: 1.22s; }
 
-    @keyframes cardSpringIn {
+    @keyframes cardReveal {
       from {
         opacity: 0;
-        transform: translateY(60px) scale(0.88) rotateX(15deg);
-        filter: blur(6px);
+        transform: var(--base-transform, none) scale(0.85);
+        filter: blur(4px);
       }
       to {
         opacity: 1;
-        transform: translateY(0) scale(1) rotateX(0deg);
+        transform: var(--base-transform, none) scale(1);
         filter: blur(0);
       }
     }
+
+    /* Deck collapsed hint text */
+    .deck-hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      font-weight: 300;
+      opacity: 0;
+      transition: opacity 0.5s;
+      white-space: nowrap;
+      z-index: 5;
+    }
+    .cards-stage:not(.spread) .deck-hint { opacity: 0.5; }
+    .cards-stage.spread .deck-hint { display: none; }
 
     /* Scroll hint */
     .scroll-hint {
@@ -610,7 +681,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 0 0 28px;
+      padding: 0 0 20px;
       font-size: 0.68rem;
       color: var(--muted);
       letter-spacing: 0.22em;
@@ -624,6 +695,10 @@
       0%, 100% { transform: translateX(0); }
       50% { transform: translateX(8px); }
     }
+
+    /* Card base transform var — updated by JS per stacked/spread state */
+    .card { --bt: translateX(-50%) translateY(-50%); }
+    .cards-stage.spread .card { --bt: none; }
 
     .card-header {
       display: flex;
@@ -1245,16 +1320,12 @@ function generateCards() {
 }
 
 function renderCards(names) {
-  const showHint = names.length > 2;
-
   cardsEl.innerHTML = `
-    <div class="cards-stage">
-      <div class="scroll-hint${showHint ? ' show' : ''}" id="scrollHint">
-        <span>左右滑动 · 探索更多</span>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M3 8h10M9 4l4 4-4 4"/>
-        </svg>
-      </div>
+    <div class="cards-stage" id="cardsStage">
+      <!-- Deck collapsed hint -->
+      <div class="deck-hint">点击展开卡片 · CLICK TO SPREAD</div>
+
+      <!-- Cards deck -->
       <div class="cards-track" id="cardsTrack">
         ${names.map((name, i) => {
           const p = CELEBRITIES[name];
@@ -1311,43 +1382,40 @@ function renderCards(names) {
           </div>
         `}).join('')}
       </div>
+
+      <!-- Spread state scroll hint -->
+      <div class="scroll-hint" id="scrollHint">
+        <span>左右滑动</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </div>
     </div>
   `;
 
-  // 3D tilt + shimmer follow mouse
+  // Toggle spread/collapse on stage click
+  const stage = document.getElementById('cardsStage');
+  stage.addEventListener('click', () => {
+    stage.classList.toggle('spread');
+    const hint = document.getElementById('scrollHint');
+    if (hint) hint.classList.toggle('show', stage.classList.contains('spread'));
+  });
+
+  // Mouse-follow glow + tilt on each card
   const cards = document.querySelectorAll('.card');
   cards.forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = (e.clientX - cx) / (rect.width / 2);   // -1 to 1
-      const dy = (e.clientY - cy) / (rect.height / 2);  // -1 to 1
-      const rx = dy * -10;
-      const ry = dx * 10;
       const mx = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
       const my = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-      card.style.setProperty('--rx', rx.toFixed(2) + 'deg');
-      card.style.setProperty('--ry', ry.toFixed(2) + 'deg');
       card.style.setProperty('--mx', mx + '%');
       card.style.setProperty('--my', my + '%');
     });
-
     card.addEventListener('mouseleave', () => {
-      card.style.setProperty('--rx', '0deg');
-      card.style.setProperty('--ry', '0deg');
+      card.style.setProperty('--mx', '50%');
+      card.style.setProperty('--my', '50%');
     });
   });
-
-  // Center first card on load
-  setTimeout(() => {
-    const track = document.getElementById('cardsTrack');
-    if (track && track.firstElementChild) {
-      const first = track.firstElementChild;
-      const scrollLeft = first.offsetLeft - (window.innerWidth / 2) + (first.offsetWidth / 2);
-      track.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
-    }
-  }, 900);
 }
 
 function resetAll() {
