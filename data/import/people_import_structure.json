@@ -1,0 +1,540 @@
+{
+  "version": "v1",
+  "description": "Import blueprint for loading people_dataset_v1.json into normalized backend tables.",
+  "source": {
+    "format": "json",
+    "path": "data/people_dataset_v1.json",
+    "root_path": "$.people[*]",
+    "entity_key": "id"
+  },
+  "import_order": [
+    "people",
+    "persona_profiles",
+    "knowledge_chunks",
+    "quotes",
+    "works_or_events"
+  ],
+  "shared_transforms": {
+    "person_slug": "use source.id as the stable slug",
+    "is_fictional": "set true when structured_facts.instance_of contains fictional-related values such as fictional human, comics character, film character, television character, animated character, deity, legendary character; otherwise false",
+    "status": "default to active",
+    "persona_profile_status": "default to draft until human-reviewed",
+    "array_cleanup": "trim strings, drop empty values, de-duplicate while preserving order",
+    "story_seed_chunking": "each biography.story_seeds item becomes one seed chunk with chunk_type=story_seed",
+    "summary_chunking": "biography.summary becomes one summary chunk when present",
+    "full_extract_chunking": "split biography.full_extract into 400-800 character semantic chunks with overlap=80 and tag chunk_type=biography_extract",
+    "source_priority": "set 100 for local roster text, 80 for wikipedia summary, 70 for full extract, 60 for derived story seeds",
+    "embedding_policy": "create embeddings only for knowledge_chunks.content after import"
+  },
+  "tables": {
+    "people": {
+      "purpose": "Primary identity and display table for advisor records.",
+      "primary_key": "id",
+      "unique_keys": [
+        "slug",
+        "english_name"
+      ],
+      "upsert_strategy": "on conflict slug do update",
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "source": null,
+          "transform": "generate at import time"
+        },
+        "slug": {
+          "type": "text",
+          "source": "id",
+          "required": true
+        },
+        "english_name": {
+          "type": "text",
+          "source": "english_name",
+          "required": true
+        },
+        "chinese_name": {
+          "type": "text",
+          "source": "chinese_name",
+          "required": true
+        },
+        "domain_category": {
+          "type": "text",
+          "source": "domain_category",
+          "required": true
+        },
+        "ai_archetype": {
+          "type": "text",
+          "source": "ai_archetype",
+          "required": true
+        },
+        "brief_intro": {
+          "type": "text",
+          "source": "source_brief_intro",
+          "required": true
+        },
+        "portrait_asset": {
+          "type": "text",
+          "source": "portrait_asset",
+          "required": false
+        },
+        "is_fictional": {
+          "type": "boolean",
+          "source": "structured_facts.instance_of",
+          "required": true,
+          "transform": "apply shared_transforms.is_fictional"
+        },
+        "era_context": {
+          "type": "text",
+          "source": "biography.description",
+          "required": false
+        },
+        "source_dataset_version": {
+          "type": "text",
+          "source": "$.meta.generated_at",
+          "required": true,
+          "transform": "copy generation timestamp or map to semantic dataset version"
+        },
+        "status": {
+          "type": "text",
+          "source": null,
+          "required": true,
+          "default": "active"
+        },
+        "created_at": {
+          "type": "timestamp",
+          "source": null,
+          "required": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "type": "timestamp",
+          "source": null,
+          "required": true,
+          "default": "now()"
+        }
+      }
+    },
+    "persona_profiles": {
+      "purpose": "Compact prompt-facing persona card for one person.",
+      "primary_key": "id",
+      "unique_keys": [
+        "person_id",
+        "version"
+      ],
+      "upsert_strategy": "insert new version; optionally mark older rows deprecated",
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "source": null,
+          "transform": "generate at import time"
+        },
+        "person_id": {
+          "type": "uuid",
+          "source": "people.id",
+          "required": true,
+          "transform": "lookup by slug"
+        },
+        "slug": {
+          "type": "text",
+          "source": "id",
+          "required": true
+        },
+        "version": {
+          "type": "integer",
+          "source": null,
+          "required": true,
+          "default": 1
+        },
+        "profile_status": {
+          "type": "text",
+          "source": null,
+          "required": true,
+          "default": "draft"
+        },
+        "identity.display_name": {
+          "type": "text",
+          "source": "chinese_name",
+          "required": true
+        },
+        "identity.english_name": {
+          "type": "text",
+          "source": "english_name",
+          "required": true
+        },
+        "identity.one_line_identity": {
+          "type": "text",
+          "source": "source_brief_intro",
+          "required": true,
+          "transform": "rewrite into one compact role line if needed"
+        },
+        "identity.domain_category": {
+          "type": "text",
+          "source": "domain_category",
+          "required": true
+        },
+        "identity.archetype": {
+          "type": "text",
+          "source": "ai_archetype",
+          "required": true
+        },
+        "identity.era_context": {
+          "type": "text",
+          "source": "biography.description",
+          "required": false
+        },
+        "identity.is_fictional": {
+          "type": "boolean",
+          "source": "structured_facts.instance_of",
+          "required": true,
+          "transform": "apply shared_transforms.is_fictional"
+        },
+        "core_traits": {
+          "type": "jsonb",
+          "source": "personality_seed",
+          "required": true,
+          "transform": "array_cleanup and enrich to 3-6 items during persona curation"
+        },
+        "thinking_style.summary": {
+          "type": "text",
+          "source": "biography.summary",
+          "required": true,
+          "transform": "summarize into how this person thinks, not full biography"
+        },
+        "thinking_style.reasoning_patterns": {
+          "type": "jsonb",
+          "source": "structured_facts.occupations",
+          "required": true,
+          "transform": "derive reasoning patterns from biography and archetype"
+        },
+        "thinking_style.decision_lens": {
+          "type": "jsonb",
+          "source": "domain_category",
+          "required": true,
+          "transform": "derive 2-6 decision lenses"
+        },
+        "thinking_style.questioning_habit": {
+          "type": "text",
+          "source": "biography.story_seeds",
+          "required": true,
+          "transform": "describe how the persona asks or reframes questions"
+        },
+        "speaking_style.tone": {
+          "type": "jsonb",
+          "source": "ai_archetype",
+          "required": true,
+          "transform": "derive 2-6 tone tags"
+        },
+        "speaking_style.cadence": {
+          "type": "text",
+          "source": null,
+          "required": true,
+          "default": "balanced"
+        },
+        "speaking_style.verbosity": {
+          "type": "text",
+          "source": null,
+          "required": true,
+          "default": "medium"
+        },
+        "speaking_style.rhetorical_devices": {
+          "type": "jsonb",
+          "source": "biography.story_seeds",
+          "required": true,
+          "transform": "manual or llm-assisted curation"
+        },
+        "speaking_style.modernization_policy": {
+          "type": "text",
+          "source": null,
+          "required": true,
+          "default": "modernized_with_flavor"
+        },
+        "values": {
+          "type": "jsonb",
+          "source": "biography.summary",
+          "required": true,
+          "transform": "curate 3-8 values from source data"
+        },
+        "blind_spots": {
+          "type": "jsonb",
+          "source": "biography.summary",
+          "required": true,
+          "transform": "manual curation required"
+        },
+        "taboos": {
+          "type": "jsonb",
+          "source": null,
+          "required": true,
+          "default": [
+            "Do not pretend to know private facts about the user.",
+            "Do not claim experiences or inventions outside the person's era and corpus."
+          ]
+        },
+        "preferred_topics": {
+          "type": "jsonb",
+          "source": "domain_category",
+          "required": true,
+          "transform": "split into theme tags and enrich"
+        },
+        "disallowed_claims": {
+          "type": "jsonb",
+          "source": null,
+          "required": true,
+          "default": [
+            "Do not fabricate historical facts or quotes.",
+            "Do not speak as if the person has direct knowledge of modern events unless explicitly reframed."
+          ]
+        },
+        "response_strategy": {
+          "type": "jsonb",
+          "source": null,
+          "required": true,
+          "transform": "generated from persona curation rules"
+        },
+        "prompt_contract": {
+          "type": "jsonb",
+          "source": null,
+          "required": true,
+          "transform": "generated from persona curation rules"
+        },
+        "generation_notes": {
+          "type": "jsonb",
+          "source": "research_status",
+          "required": true,
+          "transform": "copy status flags and annotate curation confidence"
+        },
+        "metadata": {
+          "type": "jsonb",
+          "source": null,
+          "required": true,
+          "transform": "set created_at, updated_at, created_by, updated_by"
+        }
+      }
+    },
+    "knowledge_chunks": {
+      "purpose": "Retrieval layer storing per-person factual and narrative snippets.",
+      "primary_key": "id",
+      "indexes": [
+        "person_id",
+        "chunk_type",
+        "importance_score"
+      ],
+      "upsert_strategy": "replace chunks by person_id on rebuild",
+      "chunk_types": [
+        "roster_intro",
+        "summary",
+        "biography_extract",
+        "story_seed",
+        "fact_profile"
+      ],
+      "record_generation": [
+        {
+          "chunk_type": "roster_intro",
+          "content_source": "source_brief_intro",
+          "title_template": "{english_name} roster intro",
+          "source_name": "local_roster",
+          "source_priority": 100,
+          "importance_score": 0.95
+        },
+        {
+          "chunk_type": "summary",
+          "content_source": "biography.summary",
+          "title_template": "{english_name} summary",
+          "source_name": "wikipedia_summary",
+          "source_priority": 80,
+          "importance_score": 0.9
+        },
+        {
+          "chunk_type": "story_seed",
+          "content_source": "biography.story_seeds[*]",
+          "title_template": "{english_name} story seed #{index}",
+          "source_name": "derived_story_seed",
+          "source_priority": 60,
+          "importance_score": 0.72
+        },
+        {
+          "chunk_type": "biography_extract",
+          "content_source": "biography.full_extract",
+          "title_template": "{english_name} extract #{index}",
+          "source_name": "wikipedia_extract",
+          "source_priority": 70,
+          "importance_score": 0.75,
+          "transform": "apply shared_transforms.full_extract_chunking"
+        },
+        {
+          "chunk_type": "fact_profile",
+          "content_source": "structured_facts",
+          "title_template": "{english_name} fact profile",
+          "source_name": "wikidata",
+          "source_priority": 85,
+          "importance_score": 0.82,
+          "transform": "render structured facts into compact factual prose"
+        }
+      ],
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "source": null,
+          "transform": "generate at import time"
+        },
+        "person_id": {
+          "type": "uuid",
+          "source": "people.id",
+          "required": true,
+          "transform": "lookup by slug"
+        },
+        "chunk_type": {
+          "type": "text",
+          "required": true
+        },
+        "title": {
+          "type": "text",
+          "required": true
+        },
+        "content": {
+          "type": "text",
+          "required": true
+        },
+        "summary": {
+          "type": "text",
+          "required": false,
+          "transform": "optional compact summary for reranking"
+        },
+        "source_name": {
+          "type": "text",
+          "required": true
+        },
+        "source_url": {
+          "type": "text",
+          "source": "source_links.wikipedia",
+          "required": false
+        },
+        "source_priority": {
+          "type": "integer",
+          "required": true
+        },
+        "theme_tags": {
+          "type": "jsonb",
+          "source": "domain_category, ai_archetype, structured_facts.occupations",
+          "required": true,
+          "transform": "array_cleanup"
+        },
+        "era": {
+          "type": "text",
+          "source": "biography.description",
+          "required": false
+        },
+        "importance_score": {
+          "type": "numeric",
+          "required": true
+        },
+        "embedding": {
+          "type": "vector",
+          "source": null,
+          "required": false,
+          "transform": "fill in post-import embedding job"
+        },
+        "created_at": {
+          "type": "timestamp",
+          "source": null,
+          "required": true,
+          "default": "now()"
+        }
+      }
+    },
+    "quotes": {
+      "purpose": "Curated direct quotes with provenance. Not auto-filled from v1 because the source dataset has no reliable quote field.",
+      "primary_key": "id",
+      "upsert_strategy": "manual or curated import only",
+      "autofill": false,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "source": null,
+          "transform": "generate at import time"
+        },
+        "person_id": {
+          "type": "uuid",
+          "source": "people.id",
+          "required": true
+        },
+        "quote_text": {
+          "type": "text",
+          "required": true
+        },
+        "quote_translation": {
+          "type": "text",
+          "required": false
+        },
+        "source_name": {
+          "type": "text",
+          "required": true
+        },
+        "source_url": {
+          "type": "text",
+          "required": false
+        },
+        "authenticity_level": {
+          "type": "text",
+          "required": true,
+          "default": "unverified"
+        },
+        "theme_tags": {
+          "type": "jsonb",
+          "required": false
+        }
+      }
+    },
+    "works_or_events": {
+      "purpose": "Curated milestones, works, inventions, campaigns, or fictional arc events.",
+      "primary_key": "id",
+      "upsert_strategy": "manual or curated import only",
+      "autofill": false,
+      "fields": {
+        "id": {
+          "type": "uuid",
+          "source": null,
+          "transform": "generate at import time"
+        },
+        "person_id": {
+          "type": "uuid",
+          "source": "people.id",
+          "required": true
+        },
+        "name": {
+          "type": "text",
+          "required": true
+        },
+        "type": {
+          "type": "text",
+          "required": true
+        },
+        "period": {
+          "type": "text",
+          "required": false
+        },
+        "summary": {
+          "type": "text",
+          "required": true
+        },
+        "significance": {
+          "type": "text",
+          "required": false
+        },
+        "theme_tags": {
+          "type": "jsonb",
+          "required": false
+        }
+      }
+    }
+  },
+  "minimum_viable_import": {
+    "required_tables": [
+      "people",
+      "persona_profiles",
+      "knowledge_chunks"
+    ],
+    "notes": [
+      "The first usable backend version only needs people, persona_profiles, and knowledge_chunks.",
+      "quotes and works_or_events should be filled after manual curation or a second-stage research pass."
+    ]
+  }
+}

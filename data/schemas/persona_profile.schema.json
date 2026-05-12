@@ -1,0 +1,484 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zhinang-tuan.local/schemas/persona_profile.schema.json",
+  "title": "Persona Profile",
+  "description": "Schema for the compact persona card used to drive one advisor's behavior, language, and boundaries in prompts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "person_id",
+    "slug",
+    "version",
+    "profile_status",
+    "identity",
+    "core_traits",
+    "thinking_style",
+    "speaking_style",
+    "values",
+    "blind_spots",
+    "taboos",
+    "preferred_topics",
+    "disallowed_claims",
+    "response_strategy",
+    "prompt_contract",
+    "generation_notes",
+    "metadata"
+  ],
+  "properties": {
+    "person_id": {
+      "type": "string",
+      "description": "Database id or source id of the person record.",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "slug": {
+      "type": "string",
+      "description": "Stable person slug used across prompt, API, and storage layers.",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonic version number for persona revisions."
+    },
+    "profile_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "reviewed",
+        "approved",
+        "deprecated"
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "display_name",
+        "english_name",
+        "one_line_identity",
+        "domain_category",
+        "archetype"
+      ],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "english_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "one_line_identity": {
+          "type": "string",
+          "description": "Short identity line used in prompts and admin tooling.",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "domain_category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "archetype": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "era_context": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "is_fictional": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "core_traits": {
+      "type": "array",
+      "description": "Stable personality anchors, normally 3-6 items.",
+      "minItems": 3,
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 40
+      },
+      "uniqueItems": true
+    },
+    "thinking_style": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "reasoning_patterns",
+        "decision_lens",
+        "questioning_habit"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 320
+        },
+        "reasoning_patterns": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 60
+          },
+          "uniqueItems": true
+        },
+        "decision_lens": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 60
+          },
+          "uniqueItems": true
+        },
+        "questioning_habit": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 200
+        }
+      }
+    },
+    "speaking_style": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tone",
+        "cadence",
+        "verbosity",
+        "rhetorical_devices",
+        "modernization_policy"
+      ],
+      "properties": {
+        "tone": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 40
+          },
+          "uniqueItems": true
+        },
+        "cadence": {
+          "type": "string",
+          "enum": [
+            "very_concise",
+            "concise",
+            "balanced",
+            "elaborate"
+          ]
+        },
+        "verbosity": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "rhetorical_devices": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 60
+          },
+          "uniqueItems": true
+        },
+        "lexical_style": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 60
+          },
+          "uniqueItems": true
+        },
+        "modernization_policy": {
+          "type": "string",
+          "description": "How much the model may modernize the historical person's language for current users.",
+          "enum": [
+            "fully_modernized",
+            "modernized_with_flavor",
+            "historically_flavored"
+          ]
+        }
+      }
+    },
+    "values": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 60
+      },
+      "uniqueItems": true
+    },
+    "blind_spots": {
+      "type": "array",
+      "description": "Recurring limitations or biases that make the persona believable.",
+      "minItems": 1,
+      "maxItems": 6,
+      "items": {
+        "type": "string",
+        "minLength": 4,
+        "maxLength": 120
+      },
+      "uniqueItems": true
+    },
+    "taboos": {
+      "type": "array",
+      "description": "Things this persona should avoid endorsing or saying in-character.",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 4,
+        "maxLength": 120
+      },
+      "uniqueItems": true
+    },
+    "preferred_topics": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 10,
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 60
+      },
+      "uniqueItems": true
+    },
+    "disallowed_claims": {
+      "type": "array",
+      "description": "Explicit factual boundaries to reduce hallucinated claims and modern role leakage.",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "type": "string",
+        "minLength": 6,
+        "maxLength": 160
+      },
+      "uniqueItems": true
+    },
+    "response_strategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_mode",
+        "answer_pattern",
+        "opener_style",
+        "follow_up_strategy",
+        "advice_style"
+      ],
+      "properties": {
+        "default_mode": {
+          "type": "string",
+          "enum": [
+            "question_first",
+            "judgment_first",
+            "story_first",
+            "framework_first"
+          ]
+        },
+        "answer_pattern": {
+          "type": "array",
+          "description": "Ordered response beats, usually 3-6 steps.",
+          "minItems": 3,
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 120
+          }
+        },
+        "opener_style": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 160
+        },
+        "follow_up_strategy": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 200
+        },
+        "advice_style": {
+          "type": "string",
+          "enum": [
+            "direct",
+            "reflective",
+            "probing",
+            "strategic",
+            "empathetic"
+          ]
+        },
+        "closing_style": {
+          "type": "string",
+          "maxLength": 160
+        }
+      }
+    },
+    "prompt_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "system_rules",
+        "persona_rules",
+        "style_rules",
+        "knowledge_usage_rules",
+        "safety_rules",
+        "output_format_rules"
+      ],
+      "properties": {
+        "system_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 220
+          }
+        },
+        "persona_rules": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 220
+          }
+        },
+        "style_rules": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 220
+          }
+        },
+        "knowledge_usage_rules": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 220
+          }
+        },
+        "safety_rules": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 220
+          }
+        },
+        "output_format_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 220
+          }
+        }
+      }
+    },
+    "generation_notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_dataset_version",
+        "source_confidence",
+        "curation_status"
+      ],
+      "properties": {
+        "source_dataset_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "source_confidence": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "curation_status": {
+          "type": "string",
+          "enum": [
+            "seeded",
+            "human_reviewed",
+            "qa_passed"
+          ]
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 240
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "updated_at",
+        "created_by",
+        "updated_by"
+      ],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_by": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "updated_by": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "reviewer": {
+          "type": "string",
+          "maxLength": 80
+        }
+      }
+    }
+  }
+}
