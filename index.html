@@ -1681,23 +1681,23 @@
   <section class="home-hero">
     <div class="home-figures" aria-hidden="true">
       <div class="home-figure figure-left-top">
-        <img src="assets/portraits-v3-cut/06_商业/COCO_CHANEL.png" alt="">
+        <img src="assets/character_cutouts/coco-chanel.png" alt="">
         <span class="signature">Chanel</span>
       </div>
       <div class="home-figure figure-left-bottom">
-        <img src="assets/portraits-v3-cut/02_文学/SHAKESPEARE.png" alt="">
+        <img src="assets/character_cutouts/william-shakespeare.png" alt="">
         <span class="signature">Shakespeare</span>
       </div>
       <div class="home-figure figure-right-top">
-        <img src="assets/portraits-v3-cut/06_商业/STEVE_JOBS.png" alt="">
+        <img src="assets/character_cutouts/steve-jobs.png" alt="">
         <span class="signature">Jobs</span>
       </div>
       <div class="home-figure figure-right-bottom">
-        <img src="assets/portraits-v3-cut/05_艺术/DA_VINCI.png" alt="">
+        <img src="assets/character_cutouts/leonardo-da-vinci.png" alt="">
         <span class="signature">Da Vinci</span>
       </div>
       <div class="home-figure figure-bottom-center">
-        <img src="assets/portraits-v3-cut/03_历史/GANDHI.png" alt="">
+        <img src="assets/character_cutouts/mahatma-gandhi.png" alt="">
         <span class="signature">Gandhi</span>
       </div>
     </div>
@@ -2036,6 +2036,21 @@ const DOMAIN_COLORS = {
   default: ['#2a335f', '#5a69b8']
 };
 
+const POSTER_PALETTES = [
+  ['#2151ff', '#5b7cff'],
+  ['#c24b2c', '#f08a5c'],
+  ['#6a37d4', '#9b6cff'],
+  ['#0f8c76', '#2bc7a8'],
+  ['#a63c78', '#df72ae'],
+  ['#8d5a12', '#d3a24f'],
+  ['#264653', '#4f7c8f'],
+  ['#a33737', '#dc6a6a'],
+  ['#2a3d8f', '#6480ff'],
+  ['#6c7a12', '#a9c543'],
+  ['#16556d', '#3e93b7'],
+  ['#8a3151', '#d16f91']
+];
+
 const MIN_SHUFFLE_DURATION = 3000;
 
 function escapeHTML(value) {
@@ -2107,6 +2122,28 @@ function getDomainColors(domain) {
   return DOMAIN_COLORS[domain] || DOMAIN_COLORS.default;
 }
 
+function slugifyName(value) {
+  return String(value || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/&/g, ' and ')
+    .replace(/[^A-Za-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+}
+
+function getPosterPalette(key, fallbackKey = '') {
+  const seed = `${key || ''}-${fallbackKey || ''}`;
+  let hash = 0;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(index);
+    hash |= 0;
+  }
+  const palette = POSTER_PALETTES[Math.abs(hash) % POSTER_PALETTES.length];
+  return palette || POSTER_PALETTES[0];
+}
+
 function toPosterTitle(englishName, chineseName) {
   const staticConfig = CELEBRITIES[chineseName];
   if (staticConfig && staticConfig.posterTitle) {
@@ -2155,17 +2192,23 @@ function buildPortraitFallback(name, domain) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
-function normalizePortrait(path, name, domain) {
+function resolveCharacterCutout(englishName, name) {
+  const slug = slugifyName(englishName || name);
+  if (!slug) return '';
+  return `assets/character_cutouts/${slug}.png`;
+}
+
+function normalizePortrait(path, englishName, name, domain) {
+  const cutout = resolveCharacterCutout(englishName, name);
+  if (cutout) {
+    return cutout;
+  }
+
   if (path) {
     if (/^(https?:|data:)/.test(path)) {
       return path;
     }
     return path.replace(/^\.?\//, '');
-  }
-
-  const fallback = CELEBRITIES[name];
-  if (fallback && fallback.image) {
-    return fallback.image;
   }
 
   return buildPortraitFallback(name, domain);
@@ -2257,7 +2300,7 @@ function buildCitationMarkup(card) {
 function buildCardViewModel(rec, detail) {
   const staticConfig = CELEBRITIES[detail.chinese_name] || {};
   const profile = detail.persona_profile || {};
-  const [posterColor, posterColorSoft] = getDomainColors(detail.domain_category);
+  const [posterColor, posterColorSoft] = getPosterPalette(detail.english_name, detail.chinese_name);
   const intro = profile.one_line_identity || detail.brief_intro || rec.reason;
   const domain = profile.domain_category || detail.domain_category || '';
   const archetype = profile.archetype || detail.ai_archetype || '';
@@ -2271,9 +2314,9 @@ function buildCardViewModel(rec, detail) {
     era: (detail.era_context || detail.domain_category || 'THINK TANK').toUpperCase(),
     posterTitle: toPosterTitle(detail.english_name, detail.chinese_name).filter(Boolean),
     posterNote: staticConfig.posterNote || detail.brief_intro || rec.reason,
-    posterColor: staticConfig.posterColor || posterColor,
-    posterColorSoft: staticConfig.posterColorSoft || posterColorSoft,
-    image: normalizePortrait(detail.portrait_asset, detail.chinese_name || rec.person_name, detail.domain_category),
+    posterColor,
+    posterColorSoft,
+    image: normalizePortrait(detail.portrait_asset, detail.english_name, detail.chinese_name || rec.person_name, detail.domain_category),
     title: staticConfig.title || intro,
     intro,
     domain,
