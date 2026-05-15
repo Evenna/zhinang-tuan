@@ -21,3 +21,9 @@ backend/data/*.db-shm
 backend/data/*.db-wal
 
 node_modules/
+
+# Local debug / preview artifacts
+.dbg/
+debug-card-flip-bug.md
+assets/_cutout_previews/
+assets/character_cutouts/*-backup.png

@@ -19,7 +19,12 @@ class Settings(BaseSettings):
     app_name: str = 'AI Think Tank Backend'
     debug: bool = False
     api_prefix: str = '/api'
-    cors_origins: list[str] = Field(default_factory=lambda: ['http://127.0.0.1:8125', 'http://localhost:8125'])
+    cors_origins: list[str] = Field(default_factory=lambda: [
+        'http://127.0.0.1:8125',
+        'http://localhost:8125',
+        'http://127.0.0.1:8126',
+        'http://localhost:8126',
+    ])
     database_url: str = f'sqlite:///{DEFAULT_DB_PATH}'
     deepseek_base_url: str = 'https://api.deepseek.com'
     deepseek_model: str = 'deepseek-chat'

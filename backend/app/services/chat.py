@@ -40,8 +40,8 @@ class ChatService:
         messages = [{'role': 'system', 'content': system_prompt}]
         for turn in request.history[-6:]:
             messages.append({'role': turn.role, 'content': turn.content})
-        messages.append({'role': 'user', 'content': request.question})
-        answer = await self.llm_service.chat(messages)
+        messages.append({'role': 'user', 'content': self._build_concise_user_prompt(request.question)})
+        answer = await self.llm_service.chat(messages, temperature=0.65, max_tokens=120)
 
         self._store_message(session.id, 'user', None, request.question, None)
         self._store_message(
@@ -183,6 +183,13 @@ class ChatService:
             'response_strategy': profile.response_strategy,
             'prompt_contract': profile.prompt_contract,
         }
+
+    def _build_concise_user_prompt(self, question: str) -> str:
+        return (
+            f'{question}\n\n'
+            '请直接回答这个问题，使用中文，只写 1 到 2 句，尽量控制在 50 字内。'
+            '语气要像这位人物本人，内容具体，不要分点，不要长篇分析，不要客套开场。'
+        )
 
     def _retrieved_to_dict(self, item) -> dict:
         return {
