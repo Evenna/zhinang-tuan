@@ -63,7 +63,9 @@ def build_group_synthesis_prompt(question: str, answers: list[dict[str, str]]) -
         rendered.append(f"Advisor: {item['person_name']}\nAnswer:\n{item['answer']}")
     return (
         'You are a moderator summarizing multiple advisor perspectives. '
-        'Synthesize similarities, tensions, and a practical next step.\n\n'
+        'Synthesize similarities, tensions, and a practical next step. '
+        'Use one complete Chinese sentence, no more than 20 Chinese characters. Do not use ellipsis. '
+        'Do not include advisor names as speaker labels.\n\n'
         f'User question:\n{question}\n\n'
         'Advisor answers:\n' + '\n\n'.join(rendered)
     )

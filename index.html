@@ -50,6 +50,10 @@
     body.result-mode .footer {
       display: none;
     }
+    body.people-mode .divider-wrap,
+    body.people-mode .footer {
+      display: none;
+    }
 
     /* ── MAIN WRAP ── */
     .wrap {
@@ -71,6 +75,25 @@
         radial-gradient(circle at 50% 44%, rgba(255,255,255,0.05), transparent 18%),
         radial-gradient(circle at 50% 62%, rgba(193,152,99,0.08), transparent 26%),
         linear-gradient(180deg, #060606 0%, #020202 100%);
+    }
+    body.people-mode .home-hero {
+      position: sticky;
+      top: 0;
+      z-index: 35;
+      min-height: auto;
+      padding: 14px clamp(20px, 3vw, 42px);
+      overflow: visible;
+      background: rgba(6,6,6,0.86);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    body.people-mode .home-hero::before,
+    body.people-mode .home-hero::after,
+    body.people-mode .home-figures,
+    body.people-mode .hero-center,
+    body.people-mode .hero-notes {
+      display: none;
     }
     .home-hero::before {
       content: '';
@@ -166,6 +189,254 @@
     .nav-links a:hover,
     .nav-links a.is-active {
       color: var(--accent);
+    }
+    .people-page {
+      display: none;
+      min-height: 100vh;
+      padding: 34px clamp(18px, 4vw, 54px) 56px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(196,149,106,0.16), transparent 30%),
+        linear-gradient(180deg, #070707 0%, #020202 100%);
+    }
+    .people-page.show { display: block; }
+    .people-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 34px;
+    }
+    .people-kicker {
+      color: var(--accent);
+      font-size: 0.64rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .people-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 1;
+      color: #fff8ef;
+    }
+    .people-subtitle {
+      margin-top: 12px;
+      color: rgba(246,240,231,0.54);
+      font-size: 0.88rem;
+      line-height: 1.8;
+    }
+    .people-search {
+      width: min(320px, 100%);
+      flex: 0 0 auto;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.055);
+      color: #fff8ef;
+      outline: none;
+      padding: 13px 16px;
+      font: inherit;
+      font-size: 0.82rem;
+    }
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(226px, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+    .person-tile {
+      width: 100%;
+      max-width: 286px;
+      justify-self: center;
+      padding: 0;
+      border: 0;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .person-tile.card {
+      display: block;
+      flex: none;
+      width: min(100%, 286px);
+      margin: 0;
+      color: inherit;
+      text-align: initial;
+      overflow: hidden;
+      --card-lift: 0px;
+      --card-rotate: 0deg;
+    }
+    .person-tile.card:hover {
+      --card-lift: -10px;
+      transform: translateY(var(--card-lift)) rotateZ(0deg) scale(1.018);
+    }
+    .person-tile .poster-flip {
+      display: none;
+    }
+    .people-empty {
+      padding: 28px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(246,240,231,0.58);
+      background: rgba(255,255,255,0.04);
+    }
+    .person-chat {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+      background:
+        radial-gradient(circle at 28% 0%, rgba(196,149,106,0.16), transparent 32%),
+        linear-gradient(180deg, #070707 0%, #020202 100%);
+      color: #f6f0e7;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 0.24s ease, transform 0.24s ease;
+    }
+    .person-chat.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .person-chat-side {
+      position: relative;
+      padding: 24px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      background: rgba(255,255,255,0.035);
+    }
+    .person-chat-back {
+      position: relative;
+      z-index: 3;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.055);
+      color: rgba(246,240,231,0.78);
+      padding: 10px 13px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.72rem;
+    }
+    .person-chat-portrait {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 118%;
+      height: 78%;
+      object-fit: contain;
+      transform:
+        translateX(calc(-50% + var(--portrait-x, 0px)))
+        translateY(var(--portrait-y, 0px))
+        scale(calc(var(--portrait-scale, 1) * var(--portrait-flip, 1)), var(--portrait-scale, 1));
+      transform-origin: center bottom;
+      filter: drop-shadow(0 22px 26px rgba(0,0,0,0.28));
+    }
+    .person-chat-info {
+      position: relative;
+      z-index: 3;
+      margin-top: 26px;
+    }
+    .person-chat-name {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1;
+      color: #fff8ef;
+    }
+    .person-chat-meta {
+      margin-top: 10px;
+      color: rgba(246,240,231,0.55);
+      font-size: 0.78rem;
+      line-height: 1.7;
+    }
+    .person-chat-main {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 24px;
+    }
+    .person-chat-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      color: #fff8ef;
+    }
+    .person-chat-hint {
+      margin-top: 6px;
+      color: rgba(246,240,231,0.5);
+      font-size: 0.76rem;
+      line-height: 1.6;
+    }
+    .person-chat-messages {
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 4px 2px 18px;
+    }
+    .person-message {
+      max-width: min(720px, 88%);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .person-message.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+    .person-message.assistant { align-self: flex-start; }
+    .person-message-role {
+      color: rgba(196,149,106,0.8);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+    }
+    .person-message-bubble {
+      padding: 13px 15px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.055);
+      color: #fff8ef;
+      line-height: 1.75;
+      font-size: 0.92rem;
+      white-space: pre-wrap;
+    }
+    .person-message.user .person-message-bubble {
+      background: rgba(196,149,106,0.16);
+      border-color: rgba(196,149,106,0.24);
+    }
+    .person-chat-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.055);
+    }
+    .person-chat-input {
+      min-height: 44px;
+      max-height: 120px;
+      resize: vertical;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #fff8ef;
+      font: inherit;
+      padding: 10px;
+    }
+    .person-chat-send {
+      align-self: end;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #17120c;
+      padding: 12px 18px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+    }
+    .person-chat-send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     .nav-actions {
       display: flex;
@@ -836,6 +1107,7 @@
       min-height: calc(100vh - 120px);
       display: flex;
       align-items: center;
+      justify-content: center;
     }
     .cards-track {
       position: relative;
@@ -859,6 +1131,7 @@
       align-items: center;
       padding-top: 24px;
       padding-bottom: 130px;
+      margin: 0 auto;
     }
     .cards-track::-webkit-scrollbar { display: none; }
     .cards-track.is-dragging {
@@ -874,6 +1147,12 @@
       overflow-x: auto;
       padding-left: clamp(18px, 4vw, 42px);
       padding-right: clamp(18px, 6vw, 60px);
+    }
+    .cards-stage.spread.few-cards .cards-track {
+      justify-content: center;
+      overflow-x: hidden;
+      padding-left: clamp(18px, 3vw, 34px);
+      padding-right: clamp(18px, 3vw, 34px);
     }
 
     .card {
@@ -1779,6 +2058,915 @@
       transform: translateX(-50%) translateY(0);
     }
     .scroll-hint svg { animation: scrollBounce 1.8s ease-in-out infinite; }
+    .roundtable-actions {
+      position: relative;
+      z-index: 7;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 4px 20px 0;
+    }
+    body.result-mode .roundtable-actions {
+      position: fixed;
+      left: 24px;
+      bottom: 24px;
+      padding: 0;
+    }
+    .roundtable-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 168px;
+      padding: 14px 22px;
+      border-radius: 14px;
+      border: 1px solid rgba(196,149,106,0.24);
+      background: rgba(196,149,106,0.12);
+      color: rgba(246,240,231,0.86);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.24);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+    }
+    .roundtable-btn::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(196,149,106,0.1);
+    }
+    .roundtable-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(196,149,106,0.42);
+      background: rgba(196,149,106,0.18);
+      color: #fff8ef;
+    }
+    .roundtable-btn:disabled {
+      cursor: wait;
+      opacity: 0.72;
+      transform: none;
+    }
+    .roundtable-panel {
+      position: absolute;
+      left: 50%;
+      bottom: 82px;
+      z-index: 18;
+      width: min(920px, calc(100vw - 36px));
+      max-height: min(58vh, 560px);
+      padding: 20px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(196,149,106,0.18), transparent 34%),
+        rgba(10,10,10,0.9);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.48);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      color: #f6f0e7;
+      transform: translateX(-50%) translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      overflow: auto;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+    .roundtable-panel.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .roundtable-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .roundtable-kicker {
+      color: var(--accent);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .roundtable-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.25rem, 2vw, 1.8rem);
+      line-height: 1.15;
+      color: #fff8ef;
+    }
+    .roundtable-subtitle {
+      margin-top: 8px;
+      max-width: 620px;
+      color: rgba(246,240,231,0.54);
+      font-size: 0.76rem;
+      line-height: 1.75;
+      letter-spacing: 0.04em;
+    }
+    .roundtable-close {
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: rgba(246,240,231,0.76);
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+    .roundtable-close:hover {
+      border-color: rgba(196,149,106,0.36);
+      color: #fff8ef;
+    }
+    .roundtable-loading,
+    .roundtable-error,
+    .roundtable-empty {
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: rgba(246,240,231,0.68);
+      font-size: 0.82rem;
+      line-height: 1.7;
+    }
+    .roundtable-error {
+      border-color: rgba(218,91,91,0.34);
+      color: #f0b6a9;
+    }
+    .roundtable-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .roundtable-answer {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.045);
+    }
+    .roundtable-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff8ef;
+      font-family: var(--font-serif);
+      font-size: 0.98rem;
+      margin-bottom: 8px;
+    }
+    .roundtable-name::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .roundtable-text {
+      color: rgba(246,240,231,0.74);
+      font-size: 0.8rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+    .roundtable-synthesis {
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(196,149,106,0.22);
+      background: rgba(196,149,106,0.08);
+    }
+    .roundtable-synthesis-label {
+      color: var(--accent);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .roundtable-synthesis-text {
+      color: #fff8ef;
+      font-size: 0.86rem;
+      line-height: 1.85;
+      white-space: pre-wrap;
+    }
+    .roundtable-view {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 18px;
+      padding: max(22px, env(safe-area-inset-top)) clamp(18px, 4vw, 54px) max(18px, env(safe-area-inset-bottom));
+      background:
+        radial-gradient(circle at 50% 8%, rgba(196,149,106,0.18), transparent 30%),
+        radial-gradient(circle at 16% 42%, rgba(255,255,255,0.04), transparent 22%),
+        linear-gradient(180deg, #070707 0%, #020202 100%);
+      color: #f6f0e7;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+    .roundtable-view.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .roundtable-view-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      position: relative;
+      z-index: 2;
+      justify-self: center;
+      width: min(920px, 100%);
+    }
+    .roundtable-back {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: rgba(246,240,231,0.78);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+    }
+    .roundtable-back:hover {
+      border-color: rgba(196,149,106,0.36);
+      color: #fff8ef;
+    }
+    .roundtable-room-kicker {
+      color: var(--accent);
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .roundtable-room-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.7rem, 4vw, 3.2rem);
+      line-height: 1;
+      color: #fff8ef;
+    }
+    .roundtable-room-subtitle {
+      margin-top: 10px;
+      color: rgba(246,240,231,0.52);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      line-height: 1.65;
+    }
+    .roundtable-speakers {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: clamp(10px, 2.4vw, 24px);
+      min-height: 118px;
+      position: relative;
+      z-index: 2;
+      justify-self: center;
+      width: min(920px, 100%);
+    }
+    .roundtable-speaker {
+      width: clamp(70px, 10vw, 112px);
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+      opacity: 0.8;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .roundtable-speaker.is-speaking {
+      opacity: 1;
+      transform: translateY(-8px);
+    }
+    .roundtable-avatar {
+      width: clamp(58px, 8vw, 88px);
+      height: clamp(58px, 8vw, 88px);
+      border-radius: 50%;
+      border: 1px solid rgba(196,149,106,0.28);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.18), transparent 44%),
+        rgba(255,255,255,0.05);
+      overflow: hidden;
+      box-shadow: 0 18px 38px rgba(0,0,0,0.28);
+    }
+    .roundtable-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: saturate(0.96);
+      transform:
+        translate(var(--avatar-x, 0px), var(--avatar-y, 0px))
+        scale(var(--avatar-scale, 1));
+      transform-origin: center center;
+    }
+    .roundtable-speaker-name {
+      max-width: 100%;
+      color: rgba(246,240,231,0.68);
+      font-size: 0.66rem;
+      line-height: 1.25;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .roundtable-dialogue {
+      align-self: stretch;
+      justify-self: center;
+      width: min(920px, 100%);
+      min-height: 0;
+      padding: 4px;
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(196,149,106,0.35) transparent;
+    }
+    .roundtable-message-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 10px;
+    }
+    .roundtable-message {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      max-width: 760px;
+      animation: fadeUpIn 0.28s ease both;
+    }
+    .roundtable-message.is-user {
+      align-self: flex-end;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: min(680px, 88%);
+    }
+    .roundtable-message.is-system {
+      align-self: center;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: min(720px, 94%);
+    }
+    .roundtable-message-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(196,149,106,0.22);
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+    .roundtable-message-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transform:
+        translate(var(--avatar-x, 0px), var(--avatar-y, 0px))
+        scale(var(--avatar-scale, 1));
+      transform-origin: center center;
+    }
+    .roundtable-bubble {
+      padding: 11px 13px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.055);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+    }
+    .roundtable-message.is-user .roundtable-bubble {
+      background: rgba(196,149,106,0.16);
+      border-color: rgba(196,149,106,0.24);
+    }
+    .roundtable-message.is-system .roundtable-bubble {
+      background: rgba(255,255,255,0.035);
+      text-align: center;
+    }
+    .roundtable-message-name {
+      color: rgba(196,149,106,0.88);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      margin-bottom: 5px;
+    }
+    .roundtable-message-text {
+      color: #fff8ef;
+      font-size: clamp(0.92rem, 1.7vw, 1.08rem);
+      line-height: 1.55;
+    }
+    .roundtable-message.is-user .roundtable-message-text {
+      color: #f8efe2;
+    }
+    .roundtable-typing {
+      display: inline-flex;
+      gap: 5px;
+      align-items: center;
+      color: rgba(246,240,231,0.58);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+    }
+    .roundtable-typing i {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: typingPulse 1s ease-in-out infinite;
+    }
+    .roundtable-typing i:nth-child(2) { animation-delay: 0.14s; }
+    .roundtable-typing i:nth-child(3) { animation-delay: 0.28s; }
+    @keyframes typingPulse {
+      0%, 100% { opacity: 0.28; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-3px); }
+    }
+    .roundtable-compose {
+      justify-self: center;
+      width: min(920px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.055);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .roundtable-input {
+      min-width: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #fff8ef;
+      padding: 0 8px;
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+    }
+    .roundtable-input::placeholder {
+      color: rgba(246,240,231,0.38);
+    }
+    .roundtable-send {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      background: var(--accent);
+      color: #17120c;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+    }
+    .roundtable-send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .adjust-workbench {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(240px, 320px) minmax(0, 1fr) minmax(260px, 340px);
+      gap: 18px;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(196,149,106,0.14), transparent 30%),
+        linear-gradient(180deg, #070707 0%, #020202 100%);
+      color: #f6f0e7;
+    }
+    .adjust-panel {
+      min-height: 0;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.045);
+      border-radius: 18px;
+      box-shadow: 0 22px 60px rgba(0,0,0,0.28);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+    .adjust-sidebar {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      min-height: calc(100vh - 36px);
+    }
+    .adjust-head {
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .adjust-kicker {
+      color: var(--accent);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .adjust-title {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      line-height: 1.15;
+      color: #fff8ef;
+    }
+    .adjust-sub {
+      margin-top: 8px;
+      color: rgba(246,240,231,0.52);
+      font-size: 0.74rem;
+      line-height: 1.65;
+    }
+    .adjust-search-wrap {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .adjust-search {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.055);
+      color: #fff8ef;
+      outline: none;
+      padding: 11px 12px;
+      font: inherit;
+      font-size: 0.82rem;
+    }
+    .adjust-list {
+      overflow: auto;
+      padding: 8px;
+    }
+    .adjust-person {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      padding: 9px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: rgba(246,240,231,0.78);
+      text-align: left;
+      cursor: pointer;
+    }
+    .adjust-person:hover,
+    .adjust-person.is-active {
+      background: rgba(196,149,106,0.12);
+      color: #fff8ef;
+    }
+    .adjust-person-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(196,149,106,0.18);
+    }
+    .adjust-person-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .adjust-person-name {
+      font-size: 0.86rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .adjust-person-meta {
+      margin-top: 3px;
+      color: rgba(246,240,231,0.42);
+      font-size: 0.66rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .adjust-stage-panel {
+      min-height: calc(100vh - 36px);
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .adjust-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .adjust-tabs {
+      display: inline-flex;
+      gap: 8px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .adjust-tab {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: transparent;
+      color: rgba(246,240,231,0.62);
+      cursor: pointer;
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+    }
+    .adjust-tab.is-active {
+      background: rgba(196,149,106,0.18);
+      color: #fff8ef;
+    }
+    .adjust-save-state {
+      color: rgba(246,240,231,0.46);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+    }
+    .adjust-stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      overflow: auto;
+    }
+    .adjust-stage.is-batch {
+      display: block;
+      place-items: initial;
+    }
+    .adjust-batch-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .adjust-batch-title {
+      font-family: var(--font-serif);
+      font-size: 1.28rem;
+      color: #fff8ef;
+    }
+    .adjust-batch-count {
+      color: rgba(246,240,231,0.46);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    .adjust-batch-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+    .adjust-batch-item {
+      min-width: 0;
+    }
+    .adjust-batch-name {
+      margin-top: 9px;
+      color: rgba(246,240,231,0.82);
+      font-size: 0.8rem;
+      line-height: 1.3;
+      text-align: center;
+    }
+    .adjust-batch-meta {
+      margin-top: 2px;
+      color: rgba(246,240,231,0.38);
+      font-size: 0.62rem;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .adjust-batch-item.is-active .adjust-batch-name {
+      color: #fff8ef;
+    }
+    .adjust-card-preview,
+    .adjust-batch-card-preview {
+      position: relative;
+      width: min(360px, 72vw);
+      aspect-ratio: 5 / 7;
+      border-radius: 30px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #efe7da 0%, #e7ddcf 100%);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.32);
+      touch-action: none;
+      user-select: none;
+    }
+    .adjust-batch-card-preview {
+      width: 100%;
+      border-radius: 22px;
+      box-shadow: 0 18px 44px rgba(0,0,0,0.28);
+    }
+    .adjust-card-preview::before,
+    .adjust-batch-card-preview::before {
+      content: '';
+      position: absolute;
+      inset: 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(24,24,24,0.15);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .adjust-card-color,
+    .adjust-batch-card-color {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      top: 128px;
+      bottom: 24px;
+      background: linear-gradient(145deg, var(--adjust-soft, #5b7cff), var(--adjust-main, #2151ff));
+      z-index: 0;
+    }
+    .adjust-batch-card-color {
+      top: 35%;
+      bottom: 24px;
+    }
+    .adjust-card-title,
+    .adjust-batch-card-title {
+      position: absolute;
+      top: 28px;
+      left: 22px;
+      z-index: 3;
+      color: #171512;
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      max-width: 58%;
+      line-height: 1.15;
+    }
+    .adjust-batch-card-title {
+      font-size: 0.92rem;
+      left: 16px;
+      top: 18px;
+    }
+    .adjust-card-person,
+    .adjust-batch-card-person {
+      position: absolute;
+      left: 52%;
+      bottom: 0;
+      z-index: 1;
+      width: 108%;
+      height: 88%;
+      object-fit: contain;
+      object-position: center center;
+      filter: drop-shadow(0 12px 16px rgba(0,0,0,0.16));
+      transform:
+        translateX(calc(-50% + var(--adjust-x, 0px)))
+        translateY(calc(-8% + var(--adjust-y, 0px)))
+        scale(
+          calc(var(--adjust-scale, 1) * var(--adjust-flip, 1)),
+          var(--adjust-scale, 1)
+        );
+      transform-origin: center center;
+      cursor: grab;
+      touch-action: none;
+    }
+    .adjust-card-person.is-dragging,
+    .adjust-batch-card-person.is-dragging,
+    .adjust-avatar-img.is-dragging {
+      cursor: grabbing;
+    }
+    .adjust-handle {
+      position: absolute;
+      z-index: 5;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #111;
+      background: var(--accent);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.24);
+      transform: translate(-50%, -50%);
+      touch-action: none;
+    }
+    .adjust-handle.nw { left: 14%; top: 18%; cursor: nwse-resize; }
+    .adjust-handle.ne { right: 14%; top: 18%; cursor: nesw-resize; transform: translate(50%, -50%); }
+    .adjust-handle.sw { left: 14%; bottom: 8%; cursor: nesw-resize; transform: translate(-50%, 50%); }
+    .adjust-handle.se { right: 14%; bottom: 8%; cursor: nwse-resize; transform: translate(50%, 50%); }
+    .adjust-batch-card-preview .adjust-handle,
+    .adjust-batch-avatar-frame .adjust-handle {
+      width: 14px;
+      height: 14px;
+      border-width: 1px;
+    }
+    .adjust-avatar-preview {
+      display: grid;
+      place-items: center;
+      gap: 20px;
+    }
+    .adjust-avatar-frame {
+      position: relative;
+      width: min(320px, 62vw);
+      height: min(320px, 62vw);
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid rgba(196,149,106,0.38);
+      background: rgba(255,255,255,0.055);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.34);
+      touch-action: none;
+    }
+    .adjust-batch-avatar-frame {
+      position: relative;
+      width: min(100%, 220px);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid rgba(196,149,106,0.38);
+      background: rgba(255,255,255,0.055);
+      box-shadow: 0 18px 44px rgba(0,0,0,0.28);
+      touch-action: none;
+    }
+    .adjust-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transform:
+        translate(var(--avatar-x, 0px), var(--avatar-y, 0px))
+        scale(var(--avatar-scale, 1));
+      transform-origin: center center;
+      cursor: grab;
+      touch-action: none;
+    }
+    .adjust-side {
+      min-height: calc(100vh - 36px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+    .adjust-controls {
+      padding: 14px;
+      overflow: auto;
+    }
+    .adjust-current {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .adjust-current-name {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: #fff8ef;
+    }
+    .adjust-current-slug {
+      margin-top: 4px;
+      color: rgba(246,240,231,0.42);
+      font-size: 0.68rem;
+    }
+    .adjust-row {
+      margin-bottom: 14px;
+    }
+    .adjust-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+      color: rgba(246,240,231,0.66);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+    }
+    .adjust-row input[type="range"] {
+      width: 100%;
+      accent-color: #c4956a;
+    }
+    .adjust-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .adjust-btn {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.055);
+      color: rgba(246,240,231,0.8);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.76rem;
+    }
+    .adjust-btn.primary {
+      background: rgba(196,149,106,0.2);
+      border-color: rgba(196,149,106,0.3);
+      color: #fff8ef;
+    }
+    .adjust-output {
+      grid-column: 1 / -1;
+      min-height: 110px;
+      width: 100%;
+      resize: vertical;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.22);
+      color: #fff8ef;
+      border-radius: 12px;
+      padding: 10px;
+      font: 0.68rem/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    @media (max-width: 980px) {
+      .adjust-workbench {
+        grid-template-columns: 1fr;
+      }
+      .adjust-sidebar,
+      .adjust-stage-panel,
+      .adjust-side {
+        min-height: auto;
+      }
+      .adjust-list {
+        max-height: 260px;
+      }
+    }
     @keyframes scrollBounce {
       0%, 100% { transform: translateX(0); }
       50% { transform: translateX(7px); }
@@ -1833,6 +3021,32 @@
       }
       .nav-actions {
         display: none;
+      }
+      .people-topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .people-grid {
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 18px;
+      }
+      .person-chat {
+        grid-template-columns: 1fr;
+        grid-template-rows: 220px minmax(0, 1fr);
+      }
+      .person-chat-side {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+      .person-chat-portrait {
+        left: auto;
+        right: 12px;
+        width: 52%;
+        height: 95%;
+        transform:
+          translateX(var(--portrait-x, 0px))
+          translateY(var(--portrait-y, 0px))
+          scale(calc(var(--portrait-scale, 1) * var(--portrait-flip, 1)), var(--portrait-scale, 1));
       }
       .hero-center {
         min-height: auto;
@@ -1910,6 +3124,12 @@
         padding-left: 14px;
         padding-right: 18px;
       }
+      .cards-stage.spread.few-cards .cards-track {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-left: max(18px, calc((100vw - 258px) / 2));
+        padding-right: max(18px, calc((100vw - 258px) / 2));
+      }
       .cards-stage.stack-mode .card {
         margin-left: calc(-1 * clamp(144px, 20vw, 186px));
       }
@@ -1968,6 +3188,79 @@
         bottom: 12px;
         width: auto;
       }
+      body.result-mode .roundtable-actions {
+        left: 12px;
+        right: 12px;
+        bottom: 76px;
+      }
+      .roundtable-btn {
+        width: 100%;
+      }
+      .roundtable-panel {
+        left: 12px;
+        right: 12px;
+        bottom: 138px;
+        width: auto;
+        max-height: min(56vh, 520px);
+        padding: 16px;
+        transform: translateY(18px);
+      }
+      .roundtable-panel.show {
+        transform: translateY(0);
+      }
+      .roundtable-head {
+        gap: 12px;
+      }
+      .roundtable-grid {
+        grid-template-columns: 1fr;
+      }
+      .roundtable-view {
+        gap: 12px;
+        padding: max(14px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+      }
+      .roundtable-view-head {
+        align-items: center;
+      }
+      .roundtable-room-title {
+        font-size: 1.55rem;
+      }
+      .roundtable-room-subtitle {
+        display: none;
+      }
+      .roundtable-speakers {
+        justify-content: center;
+        min-height: 84px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+      .roundtable-speaker {
+        width: 62px;
+        flex: 0 0 62px;
+      }
+      .roundtable-avatar {
+        width: 52px;
+        height: 52px;
+      }
+      .roundtable-speaker-name {
+        font-size: 0.58rem;
+      }
+      .roundtable-message {
+        grid-template-columns: 34px minmax(0, 1fr);
+      }
+      .roundtable-message-avatar {
+        width: 34px;
+        height: 34px;
+      }
+      .roundtable-message-text {
+        font-size: 0.92rem;
+      }
+      .roundtable-compose {
+        grid-template-columns: minmax(0, 1fr) 62px;
+      }
+      .roundtable-send {
+        padding-left: 0;
+        padding-right: 0;
+      }
       body.result-mode .cards-track {
         min-height: calc(100vh - 170px);
         padding-bottom: 170px;
@@ -1976,6 +3269,17 @@
     @media (max-width: 560px) {
       .nav-links {
         display: none;
+      }
+      .people-grid {
+        grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
+        gap: 14px;
+      }
+      .people-page {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .person-chat-main {
+        padding: 14px;
       }
       .hero-center {
         padding-top: 112px;
@@ -2192,31 +3496,31 @@
       <div class="line-accent left"></div>
       <div class="line-accent right"></div>
       <div class="home-figure figure-left-top" data-figure-id="figure-left-top">
-        <img src="assets/character_cutouts/plato.png" alt="">
+        <img src="assets/home_figures/plato.png" alt="">
         <span class="signature">Plato</span>
       </div>
       <div class="home-figure figure-left-mid" data-figure-id="figure-left-mid">
-        <img src="assets/character_cutouts/steve-jobs.png" alt="">
+        <img src="assets/home_figures/steve-jobs.png" alt="">
         <span class="signature">Jobs</span>
       </div>
       <div class="home-figure figure-left-bottom" data-figure-id="figure-left-bottom">
-        <img src="assets/character_cutouts/coco-chanel.png" alt="">
+        <img src="assets/home_figures/coco-chanel.png" alt="">
         <span class="signature">Chanel</span>
       </div>
       <div class="home-figure figure-right-top" data-figure-id="figure-right-top">
-        <img src="assets/character_cutouts/ada-lovelace.png" alt="">
+        <img src="assets/home_figures/ada-lovelace.png" alt="">
         <span class="signature">Lovelace</span>
       </div>
       <div class="home-figure figure-right-mid" data-figure-id="figure-right-mid">
-        <img src="assets/character_cutouts/salvador-dali.png" alt="">
+        <img src="assets/home_figures/salvador-dali.png" alt="">
         <span class="signature">Dali</span>
       </div>
       <div class="home-figure figure-right-bottom" data-figure-id="figure-right-bottom">
-        <img src="assets/character_cutouts/michael-jackson.png" alt="">
+        <img src="assets/home_figures/michael-jackson.png" alt="">
         <span class="signature">Jackson</span>
       </div>
       <div class="home-figure figure-bottom-center" data-figure-id="figure-bottom-center">
-        <img src="assets/character_cutouts/walter-white.png" alt="">
+        <img src="assets/home_figures/walter-white.png" alt="">
         <span class="signature">White</span>
       </div>
     </div>
@@ -2231,8 +3535,8 @@
           </span>
         </a>
         <nav class="nav-links" aria-label="Primary">
-          <a href="#" class="is-active">首页</a>
-          <a href="#">名人智囊</a>
+          <a href="#" class="is-active" data-view="home" id="homeNavLink">首页</a>
+          <a href="#" data-view="people" id="peopleNavLink">名人智囊</a>
           <a href="#">智慧主题</a>
           <a href="#">用户故事</a>
           <a href="#">关于我们</a>
@@ -2264,6 +3568,42 @@
         </section>
       </div>
     </div>
+  </section>
+
+  <section class="people-page" id="peoplePage" aria-live="polite">
+    <div class="people-topbar">
+      <div class="people-heading">
+        <div class="people-kicker">Advisors</div>
+        <h2 class="people-title">名人智囊</h2>
+        <p class="people-subtitle">浏览全部人物卡牌，选择一位进入单独对话。</p>
+      </div>
+      <input class="people-search" id="peopleSearch" type="search" placeholder="搜索人物、领域、关键词...">
+    </div>
+    <div class="people-grid" id="peopleGrid"></div>
+  </section>
+
+  <section class="person-chat" id="personChat" aria-hidden="true">
+    <aside class="person-chat-side" id="personChatSide">
+      <button class="person-chat-back" id="personChatBack" type="button">返回人物列表</button>
+      <div class="person-chat-info">
+        <div class="person-chat-name" id="personChatName"></div>
+        <div class="person-chat-meta" id="personChatMeta"></div>
+      </div>
+      <img class="person-chat-portrait" id="personChatPortrait" alt="">
+    </aside>
+    <main class="person-chat-main">
+      <header class="person-chat-header">
+        <div>
+          <div class="person-chat-title" id="personChatTitle">单人对话</div>
+          <div class="person-chat-hint" id="personChatHint">向这位智囊提一个具体问题。</div>
+        </div>
+      </header>
+      <div class="person-chat-messages" id="personChatMessages"></div>
+      <form class="person-chat-form" id="personChatForm">
+        <textarea class="person-chat-input" id="personChatInput" maxlength="1000" placeholder="输入你想问 TA 的问题..."></textarea>
+        <button class="person-chat-send" id="personChatSend" type="submit">发送</button>
+      </form>
+    </main>
   </section>
 
   <!-- LOADING -->
@@ -2514,6 +3854,23 @@ const PREVIEW_EDIT_MODE = false;
 const HOME_PREVIEW_EDIT_MODE = false;
 const HOME_FIGURE_STORAGE_KEY = 'zhinang-home-figure-adjustments-v1';
 const HOME_SIGNATURE_STORAGE_KEY = 'zhinang-home-signature-adjustments-v1';
+const ADJUST_MODE = urlMode === 'adjust';
+const ADJUSTMENT_STORAGE_KEY = 'zhinang-portrait-adjustments-v2';
+const AVATAR_ADJUSTMENT_STORAGE_KEY = 'zhinang-avatar-adjustments-v1';
+const BATCH_ADJUST_START_SLUG = 'bjork';
+const PEOPLE_DEMOTED_SLUGS = new Set(['l']);
+const PEOPLE_EMPTY_IMAGE_SLUGS = new Set([
+  'banksy',
+  'batman',
+  'geralt-of-rivia',
+  'joker',
+  'loki',
+  'makoto-shinkai',
+  'spider-man',
+  'thor',
+  'yayoi-kusama',
+  'yoda'
+]);
 const DEFAULT_BACK_QUOTE_ADJUSTMENT = {
   x: 10,
   y: 36,
@@ -2547,10 +3904,2668 @@ const BACK_QUOTE_FONTS = {
 };
 
 const PORTRAIT_ADJUSTMENTS = {
-  'george-orwell': { scale: 1.66, x: 8, y: 41, flip: false },
-  diogenes: { scale: 2, x: 11, y: 2, flip: false },
-  socrates: { scale: 1.37, x: 4, y: -10, flip: false },
-  'coco-chanel': { scale: 1.07, x: 9, y: 18, flip: false }
+  "abraham-lincoln": {
+    "scale": 1.895477764423077,
+    "x": 12,
+    "y": 24,
+    "flip": false
+  },
+  "achilles": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "ada-lovelace": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "akira-kurosawa": {
+    "scale": 1.428,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "alan-turing": {
+    "scale": 1.23,
+    "x": 50,
+    "y": 31,
+    "flip": false
+  },
+  "albert-camus": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "albert-einstein": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "alexander-the-great": {
+    "scale": 1.9378455528846152,
+    "x": 16,
+    "y": 21,
+    "flip": false
+  },
+  "amelia-earhart": {
+    "scale": 1.314,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "andrei-tarkovsky": {
+    "scale": 1.4364032451923077,
+    "x": 113,
+    "y": 46,
+    "flip": false
+  },
+  "andrej-karpathy": {
+    "scale": 1.7951322115384616,
+    "x": -2,
+    "y": 33,
+    "flip": false
+  },
+  "andy-warhol": {
+    "scale": 1.1367247596153847,
+    "x": 29,
+    "y": 25,
+    "flip": false
+  },
+  "anna-karenina": {
+    "scale": 1.8866436298076923,
+    "x": -7,
+    "y": 27,
+    "flip": false
+  },
+  "archimedes": {
+    "scale": 1.411,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "aristotle": {
+    "scale": 1.454131610576923,
+    "x": 28,
+    "y": -34,
+    "flip": false
+  },
+  "arthur-morgan": {
+    "scale": 1.3990234375,
+    "x": 1,
+    "y": -35,
+    "flip": false
+  },
+  "ashoka": {
+    "scale": 1.11,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "atticus-finch": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "augustus": {
+    "scale": 1.8511117788461537,
+    "x": 26,
+    "y": 20,
+    "flip": false
+  },
+  "babe-ruth": {
+    "scale": 1.092,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "bill-gates": {
+    "scale": 0.965,
+    "x": -15,
+    "y": 59,
+    "flip": false
+  },
+  "bjork": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "blaise-pascal": {
+    "scale": 1.415,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "bob-dylan": {
+    "scale": 1.078,
+    "x": 33,
+    "y": 30,
+    "flip": false
+  },
+  "bong-joon-ho": {
+    "scale": 1.7878906250000002,
+    "x": 49,
+    "y": 38,
+    "flip": false
+  },
+  "brene-brown": {
+    "scale": 1.313,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "bruce-lee": {
+    "scale": 1.027,
+    "x": 37,
+    "y": 52,
+    "flip": false
+  },
+  "cao-cao": {
+    "scale": 1.217,
+    "x": 0,
+    "y": 51,
+    "flip": false
+  },
+  "carl-friedrich-gauss": {
+    "scale": 1.3259014423076922,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "carl-jung": {
+    "scale": 1.8104266826923077,
+    "x": -2,
+    "y": 36,
+    "flip": false
+  },
+  "carl-sagan": {
+    "scale": 1.6889423076923078,
+    "x": -3,
+    "y": 40,
+    "flip": false
+  },
+  "charles-darwin": {
+    "scale": 1.334,
+    "x": 71,
+    "y": 59,
+    "flip": false
+  },
+  "charlie-munger": {
+    "scale": 1.524,
+    "x": -28,
+    "y": 76,
+    "flip": false
+  },
+  "che-guevara": {
+    "scale": 1.5884314903846153,
+    "x": 10,
+    "y": 28,
+    "flip": false
+  },
+  "chimamanda-ngozi-adichie": {
+    "scale": 1.1776893028846154,
+    "x": 21,
+    "y": 5,
+    "flip": false
+  },
+  "christopher-columbus": {
+    "scale": 1.4086237980769232,
+    "x": 2,
+    "y": -29,
+    "flip": false
+  },
+  "christopher-nolan": {
+    "scale": 1.8543870192307692,
+    "x": 4,
+    "y": 28,
+    "flip": false
+  },
+  "claude-monet": {
+    "scale": 1.376307091346154,
+    "x": 14,
+    "y": -34,
+    "flip": false
+  },
+  "claude-shannon": {
+    "scale": 1.2435396634615383,
+    "x": 4,
+    "y": -7,
+    "flip": false
+  },
+  "cleopatra": {
+    "scale": 1.6563251201923077,
+    "x": -21,
+    "y": 18,
+    "flip": false
+  },
+  "coco-chanel": {
+    "scale": 1.07,
+    "x": 9,
+    "y": 18,
+    "flip": false
+  },
+  "confucius": {
+    "scale": 1.3164212740384615,
+    "x": 1,
+    "y": -21,
+    "flip": false
+  },
+  "cristiano-ronaldo": {
+    "scale": 1.8849909855769231,
+    "x": 11,
+    "y": 35,
+    "flip": false
+  },
+  "cyrus-the-great": {
+    "scale": 1.371,
+    "x": 43,
+    "y": 44,
+    "flip": false
+  },
+  "dalai-lama": {
+    "scale": 1.322,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "daniel-kahneman": {
+    "scale": 1.8198467548076924,
+    "x": 40,
+    "y": 24,
+    "flip": false
+  },
+  "david-bowie": {
+    "scale": 1.271319110576923,
+    "x": 22,
+    "y": -3,
+    "flip": false
+  },
+  "david-lynch": {
+    "scale": 1.3426682692307692,
+    "x": 14,
+    "y": -32,
+    "flip": false
+  },
+  "demis-hassabis": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "denis-villeneuve": {
+    "scale": 1.7895432692307691,
+    "x": 51,
+    "y": 27,
+    "flip": false
+  },
+  "dennis-ritchie": {
+    "scale": 1.8312650240384616,
+    "x": 7,
+    "y": 24,
+    "flip": false
+  },
+  "desmond-tutu": {
+    "scale": 1.257,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "dieter-rams": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "diogenes": {
+    "scale": 2,
+    "x": 11,
+    "y": 2,
+    "flip": false
+  },
+  "don-quixote": {
+    "scale": 1.6426532451923077,
+    "x": -30,
+    "y": -8,
+    "flip": false
+  },
+  "dumbledore": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "elon-musk": {
+    "scale": 1.8612530048076923,
+    "x": -3,
+    "y": 31,
+    "flip": false
+  },
+  "emperor-taizong-of-tang": {
+    "scale": 1.4250150240384616,
+    "x": 26,
+    "y": -37,
+    "flip": false
+  },
+  "empress-wu-zetian": {
+    "scale": 0.965,
+    "x": 26,
+    "y": 57,
+    "flip": false
+  },
+  "eren-yeager": {
+    "scale": 0.987,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "ernest-hemingway": {
+    "scale": 1.476,
+    "x": 60,
+    "y": 55,
+    "flip": false
+  },
+  "ernest-shackleton": {
+    "scale": 0.965,
+    "x": 8,
+    "y": 50,
+    "flip": false
+  },
+  "euclid": {
+    "scale": 1.247,
+    "x": 62,
+    "y": 50,
+    "flip": false
+  },
+  "ferdinand-magellan": {
+    "scale": 0.973,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "forrest-gump": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "frank-lloyd-wright": {
+    "scale": 1.223,
+    "x": 1,
+    "y": 55,
+    "flip": false
+  },
+  "frank-underwood": {
+    "scale": 1.391,
+    "x": 86,
+    "y": 48,
+    "flip": false
+  },
+  "franz-kafka": {
+    "scale": 1.014774639423077,
+    "x": 36,
+    "y": 44,
+    "flip": false
+  },
+  "freddie-mercury": {
+    "scale": 1.142,
+    "x": 30,
+    "y": 55,
+    "flip": false
+  },
+  "frida-kahlo": {
+    "scale": 0.965,
+    "x": 38,
+    "y": 48,
+    "flip": false
+  },
+  "fyodor-dostoevsky": {
+    "scale": 1.289,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "gabriel-garcia-marquez": {
+    "scale": 1.2794471153846154,
+    "x": -7,
+    "y": 22,
+    "flip": false
+  },
+  "galileo-galilei": {
+    "scale": 1.395703125,
+    "x": 0,
+    "y": -15,
+    "flip": false
+  },
+  "gandalf": {
+    "scale": 1.23,
+    "x": 22,
+    "y": 29,
+    "flip": false
+  },
+  "genghis-khan": {
+    "scale": 1.336,
+    "x": -97,
+    "y": 49,
+    "flip": false
+  },
+  "geoffrey-hinton": {
+    "scale": 1.287,
+    "x": 61,
+    "y": 49,
+    "flip": false
+  },
+  "george-orwell": {
+    "scale": 1.66,
+    "x": 8,
+    "y": 41,
+    "flip": false
+  },
+  "george-r-r-martin": {
+    "scale": 1.9207481971153846,
+    "x": 33,
+    "y": 19,
+    "flip": false
+  },
+  "greta-gerwig": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 47,
+    "flip": false
+  },
+  "greta-thunberg": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "guts": {
+    "scale": 1.285,
+    "x": 91,
+    "y": 62,
+    "flip": false
+  },
+  "hannah-arendt": {
+    "scale": 0.965,
+    "x": 8,
+    "y": 39,
+    "flip": false
+  },
+  "hannibal": {
+    "scale": 0.965,
+    "x": -3,
+    "y": 46,
+    "flip": false
+  },
+  "hans-zimmer": {
+    "scale": 1.517,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "haruki-murakami": {
+    "scale": 0.965,
+    "x": 35,
+    "y": 49,
+    "flip": false
+  },
+  "hayao-miyazaki": {
+    "scale": 1.195,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "heathcliff": {
+    "scale": 1.263,
+    "x": 67,
+    "y": 46,
+    "flip": false
+  },
+  "hercules": {
+    "scale": 1.695,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "holden-caulfield": {
+    "scale": 1.353,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "immanuel-kant": {
+    "scale": 2.0009014423076925,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "ingmar-bergman": {
+    "scale": 1.102,
+    "x": 44,
+    "y": 43,
+    "flip": false
+  },
+  "isaac-newton": {
+    "scale": 1.204,
+    "x": -10,
+    "y": 41,
+    "flip": false
+  },
+  "itachi-uchiha": {
+    "scale": 2.0407752403846153,
+    "x": -80,
+    "y": 10,
+    "flip": false
+  },
+  "j-k-rowling": {
+    "scale": 1.25,
+    "x": 12,
+    "y": -8,
+    "flip": false
+  },
+  "jack-kerouac": {
+    "scale": 1.352,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "jack-ma": {
+    "scale": 1.421,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "james-cameron": {
+    "scale": 0.965,
+    "x": 15,
+    "y": 49,
+    "flip": false
+  },
+  "jane-austen": {
+    "scale": 1.075,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "jane-goodall": {
+    "scale": 1.071,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "jay-chou": {
+    "scale": 1.846844951923077,
+    "x": -23,
+    "y": 22,
+    "flip": false
+  },
+  "jay-gatsby": {
+    "scale": 1.229,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "jean-michel-basquiat": {
+    "scale": 1.12,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "jean-paul-sartre": {
+    "scale": 1.495,
+    "x": 65,
+    "y": 42,
+    "flip": false
+  },
+  "jean-valjean": {
+    "scale": 1.3054236778846153,
+    "x": 1,
+    "y": -28,
+    "flip": false
+  },
+  "jeff-bezos": {
+    "scale": 1.403,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "jensen-huang": {
+    "scale": 1.298,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "joan-of-arc": {
+    "scale": 0.965,
+    "x": 5,
+    "y": 48,
+    "flip": false
+  },
+  "johann-sebastian-bach": {
+    "scale": 1.241,
+    "x": 48,
+    "y": 29,
+    "flip": false
+  },
+  "john-mccarthy": {
+    "scale": 0.965,
+    "x": -4,
+    "y": 29,
+    "flip": false
+  },
+  "john-von-neumann": {
+    "scale": 0.965,
+    "x": 25,
+    "y": 34,
+    "flip": false
+  },
+  "john-williams": {
+    "scale": 1.32,
+    "x": 46,
+    "y": 33,
+    "flip": false
+  },
+  "jony-ive": {
+    "scale": 1.3975811298076923,
+    "x": 0,
+    "y": -28,
+    "flip": false
+  },
+  "jordan-peterson": {
+    "scale": 1.8358022836538461,
+    "x": 10,
+    "y": 27,
+    "flip": false
+  },
+  "jorge-luis-borges": {
+    "scale": 1.418,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "julius-caesar": {
+    "scale": 1.34,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "katherine-johnson": {
+    "scale": 1.4400540865384617,
+    "x": 1,
+    "y": -20,
+    "flip": false
+  },
+  "kazuo-ishiguro": {
+    "scale": 1.254,
+    "x": 11,
+    "y": 31,
+    "flip": false
+  },
+  "kendrick-lamar": {
+    "scale": 1.151,
+    "x": 55,
+    "y": 38,
+    "flip": false
+  },
+  "king-arthur": {
+    "scale": 2.1030799278846155,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "kobe-bryant": {
+    "scale": 1.425,
+    "x": 59,
+    "y": 25,
+    "flip": false
+  },
+  "kratos": {
+    "scale": 1.4139873798076923,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "kublai-khan": {
+    "scale": 1.47,
+    "x": 81,
+    "y": 49,
+    "flip": false
+  },
+  "l": {
+    "scale": 1.3712890625,
+    "x": 2,
+    "y": -9,
+    "flip": false
+  },
+  "laozi": {
+    "scale": 1.345,
+    "x": 32,
+    "y": 26,
+    "flip": false
+  },
+  "larry-page": {
+    "scale": 0.965,
+    "x": -20,
+    "y": 46,
+    "flip": false
+  },
+  "le-corbusier": {
+    "scale": 1.3745643028846155,
+    "x": 0,
+    "y": -43,
+    "flip": false
+  },
+  "lebron-james": {
+    "scale": 1.1969951923076922,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "leonardo-da-vinci": {
+    "scale": 1.9099609375,
+    "x": 13,
+    "y": 29,
+    "flip": false
+  },
+  "levi-ackerman": {
+    "scale": 1.3390925480769231,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "light-yagami": {
+    "scale": 1.2944711538461537,
+    "x": -12,
+    "y": -20,
+    "flip": false
+  },
+  "linus-torvalds": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "lionel-messi": {
+    "scale": 1.2377854567307693,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "liu-bei": {
+    "scale": 1.903155048076923,
+    "x": 2,
+    "y": 15,
+    "flip": false
+  },
+  "liu-cixin": {
+    "scale": 1.3221604567307692,
+    "x": 1,
+    "y": -31,
+    "flip": false
+  },
+  "lu-xun": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "ludwig-van-beethoven": {
+    "scale": 1.206,
+    "x": 59,
+    "y": 40,
+    "flip": false
+  },
+  "mahatma-gandhi": {
+    "scale": 1.8436147836538461,
+    "x": -68,
+    "y": 20,
+    "flip": false
+  },
+  "malala-yousafzai": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "malcolm-gladwell": {
+    "scale": 1.133,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "marc-andreessen": {
+    "scale": 1.445,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "marco-polo": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "marcus-aurelius": {
+    "scale": 1.135,
+    "x": 8,
+    "y": 40,
+    "flip": false
+  },
+  "margaret-atwood": {
+    "scale": 0.983,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "marie-curie": {
+    "scale": 1.159,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "marina-abramovic": {
+    "scale": 1.305,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "mark-zuckerberg": {
+    "scale": 1.242,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "martin-luther-king-jr": {
+    "scale": 1.429,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "martin-scorsese": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "merlin": {
+    "scale": 1.254,
+    "x": 57,
+    "y": 53,
+    "flip": false
+  },
+  "michael-jackson": {
+    "scale": 0.965,
+    "x": 13,
+    "y": 44,
+    "flip": false
+  },
+  "michael-jordan": {
+    "scale": 0.973,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "mike-tyson": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "miyamoto-musashi": {
+    "scale": 1.22,
+    "x": 1,
+    "y": 55,
+    "flip": false
+  },
+  "mo-yan": {
+    "scale": 0.965,
+    "x": 18,
+    "y": 43,
+    "flip": false
+  },
+  "monkey-d-luffy": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "mother-teresa": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "mozart": {
+    "scale": 0.965,
+    "x": -28,
+    "y": 40,
+    "flip": false
+  },
+  "muhammad-ali": {
+    "scale": 1.456,
+    "x": 51,
+    "y": 38,
+    "flip": false
+  },
+  "mulan": {
+    "scale": 1.262,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "napoleon": {
+    "scale": 1.049,
+    "x": 52,
+    "y": 50,
+    "flip": false
+  },
+  "naruto-uzumaki": {
+    "scale": 1.078,
+    "x": 24,
+    "y": 36,
+    "flip": false
+  },
+  "naval-ravikant": {
+    "scale": 1.227,
+    "x": 34,
+    "y": 33,
+    "flip": false
+  },
+  "neil-armstrong": {
+    "scale": 1.483,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "neil-degrasse-tyson": {
+    "scale": 1.444,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "neil-gaiman": {
+    "scale": 1.292,
+    "x": 58,
+    "y": 52,
+    "flip": false
+  },
+  "nelson-mandela": {
+    "scale": 1.413,
+    "x": -18,
+    "y": 38,
+    "flip": false
+  },
+  "nezha": {
+    "scale": 1.9268479567307693,
+    "x": 0,
+    "y": 26,
+    "flip": false
+  },
+  "nietzsche": {
+    "scale": 1.286,
+    "x": 55,
+    "y": 58,
+    "flip": false
+  },
+  "nikola-tesla": {
+    "scale": 0.972,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "novak-djokovic": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "odysseus": {
+    "scale": 1.4926983173076924,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "oliver-sacks": {
+    "scale": 1.8361628605769231,
+    "x": -52,
+    "y": 25,
+    "flip": false
+  },
+  "oppenheimer": {
+    "scale": 1.256,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "oscar-wilde": {
+    "scale": 1.90625,
+    "x": -21,
+    "y": 43,
+    "flip": false
+  },
+  "pablo-picasso": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "peter-thiel": {
+    "scale": 1.319,
+    "x": 100,
+    "y": 46,
+    "flip": false
+  },
+  "plato": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "pony-ma": {
+    "scale": 1.231,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "qin-shi-huang": {
+    "scale": 1.377,
+    "x": -35,
+    "y": 45,
+    "flip": false
+  },
+  "quentin-tarantino": {
+    "scale": 1.135,
+    "x": 70,
+    "y": 50,
+    "flip": false
+  },
+  "raskolnikov": {
+    "scale": 1.354,
+    "x": 81,
+    "y": 53,
+    "flip": false
+  },
+  "ray-dalio": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "reed-hastings": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "richard-dawkins": {
+    "scale": 1.362,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "richard-feynman": {
+    "scale": 1.14,
+    "x": 33,
+    "y": 32,
+    "flip": false
+  },
+  "rocky-balboa": {
+    "scale": 1.37,
+    "x": 30,
+    "y": 43,
+    "flip": false
+  },
+  "roger-federer": {
+    "scale": 1.185,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "rosa-parks": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "rosalind-franklin": {
+    "scale": 1.159,
+    "x": 35,
+    "y": 32,
+    "flip": false
+  },
+  "ryuichi-sakamoto": {
+    "scale": 1.8588641826923076,
+    "x": -74,
+    "y": 22,
+    "flip": false
+  },
+  "saladin": {
+    "scale": 1.2455138221153845,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "salvador-dali": {
+    "scale": 1.136,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "sam-altman": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "satoru-gojo": {
+    "scale": 1.4139723557692307,
+    "x": 28,
+    "y": -51,
+    "flip": false
+  },
+  "satya-nadella": {
+    "scale": 1.354,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "sergey-brin": {
+    "scale": 1.264,
+    "x": 7,
+    "y": 40,
+    "flip": false
+  },
+  "sherlock-holmes": {
+    "scale": 1.8607271634615383,
+    "x": 25,
+    "y": 35,
+    "flip": false
+  },
+  "sheryl-sandberg": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "sigmund-freud": {
+    "scale": 1.111,
+    "x": 43,
+    "y": 43,
+    "flip": false
+  },
+  "simone-de-beauvoir": {
+    "scale": 0.965,
+    "x": 31,
+    "y": 36,
+    "flip": false
+  },
+  "socrates": {
+    "scale": 1.37,
+    "x": 4,
+    "y": -10,
+    "flip": false
+  },
+  "solid-snake": {
+    "scale": 1.259,
+    "x": 56,
+    "y": 30,
+    "flip": false
+  },
+  "spock": {
+    "scale": 0.965,
+    "x": 18,
+    "y": 43,
+    "flip": false
+  },
+  "srinivasa-ramanujan": {
+    "scale": 0.965,
+    "x": 26,
+    "y": 45,
+    "flip": false
+  },
+  "stanley-kubrick": {
+    "scale": 1.354,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "stephen-hawking": {
+    "scale": 1.815159254807692,
+    "x": 79,
+    "y": 23,
+    "flip": false
+  },
+  "stephen-king": {
+    "scale": 1.3,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "steve-jobs": {
+    "scale": 1,
+    "x": -5,
+    "y": 44,
+    "flip": false
+  },
+  "steve-wozniak": {
+    "scale": 1.7979417067307693,
+    "x": 0,
+    "y": 35,
+    "flip": false
+  },
+  "steven-spielberg": {
+    "scale": 1.3402794471153845,
+    "x": 0,
+    "y": 0,
+    "flip": false
+  },
+  "sun-quan": {
+    "scale": 1.8738131009615384,
+    "x": -2,
+    "y": 22,
+    "flip": false
+  },
+  "sun-tzu": {
+    "scale": 1.3982421875,
+    "x": -9,
+    "y": -24,
+    "flip": false
+  },
+  "sun-wukong": {
+    "scale": 1.4002554086538461,
+    "x": 16,
+    "y": -38,
+    "flip": false
+  },
+  "susan-wojcicki": {
+    "scale": 1.023,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "tadao-ando": {
+    "scale": 1.483,
+    "x": 47,
+    "y": 49,
+    "flip": false
+  },
+  "taylor-swift": {
+    "scale": 0.965,
+    "x": 31,
+    "y": 29,
+    "flip": false
+  },
+  "thomas-shelby": {
+    "scale": 1.481,
+    "x": 98,
+    "y": 53,
+    "flip": false
+  },
+  "tim-cook": {
+    "scale": 1.296,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "tokugawa-ieyasu": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 49,
+    "flip": false
+  },
+  "toni-morrison": {
+    "scale": 1.291,
+    "x": 38,
+    "y": 60,
+    "flip": false
+  },
+  "tony-soprano": {
+    "scale": 1.353,
+    "x": 95,
+    "y": 55,
+    "flip": false
+  },
+  "tyler-durden": {
+    "scale": 1.228,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "usain-bolt": {
+    "scale": 0.965,
+    "x": 11,
+    "y": 46,
+    "flip": false
+  },
+  "vegeta": {
+    "scale": 1.193,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "victor-hugo": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "viktor-frankl": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "vincent-van-gogh": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "virgil-abloh": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "virginia-woolf": {
+    "scale": 1.075,
+    "x": 68,
+    "y": 52,
+    "flip": false
+  },
+  "vitalik-buterin": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "walter-white": {
+    "scale": 1.068,
+    "x": 22,
+    "y": 34,
+    "flip": false
+  },
+  "warren-buffett": {
+    "scale": 0.965,
+    "x": 5,
+    "y": 36,
+    "flip": false
+  },
+  "wes-anderson": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "william-shakespeare": {
+    "scale": 1.3796875,
+    "x": 3,
+    "y": -34,
+    "flip": false
+  },
+  "winston-churchill": {
+    "scale": 1.468,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "wong-kar-wai": {
+    "scale": 0.965,
+    "x": 4,
+    "y": 44,
+    "flip": false
+  },
+  "yann-lecun": {
+    "scale": 0.965,
+    "x": 4,
+    "y": 61,
+    "flip": false
+  },
+  "yue-fei": {
+    "scale": 1.561,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "yuri-gagarin": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "yuval-noah-harari": {
+    "scale": 1.281,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "yves-saint-laurent": {
+    "scale": 1.9103365384615385,
+    "x": -1,
+    "y": 24,
+    "flip": false
+  },
+  "zaha-hadid": {
+    "scale": 0.965,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  },
+  "zhuangzi": {
+    "scale": 1.28,
+    "x": 11,
+    "y": 43,
+    "flip": false
+  },
+  "zhuge-liang": {
+    "scale": 1.335,
+    "x": 0,
+    "y": 43,
+    "flip": false
+  }
+};
+
+const ROUND_AVATAR_ADJUSTMENTS = {
+  "abraham-lincoln": {
+    "scale": 1.4756911057692308,
+    "x": 12,
+    "y": 67
+  },
+  "achilles": {
+    "scale": 1.18,
+    "x": -7,
+    "y": 1
+  },
+  "ada-lovelace": {
+    "scale": 1.18,
+    "x": 4,
+    "y": 21
+  },
+  "akira-kurosawa": {
+    "scale": 1.18,
+    "x": 15,
+    "y": 26
+  },
+  "alan-turing": {
+    "scale": 1.18,
+    "x": 34,
+    "y": 20
+  },
+  "albert-camus": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 0
+  },
+  "albert-einstein": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 0
+  },
+  "alexander-the-great": {
+    "scale": 1.2688100961538462,
+    "x": 0,
+    "y": 44
+  },
+  "amelia-earhart": {
+    "scale": 1.18,
+    "x": -11,
+    "y": 24
+  },
+  "andrei-tarkovsky": {
+    "scale": 1.18,
+    "x": 96,
+    "y": 52
+  },
+  "andy-warhol": {
+    "scale": 0.9851832932692307,
+    "x": 32,
+    "y": 8
+  },
+  "anna-karenina": {
+    "scale": 1.3390474759615385,
+    "x": 1,
+    "y": 52
+  },
+  "archimedes": {
+    "scale": 1.18,
+    "x": 10,
+    "y": 14
+  },
+  "aristotle": {
+    "scale": 1.2975961538461538,
+    "x": -13,
+    "y": -71
+  },
+  "arthur-morgan": {
+    "scale": 1.3142127403846153,
+    "x": -15,
+    "y": -73
+  },
+  "ashoka": {
+    "scale": 1.18,
+    "x": 24,
+    "y": 3
+  },
+  "atticus-finch": {
+    "scale": 1.18,
+    "x": -3,
+    "y": 20
+  },
+  "augustus": {
+    "scale": 1.2779447115384617,
+    "x": -9,
+    "y": 33
+  },
+  "babe-ruth": {
+    "scale": 1.18,
+    "x": 37,
+    "y": 32
+  },
+  "banksy": {
+    "scale": 1,
+    "x": 20,
+    "y": -8
+  },
+  "bill-gates": {
+    "scale": 1.18,
+    "x": -4,
+    "y": 44
+  },
+  "bjork": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 44
+  },
+  "blaise-pascal": {
+    "scale": 1.18,
+    "x": -3,
+    "y": 61
+  },
+  "bob-dylan": {
+    "scale": 1.18,
+    "x": 35,
+    "y": 17
+  },
+  "bong-joon-ho": {
+    "scale": 1.145477764423077,
+    "x": 28,
+    "y": 26
+  },
+  "brene-brown": {
+    "scale": 1.18,
+    "x": -17,
+    "y": 50
+  },
+  "bruce-lee": {
+    "scale": 1.18,
+    "x": 69,
+    "y": 29
+  },
+  "cao-cao": {
+    "scale": 1.18,
+    "x": 10,
+    "y": 56
+  },
+  "carl-friedrich-gauss": {
+    "scale": 1.1825270432692307,
+    "x": 0,
+    "y": -55
+  },
+  "carl-jung": {
+    "scale": 1.1661508413461539,
+    "x": -15,
+    "y": 34
+  },
+  "carl-sagan": {
+    "scale": 1.1495342548076923,
+    "x": 40,
+    "y": 25
+  },
+  "charles-darwin": {
+    "scale": 1.18,
+    "x": 45,
+    "y": 53
+  },
+  "charlie-munger": {
+    "scale": 1.18,
+    "x": -3,
+    "y": 41
+  },
+  "chimamanda-ngozi-adichie": {
+    "scale": 1.2699819711538463,
+    "x": -14,
+    "y": -28
+  },
+  "christopher-columbus": {
+    "scale": 1.3830679086538462,
+    "x": -3,
+    "y": -87
+  },
+  "christopher-nolan": {
+    "scale": 1.2858173076923076,
+    "x": 10,
+    "y": 44
+  },
+  "claude-monet": {
+    "scale": 1.269365985576923,
+    "x": -4,
+    "y": -72
+  },
+  "claude-shannon": {
+    "scale": 1.1499549278846155,
+    "x": -3,
+    "y": -55
+  },
+  "cleopatra": {
+    "scale": 1.2855018028846155,
+    "x": -23,
+    "y": 49
+  },
+  "coco-chanel": {
+    "scale": 1.1251201923076923,
+    "x": 3,
+    "y": -29
+  },
+  "confucius": {
+    "scale": 1.2974459134615386,
+    "x": -40,
+    "y": -62
+  },
+  "cristiano-ronaldo": {
+    "scale": 1.3271484375,
+    "x": -3,
+    "y": 49
+  },
+  "cyrus-the-great": {
+    "scale": 1.18,
+    "x": 50,
+    "y": 56
+  },
+  "dalai-lama": {
+    "scale": 1.18,
+    "x": 42,
+    "y": 29
+  },
+  "daniel-kahneman": {
+    "scale": 1.188641826923077,
+    "x": 8,
+    "y": 33
+  },
+  "david-bowie": {
+    "scale": 1.1407001201923077,
+    "x": -14,
+    "y": -32
+  },
+  "david-lynch": {
+    "scale": 1.28671875,
+    "x": -5,
+    "y": -64
+  },
+  "demis-hassabis": {
+    "scale": 1.18,
+    "x": 12,
+    "y": 34
+  },
+  "denis-villeneuve": {
+    "scale": 1.174639423076923,
+    "x": 18,
+    "y": 27
+  },
+  "dennis-ritchie": {
+    "scale": 1.2591796875,
+    "x": 3,
+    "y": 35
+  },
+  "desmond-tutu": {
+    "scale": 1.18,
+    "x": 21,
+    "y": 59
+  },
+  "dieter-rams": {
+    "scale": 1.18,
+    "x": -3,
+    "y": 18
+  },
+  "diogenes": {
+    "scale": 1.2068209134615384,
+    "x": 0,
+    "y": 0
+  },
+  "don-quixote": {
+    "scale": 1.4629657451923077,
+    "x": -11,
+    "y": -91
+  },
+  "dumbledore": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 0
+  },
+  "elon-musk": {
+    "scale": 1.2195763221153846,
+    "x": -1,
+    "y": 16
+  },
+  "emperor-taizong-of-tang": {
+    "scale": 1.2849459134615384,
+    "x": -5,
+    "y": -59
+  },
+  "empress-wu-zetian": {
+    "scale": 1.18,
+    "x": 23,
+    "y": 44
+  },
+  "eren-yeager": {
+    "scale": 1.18,
+    "x": -13,
+    "y": 25
+  },
+  "ernest-hemingway": {
+    "scale": 1.18,
+    "x": 44,
+    "y": 41
+  },
+  "ernest-shackleton": {
+    "scale": 1.18,
+    "x": -13,
+    "y": 55
+  },
+  "euclid": {
+    "scale": 1.18,
+    "x": 30,
+    "y": 29
+  },
+  "ferdinand-magellan": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 31
+  },
+  "forrest-gump": {
+    "scale": 1.18,
+    "x": -4,
+    "y": 20
+  },
+  "frank-lloyd-wright": {
+    "scale": 1.18,
+    "x": 31,
+    "y": 48
+  },
+  "frank-underwood": {
+    "scale": 1.18,
+    "x": 85,
+    "y": 49
+  },
+  "franz-kafka": {
+    "scale": 1.0110396634615384,
+    "x": 31,
+    "y": 1
+  },
+  "freddie-mercury": {
+    "scale": 1.18,
+    "x": 68,
+    "y": 54
+  },
+  "frida-kahlo": {
+    "scale": 0.9652313701923076,
+    "x": 25,
+    "y": 5
+  },
+  "fyodor-dostoevsky": {
+    "scale": 1.18,
+    "x": 19,
+    "y": 28
+  },
+  "gabriel-garcia-marquez": {
+    "scale": 1.0916616586538461,
+    "x": 1,
+    "y": -45
+  },
+  "galileo-galilei": {
+    "scale": 1.2844651442307693,
+    "x": -19,
+    "y": -71
+  },
+  "gandalf": {
+    "scale": 1.18,
+    "x": 11,
+    "y": 12
+  },
+  "genghis-khan": {
+    "scale": 1.18,
+    "x": -59,
+    "y": 41
+  },
+  "geoffrey-hinton": {
+    "scale": 1.18,
+    "x": 62,
+    "y": 46
+  },
+  "george-orwell": {
+    "scale": 1.2136117788461538,
+    "x": 6,
+    "y": 38
+  },
+  "greta-gerwig": {
+    "scale": 1.18,
+    "x": -10,
+    "y": 55
+  },
+  "greta-thunberg": {
+    "scale": 1.18,
+    "x": 1,
+    "y": 54
+  },
+  "guts": {
+    "scale": 1.18,
+    "x": 77,
+    "y": 49
+  },
+  "hannah-arendt": {
+    "scale": 1.18,
+    "x": -4,
+    "y": 30
+  },
+  "hannibal": {
+    "scale": 0.8570282451923077,
+    "x": 0,
+    "y": 0
+  },
+  "hans-zimmer": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 32
+  },
+  "haruki-murakami": {
+    "scale": 1.18,
+    "x": 40,
+    "y": 20
+  },
+  "hayao-miyazaki": {
+    "scale": 1.18,
+    "x": -1,
+    "y": 30
+  },
+  "heathcliff": {
+    "scale": 1.18,
+    "x": 71,
+    "y": 45
+  },
+  "hercules": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 24
+  },
+  "holden-caulfield": {
+    "scale": 1.18,
+    "x": 37,
+    "y": 23
+  },
+  "immanuel-kant": {
+    "scale": 1.4464393028846154,
+    "x": -31,
+    "y": 46
+  },
+  "ingmar-bergman": {
+    "scale": 1.18,
+    "x": 43,
+    "y": 24
+  },
+  "isaac-newton": {
+    "scale": 1.18,
+    "x": -14,
+    "y": 24
+  },
+  "itachi-uchiha": {
+    "scale": 1.159510216346154,
+    "x": -31,
+    "y": -12
+  },
+  "j-k-rowling": {
+    "scale": 1.2297926682692308,
+    "x": -7,
+    "y": -40
+  },
+  "jack-kerouac": {
+    "scale": 1.18,
+    "x": 5,
+    "y": 35
+  },
+  "jack-ma": {
+    "scale": 1.18,
+    "x": 13,
+    "y": 29
+  },
+  "james-cameron": {
+    "scale": 1.064405048076923,
+    "x": 1,
+    "y": 22
+  },
+  "jane-austen": {
+    "scale": 1.18,
+    "x": 26,
+    "y": 33
+  },
+  "jane-goodall": {
+    "scale": 1.18,
+    "x": 12,
+    "y": 29
+  },
+  "jay-chou": {
+    "scale": 1.2456730769230768,
+    "x": -8,
+    "y": 46
+  },
+  "jay-gatsby": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 55
+  },
+  "jean-michel-basquiat": {
+    "scale": 1.18,
+    "x": 17,
+    "y": 6
+  },
+  "jean-paul-sartre": {
+    "scale": 1.18,
+    "x": 23,
+    "y": 30
+  },
+  "jean-valjean": {
+    "scale": 1.1782902644230768,
+    "x": -18,
+    "y": -58
+  },
+  "jeff-bezos": {
+    "scale": 1.18,
+    "x": 1,
+    "y": 59
+  },
+  "jensen-huang": {
+    "scale": 1.18,
+    "x": 31,
+    "y": 28
+  },
+  "joan-of-arc": {
+    "scale": 0.8732692307692307,
+    "x": -18,
+    "y": 7
+  },
+  "johann-sebastian-bach": {
+    "scale": 1.18,
+    "x": 26,
+    "y": 24
+  },
+  "john-mccarthy": {
+    "scale": 1.18,
+    "x": -7,
+    "y": 26
+  },
+  "john-von-neumann": {
+    "scale": 1.18,
+    "x": -2,
+    "y": 34
+  },
+  "john-williams": {
+    "scale": 1.18,
+    "x": 9,
+    "y": 23
+  },
+  "jony-ive": {
+    "scale": 1.287364783653846,
+    "x": -24,
+    "y": -80
+  },
+  "jordan-peterson": {
+    "scale": 1.2265775240384615,
+    "x": -12,
+    "y": 33
+  },
+  "jorge-luis-borges": {
+    "scale": 1.18,
+    "x": -10,
+    "y": 26
+  },
+  "julius-caesar": {
+    "scale": 1.18,
+    "x": -27,
+    "y": 45
+  },
+  "katherine-johnson": {
+    "scale": 1.4052734375,
+    "x": -1,
+    "y": -82
+  },
+  "kazuo-ishiguro": {
+    "scale": 1.18,
+    "x": -3,
+    "y": 25
+  },
+  "kendrick-lamar": {
+    "scale": 1.18,
+    "x": 50,
+    "y": 27
+  },
+  "king-arthur": {
+    "scale": 1.2112079326923078,
+    "x": -2,
+    "y": 26
+  },
+  "kobe-bryant": {
+    "scale": 1.18,
+    "x": 29,
+    "y": 41
+  },
+  "kratos": {
+    "scale": 1.2908052884615384,
+    "x": -15,
+    "y": -68
+  },
+  "kublai-khan": {
+    "scale": 1.18,
+    "x": 48,
+    "y": 42
+  },
+  "l": {
+    "scale": 1.2716045673076923,
+    "x": 10,
+    "y": 47
+  },
+  "laozi": {
+    "scale": 1.18,
+    "x": 18,
+    "y": 29
+  },
+  "larry-page": {
+    "scale": 1.18,
+    "x": -17,
+    "y": 42
+  },
+  "le-corbusier": {
+    "scale": 1.4686147836538461,
+    "x": -3,
+    "y": -77
+  },
+  "lebron-james": {
+    "scale": 1.1461688701923076,
+    "x": -2,
+    "y": -33
+  },
+  "leo-tolstoy": {
+    "scale": 1.392548076923077,
+    "x": -20,
+    "y": -79
+  },
+  "leonardo-da-vinci": {
+    "scale": 1.2201021634615385,
+    "x": -4,
+    "y": 12
+  },
+  "levi-ackerman": {
+    "scale": 1.2157451923076923,
+    "x": -10,
+    "y": -55
+  },
+  "light-yagami": {
+    "scale": 1.1511868990384615,
+    "x": -23,
+    "y": -53
+  },
+  "linus-torvalds": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 43
+  },
+  "lionel-messi": {
+    "scale": 1.170928485576923,
+    "x": 4,
+    "y": -41
+  },
+  "liu-bei": {
+    "scale": 1.198212139423077,
+    "x": 18,
+    "y": 30
+  },
+  "liu-cixin": {
+    "scale": 1.1478816105769232,
+    "x": -13,
+    "y": -68
+  },
+  "lu-xun": {
+    "scale": 1.18,
+    "x": -7,
+    "y": 24
+  },
+  "ludwig-van-beethoven": {
+    "scale": 1.18,
+    "x": 41,
+    "y": 29
+  },
+  "mahatma-gandhi": {
+    "scale": 1.2300631009615384,
+    "x": -55,
+    "y": 25
+  },
+  "malala-yousafzai": {
+    "scale": 1.18,
+    "x": -11,
+    "y": 24
+  },
+  "malcolm-gladwell": {
+    "scale": 1.18,
+    "x": -23,
+    "y": 18
+  },
+  "marc-andreessen": {
+    "scale": 1.18,
+    "x": 32,
+    "y": 22
+  },
+  "marco-polo": {
+    "scale": 1.18,
+    "x": -2,
+    "y": 21
+  },
+  "marcus-aurelius": {
+    "scale": 1.18,
+    "x": 29,
+    "y": 31
+  },
+  "margaret-atwood": {
+    "scale": 1.18,
+    "x": 20,
+    "y": 17
+  },
+  "marie-curie": {
+    "scale": 1.18,
+    "x": 18,
+    "y": 27
+  },
+  "marina-abramovic": {
+    "scale": 1.18,
+    "x": 19,
+    "y": 30
+  },
+  "mark-zuckerberg": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 33
+  },
+  "martin-luther-king-jr": {
+    "scale": 1.18,
+    "x": 1,
+    "y": 26
+  },
+  "martin-scorsese": {
+    "scale": 1.18,
+    "x": -1,
+    "y": 21
+  },
+  "merlin": {
+    "scale": 1.18,
+    "x": 44,
+    "y": 27
+  },
+  "michael-jackson": {
+    "scale": 1.18,
+    "x": 14,
+    "y": 10
+  },
+  "michael-jordan": {
+    "scale": 1.18,
+    "x": 1,
+    "y": 29
+  },
+  "mike-tyson": {
+    "scale": 1.18,
+    "x": -1,
+    "y": 27
+  },
+  "miyamoto-musashi": {
+    "scale": 1.24875,
+    "x": 17,
+    "y": 64
+  },
+  "mo-yan": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 0
+  },
+  "monkey-d-luffy": {
+    "scale": 1.18,
+    "x": 23,
+    "y": 20
+  },
+  "mother-teresa": {
+    "scale": 1.18,
+    "x": -1,
+    "y": 23
+  },
+  "mozart": {
+    "scale": 1.18,
+    "x": -16,
+    "y": -2
+  },
+  "muhammad-ali": {
+    "scale": 1.18,
+    "x": 34,
+    "y": 27
+  },
+  "mulan": {
+    "scale": 1.18,
+    "x": 24,
+    "y": 17
+  },
+  "napoleon": {
+    "scale": 1.18,
+    "x": 56,
+    "y": 31
+  },
+  "naruto-uzumaki": {
+    "scale": 1.18,
+    "x": 38,
+    "y": 21
+  },
+  "naval-ravikant": {
+    "scale": 1.18,
+    "x": 16,
+    "y": 22
+  },
+  "neil-armstrong": {
+    "scale": 1.18,
+    "x": 25,
+    "y": 57
+  },
+  "neil-degrasse-tyson": {
+    "scale": 1.18,
+    "x": 14,
+    "y": 53
+  },
+  "neil-gaiman": {
+    "scale": 1.18,
+    "x": 83,
+    "y": 53
+  },
+  "nelson-mandela": {
+    "scale": 1.18,
+    "x": 8,
+    "y": 32
+  },
+  "nietzsche": {
+    "scale": 1.18,
+    "x": 44,
+    "y": 39
+  },
+  "nikola-tesla": {
+    "scale": 1.18,
+    "x": 42,
+    "y": 44
+  },
+  "novak-djokovic": {
+    "scale": 1.18,
+    "x": -6,
+    "y": 21
+  },
+  "odysseus": {
+    "scale": 1.405078125,
+    "x": -20,
+    "y": -47
+  },
+  "oliver-sacks": {
+    "scale": 1.2483924278846155,
+    "x": -13,
+    "y": 15
+  },
+  "oppenheimer": {
+    "scale": 1.18,
+    "x": 29,
+    "y": 27
+  },
+  "oscar-wilde": {
+    "scale": 1.2454026442307693,
+    "x": 0,
+    "y": 23
+  },
+  "pablo-picasso": {
+    "scale": 1.0255979567307691,
+    "x": 5,
+    "y": 30
+  },
+  "peter-thiel": {
+    "scale": 1.18,
+    "x": 54,
+    "y": 50
+  },
+  "plato": {
+    "scale": 1.18,
+    "x": 2,
+    "y": 49
+  },
+  "pony-ma": {
+    "scale": 1.18,
+    "x": 40,
+    "y": 27
+  },
+  "qin-shi-huang": {
+    "scale": 1.18,
+    "x": -19,
+    "y": 41
+  },
+  "quentin-tarantino": {
+    "scale": 1.18,
+    "x": 77,
+    "y": 48
+  },
+  "raskolnikov": {
+    "scale": 1.18,
+    "x": 83,
+    "y": 54
+  },
+  "ray-dalio": {
+    "scale": 1.18,
+    "x": -3,
+    "y": 21
+  },
+  "reed-hastings": {
+    "scale": 1.18,
+    "x": 2,
+    "y": 26
+  },
+  "richard-dawkins": {
+    "scale": 1.18,
+    "x": -10,
+    "y": 35
+  },
+  "richard-feynman": {
+    "scale": 1.18,
+    "x": 45,
+    "y": 35
+  },
+  "rocky-balboa": {
+    "scale": 1.348614783653846,
+    "x": 36,
+    "y": 50
+  },
+  "roger-federer": {
+    "scale": 1.18,
+    "x": 27,
+    "y": 19
+  },
+  "rosa-parks": {
+    "scale": 1.18,
+    "x": -11,
+    "y": 21
+  },
+  "rosalind-franklin": {
+    "scale": 1.18,
+    "x": 31,
+    "y": 23
+  },
+  "ryuichi-sakamoto": {
+    "scale": 1,
+    "x": -44,
+    "y": 13
+  },
+  "saladin": {
+    "scale": 1.18,
+    "x": -32,
+    "y": 4
+  },
+  "salvador-dali": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 22
+  },
+  "sam-altman": {
+    "scale": 1.18,
+    "x": 22,
+    "y": 40
+  },
+  "satoru-gojo": {
+    "scale": 1.184540264423077,
+    "x": 7,
+    "y": -65
+  },
+  "satya-nadella": {
+    "scale": 1.18,
+    "x": 2,
+    "y": 38
+  },
+  "sergey-brin": {
+    "scale": 1.18,
+    "x": 39,
+    "y": 18
+  },
+  "sheryl-sandberg": {
+    "scale": 1.18,
+    "x": 14,
+    "y": 10
+  },
+  "sigmund-freud": {
+    "scale": 1.18,
+    "x": 35,
+    "y": 28
+  },
+  "simone-de-beauvoir": {
+    "scale": 1.18,
+    "x": 44,
+    "y": -12
+  },
+  "socrates": {
+    "scale": 1.3670522836538461,
+    "x": -2,
+    "y": -46
+  },
+  "solid-snake": {
+    "scale": 1.18,
+    "x": 54,
+    "y": 25
+  },
+  "spock": {
+    "scale": 1.18,
+    "x": 26,
+    "y": 47
+  },
+  "srinivasa-ramanujan": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 21
+  },
+  "stanley-kubrick": {
+    "scale": 1.18,
+    "x": -1,
+    "y": 42
+  },
+  "stephen-hawking": {
+    "scale": 1.055303485576923,
+    "x": 18,
+    "y": -3
+  },
+  "stephen-king": {
+    "scale": 1.18,
+    "x": 31,
+    "y": 53
+  },
+  "steve-wozniak": {
+    "scale": 1.101201923076923,
+    "x": 0,
+    "y": 17
+  },
+  "steven-spielberg": {
+    "scale": 1.1928635817307693,
+    "x": -5,
+    "y": -47
+  },
+  "sun-tzu": {
+    "scale": 1.2156700721153846,
+    "x": -21,
+    "y": -46
+  },
+  "sun-wukong": {
+    "scale": 1.3201622596153846,
+    "x": -15,
+    "y": -71
+  },
+  "susan-wojcicki": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 29
+  },
+  "tadao-ando": {
+    "scale": 1.18,
+    "x": 56,
+    "y": 57
+  },
+  "taylor-swift": {
+    "scale": 1.0559615384615384,
+    "x": 23,
+    "y": 7
+  },
+  "thomas-shelby": {
+    "scale": 1.18,
+    "x": 61,
+    "y": 51
+  },
+  "tim-cook": {
+    "scale": 1.18,
+    "x": 20,
+    "y": 31
+  },
+  "tokugawa-ieyasu": {
+    "scale": 1.18,
+    "x": -23,
+    "y": 19
+  },
+  "toni-morrison": {
+    "scale": 1.18,
+    "x": 42,
+    "y": 63
+  },
+  "tony-soprano": {
+    "scale": 1.18,
+    "x": 74,
+    "y": 54
+  },
+  "tyler-durden": {
+    "scale": 1.18,
+    "x": -2,
+    "y": 21
+  },
+  "usain-bolt": {
+    "scale": 1.18,
+    "x": 9,
+    "y": 54
+  },
+  "vegeta": {
+    "scale": 1.18,
+    "x": 18,
+    "y": 11
+  },
+  "victor-hugo": {
+    "scale": 1.18,
+    "x": -11,
+    "y": 12
+  },
+  "viktor-frankl": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 0
+  },
+  "vincent-van-gogh": {
+    "scale": 0.973584735576923,
+    "x": 0,
+    "y": 0
+  },
+  "virgil-abloh": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 37
+  },
+  "virginia-woolf": {
+    "scale": 1.18,
+    "x": 56,
+    "y": 44
+  },
+  "vitalik-buterin": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 30
+  },
+  "walter-white": {
+    "scale": 1.18,
+    "x": 33,
+    "y": 32
+  },
+  "warren-buffett": {
+    "scale": 1.18,
+    "x": -2,
+    "y": 32
+  },
+  "wes-anderson": {
+    "scale": 1.18,
+    "x": 14,
+    "y": 12
+  },
+  "william-shakespeare": {
+    "scale": 1.333954326923077,
+    "x": -12,
+    "y": -71
+  },
+  "winston-churchill": {
+    "scale": 1.18,
+    "x": 33,
+    "y": 34
+  },
+  "wong-kar-wai": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 25
+  },
+  "yann-lecun": {
+    "scale": 1.18,
+    "x": -1,
+    "y": 40
+  },
+  "yue-fei": {
+    "scale": 1.18,
+    "x": 38,
+    "y": 67
+  },
+  "yuri-gagarin": {
+    "scale": 1.18,
+    "x": 0,
+    "y": 31
+  },
+  "yuval-noah-harari": {
+    "scale": 1.18,
+    "x": -8,
+    "y": 59
+  },
+  "yves-saint-laurent": {
+    "scale": 1.440594951923077,
+    "x": 34,
+    "y": 40
+  },
+  "zaha-hadid": {
+    "scale": 1.18,
+    "x": 6,
+    "y": 46
+  },
+  "zhuangzi": {
+    "scale": 1.18,
+    "x": 38,
+    "y": 42
+  },
+  "zhuge-liang": {
+    "scale": 1.18,
+    "x": 17,
+    "y": 23
+  }
 };
 
 const HOME_FIGURE_ADJUSTMENTS = {
@@ -2579,12 +6594,23 @@ const state = {
   category: '',
   promptQuestion: '',
   currentCards: [],
+  roundtable: createInitialRoundtableState(),
   requestInFlight: false,
   portraitAdjustments: {},
+  avatarAdjustments: {},
   homeFigureAdjustments: {},
-  homeSignatureAdjustments: {}
+  homeSignatureAdjustments: {},
+  people: [],
+  filteredPeople: [],
+  selectedPerson: null,
+  personChat: {
+    conversationId: null,
+    loading: false,
+    messages: []
+  }
 };
 state.portraitAdjustments = cloneAdjustmentMap(PORTRAIT_ADJUSTMENTS);
+state.avatarAdjustments = cloneAdjustmentMap(ROUND_AVATAR_ADJUSTMENTS);
 state.homeFigureAdjustments = {};
 state.homeSignatureAdjustments = {};
 
@@ -2600,6 +6626,23 @@ const resetBtn = document.getElementById('resetBtn');
 const apiStatus = document.getElementById('apiStatus');
 const loadingText = document.getElementById('loadingText');
 const loadingSub = document.getElementById('loadingSub');
+const peoplePage = document.getElementById('peoplePage');
+const peopleGrid = document.getElementById('peopleGrid');
+const peopleSearch = document.getElementById('peopleSearch');
+const personChat = document.getElementById('personChat');
+const personChatBack = document.getElementById('personChatBack');
+const personChatName = document.getElementById('personChatName');
+const personChatMeta = document.getElementById('personChatMeta');
+const personChatPortrait = document.getElementById('personChatPortrait');
+const personChatSide = document.getElementById('personChatSide');
+const personChatTitle = document.getElementById('personChatTitle');
+const personChatHint = document.getElementById('personChatHint');
+const personChatMessages = document.getElementById('personChatMessages');
+const personChatForm = document.getElementById('personChatForm');
+const personChatInput = document.getElementById('personChatInput');
+const personChatSend = document.getElementById('personChatSend');
+const homeNavLink = document.getElementById('homeNavLink');
+const peopleNavLink = document.getElementById('peopleNavLink');
 let isInputComposing = false;
 
 const STACK_PRESETS = [
@@ -2637,6 +6680,19 @@ const POSTER_PALETTES = [
 
 const MIN_SHUFFLE_DURATION = 3000;
 const SHORT_ANSWER_INSTRUCTION = '请直接回答用户此刻的问题，只用 1 到 2 句中文，尽量控制在 50 字内，简洁、具体、像这位人物本人在说话，不要分点，不要铺陈。';
+const ROUNDTABLE_INSTRUCTION = '圆桌讨论模式。每位人物可以选择回答，也可以选择沉默。若回答，只说一句完整中文，最多 20 个字，不能省略，不能说半句，不能用省略号，不要解释，不要分点，不要说自己的名字。若不回答，只输出“沉默”。主持人不要每轮总结。';
+
+function createInitialRoundtableState() {
+  return {
+    active: false,
+    loading: false,
+    error: '',
+    conversationId: null,
+    messages: [],
+    roundCount: 0,
+    activeSpeakerSlug: ''
+  };
+}
 
 function escapeHTML(value) {
   return String(value).replace(/[&<>"']/g, (char) => ({
@@ -2754,11 +6810,23 @@ function cloneAdjustmentMap(map) {
 }
 
 function loadPortraitAdjustments() {
-  return cloneAdjustmentMap(PORTRAIT_ADJUSTMENTS);
+  try {
+    const stored = window.localStorage.getItem(ADJUSTMENT_STORAGE_KEY);
+    return {
+      ...cloneAdjustmentMap(PORTRAIT_ADJUSTMENTS),
+      ...(stored ? JSON.parse(stored) : {})
+    };
+  } catch (error) {
+    return cloneAdjustmentMap(PORTRAIT_ADJUSTMENTS);
+  }
 }
 
 function savePortraitAdjustments() {
-  return;
+  try {
+    window.localStorage.setItem(ADJUSTMENT_STORAGE_KEY, JSON.stringify(state.portraitAdjustments || {}));
+  } catch (error) {
+    return;
+  }
 }
 
 function getPortraitAdjustments(slug) {
@@ -2771,7 +6839,39 @@ function getPortraitAdjustments(slug) {
   };
 }
 
+function loadAvatarAdjustments() {
+  try {
+    const stored = window.localStorage.getItem(AVATAR_ADJUSTMENT_STORAGE_KEY);
+    return {
+      ...cloneAdjustmentMap(ROUND_AVATAR_ADJUSTMENTS),
+      ...(stored ? JSON.parse(stored) : {})
+    };
+  } catch (error) {
+    return cloneAdjustmentMap(ROUND_AVATAR_ADJUSTMENTS);
+  }
+}
+
+function saveAvatarAdjustments() {
+  try {
+    window.localStorage.setItem(AVATAR_ADJUSTMENT_STORAGE_KEY, JSON.stringify(state.avatarAdjustments || {}));
+  } catch (error) {
+    return;
+  }
+}
+
+function getAvatarAdjustments(slug) {
+  return {
+    scale: 1,
+    x: 0,
+    y: 0,
+    ...(state.avatarAdjustments[slug] || {})
+  };
+}
+
 function loadHomeFigureAdjustments() {
+  if (!HOME_PREVIEW_EDIT_MODE) {
+    return cloneAdjustmentMap(HOME_FIGURE_ADJUSTMENTS);
+  }
   try {
     const stored = window.localStorage.getItem(HOME_FIGURE_STORAGE_KEY);
     if (!stored) {
@@ -2787,6 +6887,9 @@ function loadHomeFigureAdjustments() {
 }
 
 function loadHomeSignatureAdjustments() {
+  if (!HOME_PREVIEW_EDIT_MODE) {
+    return cloneAdjustmentMap(HOME_SIGNATURE_ADJUSTMENTS);
+  }
   try {
     const stored = window.localStorage.getItem(HOME_SIGNATURE_STORAGE_KEY);
     if (!stored) {
@@ -2957,6 +7060,8 @@ function makeFloatingPanelDraggable(panel, handle) {
   });
 }
 
+state.portraitAdjustments = loadPortraitAdjustments();
+state.avatarAdjustments = loadAvatarAdjustments();
 state.homeFigureAdjustments = loadHomeFigureAdjustments();
 state.homeSignatureAdjustments = loadHomeSignatureAdjustments();
 
@@ -3153,6 +7258,11 @@ function buildBackKeywordText(card) {
     return '理性判断、经验洞察、行动建议';
   }
   return escapeHTML(keywords.join(' · '));
+}
+
+function getAvatarStyle(slug) {
+  const adjustment = getAvatarAdjustments(slug);
+  return `--avatar-scale:${adjustment.scale};--avatar-x:${adjustment.x}px;--avatar-y:${adjustment.y}px;`;
 }
 
 function buildCardViewModel(rec, detail) {
@@ -3389,6 +7499,7 @@ function buildPreviewCards(questionText = '') {
 async function openPreviewCardsPage(questionText = '') {
   const previewCards = buildPreviewCards(questionText);
   state.currentCards = previewCards;
+  state.roundtable = createInitialRoundtableState();
   removeHomeFigureEditor();
   document.body.classList.add('result-mode');
   inputSection.style.display = 'none';
@@ -3407,8 +7518,1168 @@ async function openPreviewCardsPage(questionText = '') {
   showStatus('当前为本地预览模式：页面不请求 API，适合直接调试布局与交互。切回接口模式可用 `?mode=api`。', 'success');
 }
 
+async function fetchAllPeopleForAdjuster() {
+  const people = [];
+  let offset = 0;
+  const limit = 100;
+  while (true) {
+    const batch = await apiFetch(`/people?limit=${limit}&offset=${offset}`);
+    people.push(...batch);
+    if (!batch.length || batch.length < limit) break;
+    offset += limit;
+  }
+  return people;
+}
+
+function buildAdjustPersonViewModel(person) {
+  const [posterColor, posterColorSoft] = getPosterPalette(person.english_name, person.chinese_name);
+  return {
+    slug: person.slug,
+    name: person.chinese_name || person.english_name || person.slug,
+    englishName: person.english_name || '',
+    domain: person.domain_category || '',
+    posterColor,
+    posterColorSoft,
+    image: normalizePortrait(person.portrait_asset, person.english_name, person.chinese_name || person.slug, person.domain_category)
+  };
+}
+
+function buildPeoplePageViewModel(person, index = 0) {
+  const staticConfig = CELEBRITIES[person.chinese_name] || {};
+  const [posterColor, posterColorSoft] = getPosterPalette(person.english_name, person.chinese_name);
+  const portraitAdjust = getPortraitAdjustments(person.slug);
+  const name = person.chinese_name || person.english_name || person.slug;
+  const reason = person.brief_intro || '点击进入单独对话。';
+  return {
+    slug: person.slug,
+    name,
+    englishName: person.english_name || '',
+    domain: person.domain_category || '智囊',
+    archetype: person.ai_archetype || '',
+    intro: person.brief_intro || '',
+    era: (person.era_context || person.domain_category || 'THINK TANK').toUpperCase(),
+    posterTitle: toPosterTitle(person.english_name, person.chinese_name).filter(Boolean),
+    posterNote: staticConfig.posterNote || reason,
+    image: normalizePortrait(person.portrait_asset, person.english_name, person.chinese_name || person.slug, person.domain_category),
+    posterColor,
+    posterColorSoft,
+    tags: pickTags(person, { reason }),
+    serial: String((index % 99) + 1).padStart(2, '0'),
+    portraitAdjust
+  };
+}
+
+function getPeoplePageSortRank(person) {
+  if (PEOPLE_EMPTY_IMAGE_SLUGS.has(person.slug)) return 2;
+  if (PEOPLE_DEMOTED_SLUGS.has(person.slug)) return 1;
+  return 0;
+}
+
+function sortPeopleForDisplay(people) {
+  return people
+    .map((person, index) => ({ person, index }))
+    .sort((a, b) => {
+      const rankDiff = getPeoplePageSortRank(a.person) - getPeoplePageSortRank(b.person);
+      if (rankDiff) return rankDiff;
+      return a.index - b.index;
+    })
+    .map((item) => item.person);
+}
+
+function setNavActive(target) {
+  document.querySelectorAll('.nav-links a[data-view]').forEach((link) => {
+    link.classList.toggle('is-active', link.dataset.view === target);
+  });
+}
+
+function showHomePage() {
+  document.body.classList.remove('people-mode');
+  peoplePage?.classList.remove('show');
+  closePersonChat();
+  setNavActive('home');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function loadPeoplePage() {
+  if (state.people.length) return;
+  peopleGrid.innerHTML = '<div class="people-empty">正在加载人物卡牌...</div>';
+  const people = await fetchAllPeopleForAdjuster();
+  state.people = sortPeopleForDisplay(people.map(buildPeoplePageViewModel));
+  state.filteredPeople = state.people;
+}
+
+function renderPeopleGrid() {
+  if (!peopleGrid) return;
+  if (!state.filteredPeople.length) {
+    peopleGrid.innerHTML = '<div class="people-empty">没有找到匹配的人物。</div>';
+    return;
+  }
+  peopleGrid.innerHTML = state.filteredPeople.map((person, index) => {
+    const adjust = person.portraitAdjust || { scale: 1, x: 0, y: 0, flip: false };
+    const cardStyle = `--poster-color:${person.posterColor};--poster-color-soft:${person.posterColorSoft};--portrait-scale:${adjust.scale};--portrait-x:${adjust.x}px;--portrait-y:${adjust.y}px;--portrait-flip:${adjust.flip ? '-1' : '1'};`;
+    const serial = String((index % 99) + 1).padStart(2, '0');
+    return `
+      <button class="person-tile card" type="button" data-slug="${escapeHTML(person.slug)}" style="${cardStyle}">
+        <div class="card-aura"></div>
+        <div class="card-shimmer"></div>
+        <svg class="card-corner tl" viewBox="0 0 56 56" fill="none">
+          <path d="M0 0 L56 0 L56 8 Q28 8 8 56 L0 56 Z" fill="#c4956a"/>
+        </svg>
+        <svg class="card-corner br" viewBox="0 0 56 56" fill="none">
+          <path d="M0 0 L56 0 L56 8 Q28 8 8 56 L0 56 Z" fill="#c4956a"/>
+        </svg>
+        <div class="card-inner">
+          <div class="card-shell">
+            <div class="card-face card-front">
+              <div class="poster-meta">
+                <div class="poster-kicker">${escapeHTML(person.era)}</div>
+                <div class="poster-serial">${serial}</div>
+              </div>
+              <div class="poster-title-block">
+                <div class="poster-wordmark">${renderPosterWords(person.posterTitle)}</div>
+                <div class="poster-name">${escapeHTML(person.name)}</div>
+              </div>
+              <div class="poster-subcopy">${escapeHTML(person.posterNote)}</div>
+              <img class="poster-cutout echo" src="${person.image}" alt="">
+              <img class="poster-cutout main" src="${person.image}" alt="${escapeHTML(person.name)}">
+              <div class="poster-footer">
+                <div class="poster-caption">${escapeHTML(person.tags[0] || person.domain || '智囊')}</div>
+                <div class="poster-flip">Chat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </button>
+    `;
+  }).join('');
+}
+
+async function showPeoplePage() {
+  resetResultOnly();
+  document.body.classList.add('people-mode');
+  peoplePage?.classList.add('show');
+  setNavActive('people');
+  try {
+    await loadPeoplePage();
+    renderPeopleGrid();
+  } catch (error) {
+    peopleGrid.innerHTML = `<div class="people-empty">${escapeHTML(normalizeApiErrorMessage(error.message || '人物加载失败。'))}</div>`;
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function filterPeoplePage() {
+  const q = String(peopleSearch?.value || '').trim().toLowerCase();
+  state.filteredPeople = sortPeopleForDisplay(state.people.filter((person) => {
+    if (!q) return true;
+    return [person.name, person.englishName, person.domain, person.archetype, person.intro, person.slug]
+      .some((item) => String(item || '').toLowerCase().includes(q));
+  }));
+  renderPeopleGrid();
+}
+
+function renderPersonChatMessages() {
+  if (!personChatMessages) return;
+  if (!state.personChat.messages.length) {
+    personChatMessages.innerHTML = `
+      <div class="person-message assistant">
+        <div class="person-message-role">${escapeHTML(state.selectedPerson?.name || '智囊')}</div>
+        <div class="person-message-bubble">你可以直接问我一个具体问题。</div>
+      </div>
+    `;
+    return;
+  }
+  personChatMessages.innerHTML = state.personChat.messages.map((message) => `
+    <div class="person-message ${message.role === 'user' ? 'user' : 'assistant'}">
+      <div class="person-message-role">${message.role === 'user' ? '你' : escapeHTML(state.selectedPerson?.name || '智囊')}</div>
+      <div class="person-message-bubble">${escapeHTML(message.content)}</div>
+    </div>
+  `).join('');
+  requestAnimationFrame(() => {
+    personChatMessages.scrollTop = personChatMessages.scrollHeight;
+  });
+}
+
+function findPendingAssistantMessage() {
+  for (let index = state.personChat.messages.length - 1; index >= 0; index -= 1) {
+    const message = state.personChat.messages[index];
+    if (message.role === 'assistant' && message.content === '正在思考...') {
+      return message;
+    }
+  }
+  return null;
+}
+
+function openPersonChat(slug) {
+  const person = state.people.find((item) => item.slug === slug);
+  if (!person) return;
+  state.selectedPerson = person;
+  state.personChat = {
+    conversationId: null,
+    loading: false,
+    messages: []
+  };
+  const adjust = person.portraitAdjust || { scale: 1, x: 0, y: 0, flip: false };
+  personChatName.textContent = person.name;
+  personChatMeta.textContent = [person.domain, person.archetype, person.era].filter(Boolean).join(' · ');
+  personChatTitle.textContent = `和 ${person.name} 对话`;
+  personChatHint.textContent = person.intro || '向这位智囊提一个具体问题。';
+  personChatPortrait.src = person.image;
+  personChatPortrait.alt = person.name;
+  personChatSide.style.setProperty('--portrait-scale', String(adjust.scale));
+  personChatSide.style.setProperty('--portrait-x', `${adjust.x}px`);
+  personChatSide.style.setProperty('--portrait-y', `${adjust.y}px`);
+  personChatSide.style.setProperty('--portrait-flip', adjust.flip ? '-1' : '1');
+  personChat.classList.add('show');
+  personChat.setAttribute('aria-hidden', 'false');
+  renderPersonChatMessages();
+  setTimeout(() => personChatInput?.focus(), 120);
+}
+
+function closePersonChat() {
+  if (!personChat) return;
+  personChat.classList.remove('show');
+  personChat.setAttribute('aria-hidden', 'true');
+}
+
+async function sendPersonChatMessage(question) {
+  const clean = String(question || '').trim();
+  if (!clean || !state.selectedPerson || state.personChat.loading) return;
+  state.personChat.loading = true;
+  personChatSend.disabled = true;
+  state.personChat.messages.push({ role: 'user', content: clean });
+  state.personChat.messages.push({ role: 'assistant', content: '正在思考...' });
+  renderPersonChatMessages();
+  try {
+    const history = state.personChat.messages
+      .filter((message) => message.content !== '正在思考...')
+      .slice(-8)
+      .map((message) => ({ role: message.role, content: message.content }));
+    const response = await apiFetch('/chat/respond', {
+      method: 'POST',
+      body: {
+        person_slug: state.selectedPerson.slug,
+        question: clean,
+        history,
+        conversation_id: state.personChat.conversationId
+      }
+    });
+    state.personChat.conversationId = response.conversation_id || null;
+    const pending = findPendingAssistantMessage();
+    if (pending) {
+      pending.content = response.answer || '我暂时没有想好。';
+    } else {
+      state.personChat.messages.push({ role: 'assistant', content: response.answer || '我暂时没有想好。' });
+    }
+  } catch (error) {
+    const pending = findPendingAssistantMessage();
+    const text = normalizeApiErrorMessage(error.message || '回答生成失败。');
+    if (pending) pending.content = text;
+    else state.personChat.messages.push({ role: 'assistant', content: text });
+  } finally {
+    state.personChat.loading = false;
+    personChatSend.disabled = false;
+    renderPersonChatMessages();
+  }
+}
+
+function formatAdjustmentValue(value) {
+  return Number.isInteger(value) ? String(value) : Number(value).toFixed(2);
+}
+
+function buildAdjustmentExport() {
+  const portraitEntries = Object.fromEntries(
+    Object.entries(state.portraitAdjustments || {})
+      .filter(([slug]) => Boolean(slug))
+      .sort(([a], [b]) => a.localeCompare(b))
+  );
+  const avatarEntries = Object.fromEntries(
+    Object.entries(state.avatarAdjustments || {})
+      .filter(([slug]) => Boolean(slug))
+      .sort(([a], [b]) => a.localeCompare(b))
+  );
+  return [
+    `const PORTRAIT_ADJUSTMENTS = ${JSON.stringify(portraitEntries, null, 2)};`,
+    '',
+    `const ROUND_AVATAR_ADJUSTMENTS = ${JSON.stringify(avatarEntries, null, 2)};`
+  ].join('\n');
+}
+
+async function copyAdjustmentExport() {
+  const output = document.getElementById('adjustOutput');
+  const value = buildAdjustmentExport();
+  if (output) {
+    output.value = value;
+    output.select();
+  }
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch (error) {
+    document.execCommand('copy');
+  }
+}
+
+function initAdjustmentWorkbench() {
+  document.body.classList.remove('result-mode');
+  document.body.innerHTML = `
+    <main class="adjust-workbench">
+      <aside class="adjust-panel adjust-sidebar">
+        <div class="adjust-head">
+          <div class="adjust-kicker">Adjust</div>
+          <div class="adjust-title">人物调图工作台</div>
+          <div class="adjust-sub">点选人物后，在中间预览里拖动人物调位置，拖四个角调大小。所有改动会自动保存到本机。</div>
+        </div>
+        <div class="adjust-search-wrap">
+          <input class="adjust-search" id="adjustSearch" type="text" placeholder="搜索人物...">
+        </div>
+        <div class="adjust-list" id="adjustList"></div>
+      </aside>
+
+      <section class="adjust-panel adjust-stage-panel">
+        <div class="adjust-toolbar">
+          <div class="adjust-tabs">
+            <button class="adjust-tab is-active" id="adjustCardTab" type="button">卡牌人物</button>
+            <button class="adjust-tab" id="adjustAvatarTab" type="button">圆桌头像</button>
+            <button class="adjust-tab" id="adjustBatchTab" type="button">批量铺开</button>
+          </div>
+          <div class="adjust-save-state" id="adjustSaveState">正在加载人物...</div>
+        </div>
+        <div class="adjust-stage" id="adjustStage"></div>
+      </section>
+
+      <aside class="adjust-panel adjust-side">
+        <div class="adjust-current">
+          <div class="adjust-current-name" id="adjustCurrentName">-</div>
+          <div class="adjust-current-slug" id="adjustCurrentSlug">-</div>
+        </div>
+        <div class="adjust-controls">
+          <div class="adjust-row">
+            <div class="adjust-label"><span>大小</span><span id="adjustScaleValue">1.00</span></div>
+            <input id="adjustScale" type="range" min="0.35" max="3" step="0.01">
+          </div>
+          <div class="adjust-row">
+            <div class="adjust-label"><span>左右</span><span id="adjustXValue">0px</span></div>
+            <input id="adjustX" type="range" min="-220" max="220" step="1">
+          </div>
+          <div class="adjust-row">
+            <div class="adjust-label"><span>上下</span><span id="adjustYValue">0px</span></div>
+            <input id="adjustY" type="range" min="-220" max="220" step="1">
+          </div>
+          <label class="adjust-row" id="adjustFlipRow">
+            <div class="adjust-label"><span>左右翻转</span><span id="adjustFlipValue">否</span></div>
+            <input id="adjustFlip" type="checkbox">
+          </label>
+        </div>
+        <div class="adjust-actions">
+          <button class="adjust-btn" id="adjustResetBtn" type="button">重置当前</button>
+          <button class="adjust-btn" id="adjustExportBtn" type="button">复制配置</button>
+          <button class="adjust-btn primary" id="adjustBackBtn" type="button">回到原页面</button>
+          <button class="adjust-btn" id="adjustClearBtn" type="button">清空本地</button>
+          <textarea class="adjust-output" id="adjustOutput" readonly placeholder="点击“复制配置”会生成完整配置。"></textarea>
+        </div>
+      </aside>
+    </main>
+  `;
+
+  const ui = {
+    list: document.getElementById('adjustList'),
+    search: document.getElementById('adjustSearch'),
+    stage: document.getElementById('adjustStage'),
+    cardTab: document.getElementById('adjustCardTab'),
+    avatarTab: document.getElementById('adjustAvatarTab'),
+    batchTab: document.getElementById('adjustBatchTab'),
+    saveState: document.getElementById('adjustSaveState'),
+    name: document.getElementById('adjustCurrentName'),
+    slug: document.getElementById('adjustCurrentSlug'),
+    scale: document.getElementById('adjustScale'),
+    x: document.getElementById('adjustX'),
+    y: document.getElementById('adjustY'),
+    flip: document.getElementById('adjustFlip'),
+    flipRow: document.getElementById('adjustFlipRow'),
+    scaleValue: document.getElementById('adjustScaleValue'),
+    xValue: document.getElementById('adjustXValue'),
+    yValue: document.getElementById('adjustYValue'),
+    flipValue: document.getElementById('adjustFlipValue'),
+    reset: document.getElementById('adjustResetBtn'),
+    export: document.getElementById('adjustExportBtn'),
+    back: document.getElementById('adjustBackBtn'),
+    clear: document.getElementById('adjustClearBtn'),
+    output: document.getElementById('adjustOutput')
+  };
+
+  const workbench = {
+    people: [],
+    filtered: [],
+    selectedSlug: '',
+    mode: 'card',
+    view: 'batch'
+  };
+
+  function getSelectedPerson() {
+    return workbench.people.find((person) => person.slug === workbench.selectedSlug) || workbench.people[0];
+  }
+
+  function getBatchBasePeople() {
+    const startIndex = workbench.people.findIndex((person) => person.slug === BATCH_ADJUST_START_SLUG);
+    return startIndex >= 0 ? workbench.people.slice(startIndex + 1) : workbench.people;
+  }
+
+  function getVisiblePeople() {
+    return workbench.view === 'batch' ? getBatchBasePeople() : workbench.people;
+  }
+
+  function getCurrentAdjustment() {
+    const person = getSelectedPerson();
+    if (!person) return { scale: 1, x: 0, y: 0, flip: false };
+    return workbench.mode === 'card'
+      ? getPortraitAdjustments(person.slug)
+      : getAvatarAdjustments(person.slug);
+  }
+
+  function getAdjustmentFor(slug) {
+    return workbench.mode === 'card' ? getPortraitAdjustments(slug) : getAvatarAdjustments(slug);
+  }
+
+  function saveAdjustmentFor(slug, next) {
+    if (!slug) return;
+    if (workbench.mode === 'card') {
+      state.portraitAdjustments[slug] = {
+        scale: Number(next.scale ?? 1),
+        x: Math.round(Number(next.x ?? 0)),
+        y: Math.round(Number(next.y ?? 0)),
+        flip: Boolean(next.flip)
+      };
+      savePortraitAdjustments();
+    } else {
+      state.avatarAdjustments[slug] = {
+        scale: Number(next.scale ?? 1),
+        x: Math.round(Number(next.x ?? 0)),
+        y: Math.round(Number(next.y ?? 0))
+      };
+      saveAvatarAdjustments();
+    }
+    ui.saveState.textContent = '已保存到本机';
+    ui.output.value = buildAdjustmentExport();
+  }
+
+  function saveCurrentAdjustment(next) {
+    const person = getSelectedPerson();
+    if (!person) return;
+    saveAdjustmentFor(person.slug, next);
+  }
+
+  function paintAdjustment() {
+    const person = getSelectedPerson();
+    const preview = workbench.view === 'batch' && person
+      ? document.querySelector(`[data-adjust-preview="${person.slug}"]`)
+      : document.getElementById('adjustPreview');
+    const adjustment = getCurrentAdjustment();
+    if (!preview) return;
+    if (workbench.mode === 'card') {
+      preview.style.setProperty('--adjust-scale', String(adjustment.scale));
+      preview.style.setProperty('--adjust-x', `${adjustment.x}px`);
+      preview.style.setProperty('--adjust-y', `${adjustment.y}px`);
+      preview.style.setProperty('--adjust-flip', adjustment.flip ? '-1' : '1');
+    } else {
+      preview.style.setProperty('--avatar-scale', String(adjustment.scale));
+      preview.style.setProperty('--avatar-x', `${adjustment.x}px`);
+      preview.style.setProperty('--avatar-y', `${adjustment.y}px`);
+    }
+  }
+
+  function updateAdjustment(partial, rerender = false) {
+    saveCurrentAdjustment({
+      ...getCurrentAdjustment(),
+      ...partial
+    });
+    if (rerender) {
+      renderStage();
+    } else {
+      paintAdjustment();
+    }
+    refreshControls();
+  }
+
+  function renderList() {
+    ui.list.innerHTML = workbench.filtered.map((person) => `
+      <button class="adjust-person${person.slug === workbench.selectedSlug ? ' is-active' : ''}" type="button" data-slug="${escapeHTML(person.slug)}">
+        <span class="adjust-person-thumb"><img src="${person.image}" alt=""></span>
+        <span>
+          <span class="adjust-person-name">${escapeHTML(person.name)}</span>
+          <span class="adjust-person-meta">${escapeHTML(person.englishName || person.slug)}</span>
+        </span>
+      </button>
+    `).join('');
+  }
+
+  function applyFilter() {
+    const q = ui.search.value.trim().toLowerCase();
+    workbench.filtered = getVisiblePeople().filter((person) => {
+      if (!q) return true;
+      return [person.name, person.englishName, person.slug, person.domain]
+        .some((item) => String(item || '').toLowerCase().includes(q));
+    });
+    if (!workbench.filtered.some((person) => person.slug === workbench.selectedSlug)) {
+      workbench.selectedSlug = workbench.filtered[0]?.slug || getVisiblePeople()[0]?.slug || workbench.people[0]?.slug || '';
+    }
+    renderList();
+    renderStage();
+    refreshControls();
+  }
+
+  function refreshControls() {
+    const person = getSelectedPerson();
+    const adjustment = getCurrentAdjustment();
+    if (!person) return;
+    ui.name.textContent = person.name;
+    ui.slug.textContent = person.slug;
+    ui.scale.value = String(adjustment.scale);
+    ui.x.value = String(adjustment.x);
+    ui.y.value = String(adjustment.y);
+    ui.flip.checked = Boolean(adjustment.flip);
+    ui.scaleValue.textContent = Number(adjustment.scale).toFixed(2);
+    ui.xValue.textContent = `${Math.round(adjustment.x)}px`;
+    ui.yValue.textContent = `${Math.round(adjustment.y)}px`;
+    ui.flipValue.textContent = adjustment.flip ? '是' : '否';
+    ui.flipRow.style.display = workbench.mode === 'card' ? 'block' : 'none';
+    ui.cardTab.classList.toggle('is-active', workbench.mode === 'card');
+    ui.avatarTab.classList.toggle('is-active', workbench.mode === 'avatar');
+    ui.batchTab.classList.toggle('is-active', workbench.view === 'batch');
+  }
+
+  function renderStage() {
+    ui.stage.classList.toggle('is-batch', workbench.view === 'batch');
+    if (workbench.view === 'batch') {
+      renderBatchStage();
+      return;
+    }
+    const person = getSelectedPerson();
+    if (!person) {
+      ui.stage.innerHTML = '<div class="adjust-sub">没有可调整的人物。</div>';
+      return;
+    }
+    const adjustment = getCurrentAdjustment();
+    if (workbench.mode === 'card') {
+      ui.stage.innerHTML = `
+        <div class="adjust-card-preview" id="adjustPreview" style="--adjust-main:${person.posterColor};--adjust-soft:${person.posterColorSoft};--adjust-scale:${adjustment.scale};--adjust-x:${adjustment.x}px;--adjust-y:${adjustment.y}px;--adjust-flip:${adjustment.flip ? '-1' : '1'};">
+          <div class="adjust-card-color"></div>
+          <div class="adjust-card-title">${escapeHTML(person.name)}</div>
+          <img class="adjust-card-person" id="adjustSubject" src="${person.image}" alt="${escapeHTML(person.name)}">
+          <span class="adjust-handle nw" data-corner="nw"></span>
+          <span class="adjust-handle ne" data-corner="ne"></span>
+          <span class="adjust-handle sw" data-corner="sw"></span>
+          <span class="adjust-handle se" data-corner="se"></span>
+        </div>
+      `;
+    } else {
+      ui.stage.innerHTML = `
+        <div class="adjust-avatar-preview">
+          <div class="adjust-avatar-frame" id="adjustPreview" style="--avatar-scale:${adjustment.scale};--avatar-x:${adjustment.x}px;--avatar-y:${adjustment.y}px;">
+            <img class="adjust-avatar-img" id="adjustSubject" src="${person.image}" alt="${escapeHTML(person.name)}">
+            <span class="adjust-handle nw" data-corner="nw"></span>
+            <span class="adjust-handle ne" data-corner="ne"></span>
+            <span class="adjust-handle sw" data-corner="sw"></span>
+            <span class="adjust-handle se" data-corner="se"></span>
+          </div>
+          <div class="adjust-sub">圆桌头像预览</div>
+        </div>
+      `;
+    }
+    bindStageDrag();
+  }
+
+  function renderBatchStage() {
+    const people = workbench.filtered;
+    if (!people.length) {
+      ui.stage.innerHTML = '<div class="adjust-sub">没有符合条件的人物。</div>';
+      return;
+    }
+    const modeLabel = workbench.mode === 'card' ? '卡牌人物' : '圆桌头像';
+    ui.stage.innerHTML = `
+      <div class="adjust-batch-head">
+        <div>
+          <div class="adjust-batch-title">比约克下面 · ${modeLabel}</div>
+          <div class="adjust-sub">直接拖每张图调整位置，拖四个角调整大小。改动会自动保存到本机。</div>
+        </div>
+        <div class="adjust-batch-count">${people.length} 位</div>
+      </div>
+      <div class="adjust-batch-grid">
+        ${people.map((person) => {
+          const adjustment = getAdjustmentFor(person.slug);
+          const activeClass = person.slug === workbench.selectedSlug ? ' is-active' : '';
+          if (workbench.mode === 'card') {
+            return `
+              <div class="adjust-batch-item${activeClass}" data-adjust-item="${escapeHTML(person.slug)}">
+                <div class="adjust-batch-card-preview" data-adjust-preview="${escapeHTML(person.slug)}" style="--adjust-main:${person.posterColor};--adjust-soft:${person.posterColorSoft};--adjust-scale:${adjustment.scale};--adjust-x:${adjustment.x}px;--adjust-y:${adjustment.y}px;--adjust-flip:${adjustment.flip ? '-1' : '1'};">
+                  <div class="adjust-batch-card-color"></div>
+                  <div class="adjust-batch-card-title">${escapeHTML(person.name)}</div>
+                  <img class="adjust-batch-card-person" data-adjust-subject="${escapeHTML(person.slug)}" src="${person.image}" alt="${escapeHTML(person.name)}">
+                  <span class="adjust-handle nw" data-corner="nw"></span>
+                  <span class="adjust-handle ne" data-corner="ne"></span>
+                  <span class="adjust-handle sw" data-corner="sw"></span>
+                  <span class="adjust-handle se" data-corner="se"></span>
+                </div>
+                <div class="adjust-batch-name">${escapeHTML(person.name)}</div>
+                <div class="adjust-batch-meta">${escapeHTML(person.englishName || person.slug)}</div>
+              </div>
+            `;
+          }
+          return `
+            <div class="adjust-batch-item${activeClass}" data-adjust-item="${escapeHTML(person.slug)}">
+              <div class="adjust-batch-avatar-frame" data-adjust-preview="${escapeHTML(person.slug)}" style="--avatar-scale:${adjustment.scale};--avatar-x:${adjustment.x}px;--avatar-y:${adjustment.y}px;">
+                <img class="adjust-avatar-img" data-adjust-subject="${escapeHTML(person.slug)}" src="${person.image}" alt="${escapeHTML(person.name)}">
+                <span class="adjust-handle nw" data-corner="nw"></span>
+                <span class="adjust-handle ne" data-corner="ne"></span>
+                <span class="adjust-handle sw" data-corner="sw"></span>
+                <span class="adjust-handle se" data-corner="se"></span>
+              </div>
+              <div class="adjust-batch-name">${escapeHTML(person.name)}</div>
+              <div class="adjust-batch-meta">${escapeHTML(person.englishName || person.slug)}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+    bindBatchDrag();
+  }
+
+  function updateBatchAdjustment(slug, partial) {
+    saveAdjustmentFor(slug, {
+      ...getAdjustmentFor(slug),
+      ...partial
+    });
+    if (workbench.selectedSlug !== slug) {
+      workbench.selectedSlug = slug;
+      renderList();
+    }
+    const preview = document.querySelector(`[data-adjust-preview="${slug}"]`);
+    const adjustment = getAdjustmentFor(slug);
+    if (!preview) return;
+    if (workbench.mode === 'card') {
+      preview.style.setProperty('--adjust-scale', String(adjustment.scale));
+      preview.style.setProperty('--adjust-x', `${adjustment.x}px`);
+      preview.style.setProperty('--adjust-y', `${adjustment.y}px`);
+      preview.style.setProperty('--adjust-flip', adjustment.flip ? '-1' : '1');
+    } else {
+      preview.style.setProperty('--avatar-scale', String(adjustment.scale));
+      preview.style.setProperty('--avatar-x', `${adjustment.x}px`);
+      preview.style.setProperty('--avatar-y', `${adjustment.y}px`);
+    }
+    document.querySelectorAll('.adjust-batch-item.is-active').forEach((item) => item.classList.remove('is-active'));
+    preview.closest('.adjust-batch-item')?.classList.add('is-active');
+    refreshControls();
+  }
+
+  function bindBatchDrag() {
+    let drag = null;
+
+    function pointerMove(event) {
+      if (!drag) return;
+      const dx = event.clientX - drag.startX;
+      const dy = event.clientY - drag.startY;
+      if (drag.kind === 'move') {
+        updateBatchAdjustment(drag.slug, {
+          x: drag.startAdjustment.x + dx,
+          y: drag.startAdjustment.y + dy
+        });
+        return;
+      }
+      const direction = drag.corner === 'nw' || drag.corner === 'sw' ? -1 : 1;
+      const vertical = drag.corner === 'nw' || drag.corner === 'ne' ? -1 : 1;
+      const delta = ((dx * direction) + (dy * vertical)) / 260;
+      updateBatchAdjustment(drag.slug, {
+        scale: Math.min(3, Math.max(0.35, drag.startAdjustment.scale + delta))
+      });
+    }
+
+    function pointerUp() {
+      if (drag?.subject) {
+        drag.subject.classList.remove('is-dragging');
+      }
+      drag = null;
+      window.removeEventListener('pointermove', pointerMove);
+      window.removeEventListener('pointerup', pointerUp);
+      window.removeEventListener('pointercancel', pointerUp);
+    }
+
+    ui.stage.querySelectorAll('[data-adjust-subject]').forEach((subject) => {
+      subject.addEventListener('pointerdown', (event) => {
+        const slug = subject.dataset.adjustSubject;
+        if (!slug) return;
+        event.preventDefault();
+        subject.setPointerCapture?.(event.pointerId);
+        subject.classList.add('is-dragging');
+        workbench.selectedSlug = slug;
+        refreshControls();
+        drag = {
+          kind: 'move',
+          slug,
+          subject,
+          startX: event.clientX,
+          startY: event.clientY,
+          startAdjustment: getAdjustmentFor(slug)
+        };
+        window.addEventListener('pointermove', pointerMove);
+        window.addEventListener('pointerup', pointerUp);
+        window.addEventListener('pointercancel', pointerUp);
+      });
+    });
+
+    ui.stage.querySelectorAll('[data-adjust-preview] .adjust-handle').forEach((handle) => {
+      handle.addEventListener('pointerdown', (event) => {
+        const preview = handle.closest('[data-adjust-preview]');
+        const slug = preview?.dataset.adjustPreview;
+        if (!slug) return;
+        event.preventDefault();
+        event.stopPropagation();
+        handle.setPointerCapture?.(event.pointerId);
+        workbench.selectedSlug = slug;
+        refreshControls();
+        drag = {
+          kind: 'scale',
+          slug,
+          subject: preview.querySelector('[data-adjust-subject]'),
+          corner: handle.dataset.corner,
+          startX: event.clientX,
+          startY: event.clientY,
+          startAdjustment: getAdjustmentFor(slug)
+        };
+        window.addEventListener('pointermove', pointerMove);
+        window.addEventListener('pointerup', pointerUp);
+        window.addEventListener('pointercancel', pointerUp);
+      });
+    });
+  }
+
+  function bindStageDrag() {
+    const preview = document.getElementById('adjustPreview');
+    const subject = document.getElementById('adjustSubject');
+    if (!preview || !subject) return;
+
+    let drag = null;
+
+    function pointerMove(event) {
+      if (!drag) return;
+      const dx = event.clientX - drag.startX;
+      const dy = event.clientY - drag.startY;
+      if (drag.kind === 'move') {
+        updateAdjustment({
+          x: drag.startAdjustment.x + dx,
+          y: drag.startAdjustment.y + dy
+        });
+        return;
+      }
+
+      const direction = drag.corner === 'nw' || drag.corner === 'sw' ? -1 : 1;
+      const vertical = drag.corner === 'nw' || drag.corner === 'ne' ? -1 : 1;
+      const delta = ((dx * direction) + (dy * vertical)) / 260;
+      updateAdjustment({
+        scale: Math.min(3, Math.max(0.35, drag.startAdjustment.scale + delta))
+      });
+    }
+
+    function pointerUp() {
+      drag = null;
+      subject.classList.remove('is-dragging');
+      window.removeEventListener('pointermove', pointerMove);
+      window.removeEventListener('pointerup', pointerUp);
+      window.removeEventListener('pointercancel', pointerUp);
+    }
+
+    subject.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      subject.setPointerCapture?.(event.pointerId);
+      subject.classList.add('is-dragging');
+      drag = {
+        kind: 'move',
+        startX: event.clientX,
+        startY: event.clientY,
+        startAdjustment: getCurrentAdjustment()
+      };
+      window.addEventListener('pointermove', pointerMove);
+      window.addEventListener('pointerup', pointerUp);
+      window.addEventListener('pointercancel', pointerUp);
+    });
+
+    preview.querySelectorAll('.adjust-handle').forEach((handle) => {
+      handle.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        handle.setPointerCapture?.(event.pointerId);
+        drag = {
+          kind: 'scale',
+          corner: handle.dataset.corner,
+          startX: event.clientX,
+          startY: event.clientY,
+          startAdjustment: getCurrentAdjustment()
+        };
+        window.addEventListener('pointermove', pointerMove);
+        window.addEventListener('pointerup', pointerUp);
+        window.addEventListener('pointercancel', pointerUp);
+      });
+    });
+  }
+
+  ui.list.addEventListener('click', (event) => {
+    const button = event.target.closest('.adjust-person');
+    if (!button) return;
+    workbench.selectedSlug = button.dataset.slug;
+    renderList();
+    renderStage();
+    refreshControls();
+  });
+
+  ui.search.addEventListener('input', applyFilter);
+  ui.cardTab.addEventListener('click', () => {
+    workbench.mode = 'card';
+    renderStage();
+    refreshControls();
+  });
+  ui.avatarTab.addEventListener('click', () => {
+    workbench.mode = 'avatar';
+    renderStage();
+    refreshControls();
+  });
+  ui.batchTab.addEventListener('click', () => {
+    workbench.view = workbench.view === 'batch' ? 'single' : 'batch';
+    ui.batchTab.textContent = workbench.view === 'batch' ? '批量铺开' : '单个预览';
+    applyFilter();
+  });
+  ui.scale.addEventListener('input', () => updateAdjustment({ scale: Number(ui.scale.value) }));
+  ui.x.addEventListener('input', () => updateAdjustment({ x: Number(ui.x.value) }));
+  ui.y.addEventListener('input', () => updateAdjustment({ y: Number(ui.y.value) }));
+  ui.flip.addEventListener('change', () => updateAdjustment({ flip: Boolean(ui.flip.checked) }));
+  ui.reset.addEventListener('click', () => {
+    const person = getSelectedPerson();
+    if (!person) return;
+    if (workbench.mode === 'card') {
+      state.portraitAdjustments[person.slug] = {
+        scale: PORTRAIT_ADJUSTMENTS[person.slug]?.scale ?? 1,
+        x: PORTRAIT_ADJUSTMENTS[person.slug]?.x ?? 0,
+        y: PORTRAIT_ADJUSTMENTS[person.slug]?.y ?? 0,
+        flip: Boolean(PORTRAIT_ADJUSTMENTS[person.slug]?.flip)
+      };
+      savePortraitAdjustments();
+    } else {
+      state.avatarAdjustments[person.slug] = {
+        scale: ROUND_AVATAR_ADJUSTMENTS[person.slug]?.scale ?? 1,
+        x: ROUND_AVATAR_ADJUSTMENTS[person.slug]?.x ?? 0,
+        y: ROUND_AVATAR_ADJUSTMENTS[person.slug]?.y ?? 0
+      };
+      saveAvatarAdjustments();
+    }
+    renderStage();
+    refreshControls();
+  });
+  ui.export.addEventListener('click', copyAdjustmentExport);
+  ui.back.addEventListener('click', () => {
+    window.location.href = `${window.location.pathname}?mode=api`;
+  });
+  ui.clear.addEventListener('click', () => {
+    window.localStorage.removeItem(ADJUSTMENT_STORAGE_KEY);
+    window.localStorage.removeItem(AVATAR_ADJUSTMENT_STORAGE_KEY);
+    state.portraitAdjustments = cloneAdjustmentMap(PORTRAIT_ADJUSTMENTS);
+    state.avatarAdjustments = cloneAdjustmentMap(ROUND_AVATAR_ADJUSTMENTS);
+    renderStage();
+    refreshControls();
+    ui.output.value = buildAdjustmentExport();
+    ui.saveState.textContent = '已清空本地调整';
+  });
+
+  fetchAllPeopleForAdjuster()
+    .then((people) => {
+      workbench.people = people.map(buildAdjustPersonViewModel);
+      workbench.filtered = getVisiblePeople();
+      workbench.selectedSlug = workbench.filtered[0]?.slug || workbench.people[0]?.slug || '';
+      ui.saveState.textContent = `已加载 ${workbench.people.length} 位人物，批量页 ${workbench.filtered.length} 位`;
+      renderList();
+      renderStage();
+      refreshControls();
+      ui.output.value = buildAdjustmentExport();
+      window.__zhinangAdjustmentExport = buildAdjustmentExport;
+    })
+    .catch((error) => {
+      ui.saveState.textContent = normalizeApiErrorMessage(error.message || '人物加载失败');
+      ui.stage.innerHTML = '<div class="adjust-sub">加载人物失败，请确认后端服务正在运行。</div>';
+    });
+}
+
 function buildAnswerRequestQuestion(question) {
   return `${question}\n\n${SHORT_ANSWER_INSTRUCTION}`;
+}
+
+function buildRoundtableRequestQuestion(question) {
+  return `${question}\n\n${ROUNDTABLE_INSTRUCTION}`;
+}
+
+function normalizeShortSpeech(value, limit = 20, fallback = '我先不回答。', speakerName = '') {
+  let text = String(value || '')
+    .replace(/\s+/g, ' ')
+    .replace(/^["“”']+|["“”']+$/g, '')
+    .trim();
+  const name = String(speakerName || '').trim();
+  if (name && text.startsWith(name)) {
+    text = text.slice(name.length).replace(/^[：:，,、\s-]+/, '').trim();
+  }
+  if (!text || /^(沉默|不回答|pass|skip)$/i.test(text)) {
+    return '';
+  }
+
+  const normalized = text.replace(/\.{3,}|…+/g, '').trim();
+  if (!normalized || (name && normalized === name)) {
+    return '';
+  }
+  const completeMatches = normalized.match(/[^。！？!?；;]+[。！？!?；;]/g) || [];
+  const complete = completeMatches
+    .map((item) => item.trim())
+    .find((item) => item.length <= limit);
+
+  if (complete) return complete;
+  if (normalized.length <= limit && /[。！？!?；;]$/.test(normalized)) return normalized;
+
+  const clause = normalized.split(/[，,、：:]/).map((item) => item.trim()).find((item) => item && item.length <= limit - 1);
+  if (clause) return `${clause.replace(/[。！？!?；;]$/, '')}。`;
+
+  return fallback;
+}
+
+function getRoundtableCard(slug) {
+  return (state.currentCards || []).find((card) => card.slug === slug) || null;
+}
+
+function buildRoundtableHistory() {
+  return (state.roundtable?.messages || [])
+    .filter((message) => message.role === 'user' || message.role === 'assistant')
+    .slice(-6)
+    .map((message) => ({
+      role: message.role,
+      content: message.text
+    }));
+}
+
+function buildPreviewRoundtableDiscussion(question) {
+  const answers = (state.currentCards || []).map((card) => ({
+    person_slug: card.slug,
+    person_name: card.name,
+    answer: normalizeShortSpeech(card.answer || '先看清真正想要。', 20, '', card.name),
+    citations: []
+  }));
+
+  return {
+    conversation_id: 'preview-roundtable',
+    selected_people: answers.map((item) => item.person_slug),
+    answers,
+    synthesis: normalizeShortSpeech(`先做一小步验证。`, 20, '先做一小步验证。')
+  };
+}
+
+function renderRoundtableSpeakers() {
+  return (state.currentCards || []).map((card) => `
+    <div class="roundtable-speaker${state.roundtable?.activeSpeakerSlug === card.slug ? ' is-speaking' : ''}">
+      <div class="roundtable-avatar" style="${getAvatarStyle(card.slug)}">
+        <img src="${card.image}" alt="${escapeHTML(card.name)}">
+      </div>
+      <div class="roundtable-speaker-name">${escapeHTML(card.name)}</div>
+    </div>
+  `).join('');
+}
+
+function renderRoundtableMessages() {
+  const messages = state.roundtable?.messages || [];
+  if (!messages.length && !state.roundtable?.loading) {
+    return '<div class="roundtable-message is-system"><div class="roundtable-bubble"><div class="roundtable-message-text">进入圆桌后，他们会逐个短句发言。</div></div></div>';
+  }
+
+  return messages.map((message) => {
+    if (message.type === 'user') {
+      return `
+        <div class="roundtable-message is-user">
+          <div class="roundtable-bubble">
+            <div class="roundtable-message-text">${escapeHTML(message.text)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (message.type === 'system' || message.type === 'error') {
+      return `
+        <div class="roundtable-message is-system">
+          <div class="roundtable-bubble">
+            <div class="roundtable-message-name">${message.type === 'error' ? '错误' : '主持总结'}</div>
+            <div class="roundtable-message-text">${escapeHTML(message.text)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    const card = getRoundtableCard(message.slug);
+    return `
+      <div class="roundtable-message">
+        <div class="roundtable-message-avatar" style="${getAvatarStyle(message.slug)}">
+          ${card?.image ? `<img src="${card.image}" alt="${escapeHTML(message.name)}">` : ''}
+        </div>
+        <div class="roundtable-bubble">
+          <div class="roundtable-message-name">${escapeHTML(message.name || '智囊')}</div>
+          <div class="roundtable-message-text">${escapeHTML(message.text)}</div>
+        </div>
+      </div>
+    `;
+  }).join('') + (state.roundtable?.loading ? `
+    <div class="roundtable-message is-system">
+      <div class="roundtable-bubble">
+        <div class="roundtable-typing"><span>思考中</span><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  ` : '');
+}
+
+function syncRoundtableView() {
+  const view = document.getElementById('roundtableView');
+  const speakers = document.getElementById('roundtableSpeakers');
+  const messages = document.getElementById('roundtableMessages');
+  const button = document.getElementById('roundtableBtn');
+  const inputEl = document.getElementById('roundtableInput');
+  const sendBtn = document.getElementById('roundtableSendBtn');
+  if (!view || !speakers || !messages || !button) return;
+
+  const roundtable = state.roundtable || createInitialRoundtableState();
+  view.classList.toggle('show', Boolean(roundtable.active));
+  view.setAttribute('aria-hidden', roundtable.active ? 'false' : 'true');
+  speakers.innerHTML = renderRoundtableSpeakers();
+  messages.innerHTML = renderRoundtableMessages();
+  button.disabled = Boolean(roundtable.loading);
+  button.textContent = roundtable.loading ? '圆桌发言中' : '进入圆桌';
+  if (inputEl) {
+    inputEl.disabled = Boolean(roundtable.loading);
+  }
+  if (sendBtn) {
+    sendBtn.disabled = Boolean(roundtable.loading);
+  }
+  requestAnimationFrame(() => {
+    const dialogue = document.getElementById('roundtableDialogue');
+    if (dialogue) {
+      dialogue.scrollTop = dialogue.scrollHeight;
+    }
+  });
+}
+
+async function fetchRoundtableDiscussion(question) {
+  if (PREVIEW_CARD_MODE) {
+    await wait(700);
+    return buildPreviewRoundtableDiscussion(question);
+  }
+
+  return apiFetch('/chat/group', {
+    method: 'POST',
+    body: {
+      question: buildRoundtableRequestQuestion(question),
+      person_slugs: (state.currentCards || []).map((card) => card.slug).filter(Boolean),
+      top_k: Math.min(Math.max((state.currentCards || []).length, 1), 5),
+      history: buildRoundtableHistory(),
+      conversation_id: state.roundtable?.conversationId || null
+    }
+  });
+}
+
+async function playRoundtableResponse(response, shouldSummarize = false) {
+  const answers = response.answers || [];
+  for (const item of answers) {
+    state.roundtable.activeSpeakerSlug = item.person_slug || '';
+    const speech = normalizeShortSpeech(item.answer, 20, '', item.person_name);
+    if (speech) {
+      state.roundtable.messages.push({
+        type: 'advisor',
+        role: 'assistant',
+        slug: item.person_slug,
+        name: item.person_name,
+        text: speech
+      });
+    }
+    syncRoundtableView();
+    await wait(520);
+  }
+
+  state.roundtable.activeSpeakerSlug = 'moderator';
+  const synthesis = shouldSummarize
+    ? normalizeShortSpeech(response.synthesis, 20, '先做一小步验证。')
+    : '';
+  if (shouldSummarize && synthesis) {
+    state.roundtable.messages.push({
+      type: 'system',
+      role: 'assistant',
+      text: synthesis
+    });
+  }
+  state.roundtable.activeSpeakerSlug = '';
+  state.roundtable.loading = false;
+  syncRoundtableView();
+}
+
+async function submitRoundtableMessage(question) {
+  if (!state.currentCards.length) return;
+  const cleanQuestion = String(question || '').trim();
+  if (!cleanQuestion || state.roundtable?.loading) return;
+
+  state.roundtable = {
+    ...(state.roundtable || createInitialRoundtableState()),
+    active: true,
+    loading: true,
+    error: '',
+    activeSpeakerSlug: ''
+  };
+  const nextRoundCount = (state.roundtable.roundCount || 0) + 1;
+  state.roundtable.roundCount = nextRoundCount;
+  state.roundtable.messages.push({
+    type: 'user',
+    role: 'user',
+    text: cleanQuestion
+  });
+  syncRoundtableView();
+
+  try {
+    const response = await fetchRoundtableDiscussion(cleanQuestion);
+    state.roundtable = {
+      ...state.roundtable,
+      conversationId: response.conversation_id || null,
+      error: ''
+    };
+    await playRoundtableResponse(response, nextRoundCount % 3 === 0);
+  } catch (error) {
+    state.roundtable = {
+      ...state.roundtable,
+      loading: false,
+      activeSpeakerSlug: '',
+      error: normalizeApiErrorMessage(error.message || '圆桌讨论生成失败，请稍后再试。')
+    };
+    state.roundtable.messages.push({
+      type: 'error',
+      role: 'assistant',
+      text: state.roundtable.error
+    });
+    syncRoundtableView();
+  }
+}
+
+async function openRoundtableDiscussion() {
+  if (!state.currentCards.length) return;
+  state.roundtable = {
+    ...(state.roundtable || createInitialRoundtableState()),
+    active: true
+  };
+  syncRoundtableView();
+
+  if (!state.roundtable.messages.length) {
+    await submitRoundtableMessage(state.promptQuestion || state.question);
+  }
+}
+
+function closeRoundtableDiscussion() {
+  state.roundtable = {
+    ...(state.roundtable || createInitialRoundtableState()),
+    active: false,
+    activeSpeakerSlug: ''
+  };
+  syncRoundtableView();
 }
 
 function removeHomeFigureEditor() {
@@ -3822,13 +9093,19 @@ function syncCardDOM(index) {
   const answerEl = cardNode.querySelector('.back-answer');
   const expEl = cardNode.querySelector('.back-exp');
   const citationsEl = cardNode.querySelector('.back-citations');
+  const citationsSectionEl = cardNode.querySelector('.back-citations-section');
 
   answerTitleEl.textContent = buildAnswerTitle(cardData);
   answerEl.textContent = buildQuote(cardData);
   if (expEl) {
     expEl.textContent = buildBackFooter(cardData);
   }
-  citationsEl.innerHTML = buildCitationMarkup(cardData);
+  if (citationsSectionEl) {
+    citationsSectionEl.style.display = cardData.citations.length ? '' : 'none';
+  }
+  if (citationsEl) {
+    citationsEl.innerHTML = buildCitationMarkup(cardData);
+  }
   // #region debug-point D:sync-card-dom
   reportCardDebug('D', 'syncCardDOM', {
     index,
@@ -3858,19 +9135,20 @@ async function fetchAnswerForCard(cardData) {
 }
 
 async function preloadCardAnswers(cardItems) {
-  const settled = await Promise.allSettled(
-    cardItems.map(async (cardData) => {
-      cardData.loadingAnswer = true;
-      cardData.error = '';
-      try {
-        await fetchAnswerForCard(cardData);
-      } catch (error) {
-        cardData.error = normalizeApiErrorMessage(error.message || '获取回答失败，请稍后重试。');
-      } finally {
-        cardData.loadingAnswer = false;
-      }
-    })
-  );
+  const settled = [];
+  for (const cardData of cardItems) {
+    cardData.loadingAnswer = true;
+    cardData.error = '';
+    try {
+      await fetchAnswerForCard(cardData);
+      settled.push({ status: 'fulfilled', value: cardData });
+    } catch (error) {
+      cardData.error = normalizeApiErrorMessage(error.message || '获取回答失败，请稍后重试。');
+      settled.push({ status: 'rejected', reason: error });
+    } finally {
+      cardData.loadingAnswer = false;
+    }
+  }
 
   return settled;
 }
@@ -3898,7 +9176,7 @@ async function ensureCardAnswer(index) {
 
 function renderCards(cardItems) {
   cardsEl.innerHTML = `
-    <div class="cards-stage stack-mode is-dealing" id="cardsStage">
+    <div class="cards-stage stack-mode is-dealing${cardItems.length <= 4 ? ' few-cards' : ''}" id="cardsStage">
       <div class="cards-stage-glow"></div>
       <div class="deck-status">
         <div class="deck-kicker">智囊牌阵</div>
@@ -3975,12 +9253,10 @@ function renderCards(cardItems) {
                         <div class="back-keywords-text">${buildBackKeywordText(card)}</div>
                       </div>
 
-                      ${card.citations.length ? `
-                      <div class="back-section">
+                      <div class="back-section back-citations-section" style="${card.citations.length ? '' : 'display:none;'}">
                         <div class="back-section-label">参考依据</div>
                         <div class="back-citations">${buildCitationMarkup(card)}</div>
                       </div>
-                      ` : ''}
 
                     </div>
                     <div class="back-scroll-cue">向下滑动</div>
@@ -3999,6 +9275,27 @@ function renderCards(cardItems) {
           <path d="M3 8h10M9 4l4 4-4 4"/>
         </svg>
       </div>
+      <div class="roundtable-actions">
+        <button class="roundtable-btn" id="roundtableBtn" type="button">圆桌讨论</button>
+      </div>
+      <section class="roundtable-view" id="roundtableView" aria-hidden="true" aria-live="polite">
+        <div class="roundtable-view-head">
+          <div>
+            <div class="roundtable-room-kicker">Roundtable</div>
+            <div class="roundtable-room-title">圆桌讨论</div>
+            <div class="roundtable-room-subtitle">每位智囊只说一句很短的话。你可以继续追问，让他们轮流回应。</div>
+          </div>
+          <button class="roundtable-back" id="roundtableCloseBtn" type="button">返回牌阵</button>
+        </div>
+        <div class="roundtable-speakers" id="roundtableSpeakers"></div>
+        <div class="roundtable-dialogue" id="roundtableDialogue">
+          <div class="roundtable-message-list" id="roundtableMessages"></div>
+        </div>
+        <form class="roundtable-compose" id="roundtableForm">
+          <input class="roundtable-input" id="roundtableInput" type="text" maxlength="120" placeholder="继续追问一句..." autocomplete="off">
+          <button class="roundtable-send" id="roundtableSendBtn" type="submit">发送</button>
+        </form>
+      </section>
     </div>
   `;
   applyAllBackQuoteAdjustments();
@@ -4007,6 +9304,11 @@ function renderCards(cardItems) {
   const track = document.getElementById('cardsTrack');
   const scrollHint = document.getElementById('scrollHint');
   const deckHint = document.getElementById('deckHint');
+  const roundtableBtn = document.getElementById('roundtableBtn');
+  const roundtableCloseBtn = document.getElementById('roundtableCloseBtn');
+  const roundtableView = document.getElementById('roundtableView');
+  const roundtableForm = document.getElementById('roundtableForm');
+  const roundtableInput = document.getElementById('roundtableInput');
   const cards = Array.from(stage.querySelectorAll('.card'));
   let isSpread = false;
   let activeIndex = 0;
@@ -4177,6 +9479,30 @@ function renderCards(cardItems) {
     await handleCardInteraction(index, { source: 'track-click' });
   });
 
+  roundtableBtn?.addEventListener('click', async () => {
+    await openRoundtableDiscussion();
+  });
+
+  roundtableCloseBtn?.addEventListener('click', () => {
+    closeRoundtableDiscussion();
+  });
+
+  roundtableForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const value = roundtableInput?.value?.trim() || '';
+    if (!value) return;
+    roundtableInput.value = '';
+    await submitRoundtableMessage(value);
+  });
+
+  ['pointerdown', 'click', 'wheel', 'touchstart', 'touchmove'].forEach((eventName) => {
+    roundtableView?.addEventListener(eventName, (event) => {
+      event.stopPropagation();
+    }, { passive: eventName === 'wheel' ? false : true });
+  });
+
+  syncRoundtableView();
+
   cards.forEach((card) => {
     const backScroll = card.querySelector('.back-scroll');
 
@@ -4243,6 +9569,7 @@ async function generateCards() {
   if (state.question.trim().length < MIN_QUESTION_LENGTH || state.requestInFlight) return;
 
   state.promptQuestion = buildPromptQuestion();
+  state.roundtable = createInitialRoundtableState();
   state.requestInFlight = true;
   submitBtn.disabled = true;
   showStatus('正在连接后端推荐接口...', '');
@@ -4337,13 +9664,50 @@ chips.forEach((chip) => {
 
 submitBtn.addEventListener('click', generateCards);
 
+homeNavLink?.addEventListener('click', (event) => {
+  event.preventDefault();
+  showHomePage();
+});
+
+peopleNavLink?.addEventListener('click', (event) => {
+  event.preventDefault();
+  showPeoplePage();
+});
+
+peopleSearch?.addEventListener('input', filterPeoplePage);
+
+peopleGrid?.addEventListener('click', (event) => {
+  const tile = event.target.closest('.person-tile');
+  if (!tile) return;
+  openPersonChat(tile.dataset.slug);
+});
+
+personChatBack?.addEventListener('click', closePersonChat);
+
+personChatForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const value = personChatInput.value.trim();
+  if (!value) return;
+  personChatInput.value = '';
+  await sendPersonChatMessage(value);
+});
+
+personChatInput?.addEventListener('keydown', (event) => {
+  if ((event.key === 'Enter' || event.key === 'NumpadEnter') && !event.shiftKey) {
+    event.preventDefault();
+    personChatForm?.requestSubmit();
+  }
+});
+
 function resetAll() {
   state.question = '';
   state.category = '';
   state.promptQuestion = '';
   state.currentCards = [];
+  state.roundtable = createInitialRoundtableState();
   state.requestInFlight = false;
   document.body.classList.remove('result-mode');
+  document.body.classList.remove('people-mode');
   input.value = '';
   charCount.textContent = '0';
   chips.forEach((chip) => chip.classList.remove('selected'));
@@ -4351,6 +9715,8 @@ function resetAll() {
   cardsEl.innerHTML = '';
   cardsEl.classList.remove('show');
   resetBtn.classList.remove('show');
+  peoplePage?.classList.remove('show');
+  closePersonChat();
   inputSection.style.display = 'block';
   applyAllHomeFigureAdjustments();
   removeHomeFigureEditor();
@@ -4358,8 +9724,24 @@ function resetAll() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function resetResultOnly() {
+  document.body.classList.remove('result-mode');
+  state.currentCards = [];
+  state.roundtable = createInitialRoundtableState();
+  state.requestInFlight = false;
+  loading.classList.remove('show');
+  cardsEl.innerHTML = '';
+  cardsEl.classList.remove('show');
+  resetBtn.classList.remove('show');
+  inputSection.style.display = 'block';
+  removeHomeFigureEditor();
+}
+
 applyAllHomeFigureAdjustments();
 removeHomeFigureEditor();
+if (ADJUST_MODE) {
+  initAdjustmentWorkbench();
+}
 if (PREVIEW_CARD_MODE) {
   showStatus('当前为本地预览模式：生成卡牌不会请求 API。切回接口模式可用 `?mode=api` 或执行 `__setAppMode("api")`。', 'success');
 }

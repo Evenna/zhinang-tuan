@@ -88,6 +88,11 @@ class ChatService:
                 messages.append({'role': turn.role, 'content': turn.content})
             messages.append({'role': 'user', 'content': request.question})
             answer = await self.llm_service.chat(messages, temperature=0.85)
+            normalized_answer = answer.strip().strip('"“”')
+            if normalized_answer.startswith(person.chinese_name):
+                normalized_answer = normalized_answer[len(person.chinese_name):].lstrip('：:,，、 -')
+            if normalized_answer.lower() in {'沉默', '不回答', 'pass', 'skip'}:
+                continue
             answers.append(
                 GroupAdvisorAnswer(
                     person_slug=person.slug,
@@ -104,7 +109,7 @@ class ChatService:
             [
                 {
                     'role': 'system',
-                    'content': 'You are a synthesis layer for multiple advisors. Summarize consensus, disagreement, and next action in Chinese.',
+                    'content': 'You are a synthesis layer for multiple advisors. Reply in one complete Chinese sentence, no more than 20 Chinese characters. No ellipsis.',
                 },
                 {'role': 'user', 'content': build_group_synthesis_prompt(request.question, [item.model_dump() for item in answers])},
             ],
