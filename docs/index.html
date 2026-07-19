@@ -129,6 +129,29 @@ footer .big{font-size:18px;color:var(--gold2);font-family:serif;margin-bottom:10
   <h2>从"听见思想"到"表达思想"</h2>
   <p class="sub">开题文档已论证市场断层与四条研究主线。本材料回答下一个问题：<b style="color:var(--gold2)">这些命题，在产品里被做成了什么。</b></p>
   <p>调研发现，72% 的人观看 TED 是为了获得新观点，但只有约 15% 的人最终输出过一个完整的观点——中间 57% 的断层，正是"看—收藏—转发—遗忘"四步循环的产物。我们把这条断层拆成四段可被产品干预的旅程，并让每一段对应一个已实现（或规划中）的功能模块。</p>
+
+  <figure>
+    <svg viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;border:1px solid var(--line);border-radius:14px;background:#141009">
+      <defs>
+        <linearGradient id="fg" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#e6d4a0"/><stop offset="1" stop-color="#c8a866"/>
+        </linearGradient>
+      </defs>
+      <text x="360" y="34" text-anchor="middle" fill="#e6d4a0" font-family="sans-serif" font-size="15">从"想获得观点"到"真正输出观点"的断层</text>
+      <!-- top bar 72% -->
+      <rect x="90" y="62" width="540" height="46" rx="6" fill="url(#fg)" opacity="0.92"/>
+      <text x="360" y="90" text-anchor="middle" fill="#0d0b08" font-family="sans-serif" font-size="15" font-weight="700">72% · 看 TED 是为了获得新观点</text>
+      <!-- funnel sides -->
+      <polygon points="90,108 630,108 473,168 247,168" fill="#c8a866" opacity="0.14"/>
+      <!-- bottom bar 15% -->
+      <rect x="247" y="168" width="226" height="46" rx="6" fill="url(#fg)"/>
+      <text x="360" y="196" text-anchor="middle" fill="#0d0b08" font-family="sans-serif" font-size="15" font-weight="700">15% · 真正输出过完整观点</text>
+      <!-- gap label -->
+      <text x="648" y="142" fill="#c98f4a" font-family="sans-serif" font-size="13" text-anchor="end">↕ 57% 断层</text>
+      <text x="72" y="142" fill="#a89a7c" font-family="sans-serif" font-size="11" text-anchor="end" transform="rotate(-90 72 142)">看→收藏→转发→遗忘</text>
+    </svg>
+    <figcaption><b>核心机会</b>　57% 的断层 = 产品要填的空白：把"想过"变成"说得出"。</figcaption>
+  </figure>
   <div class="flow sans">
     <div class="step"><div class="k">RQ1 · 已实现</div><div class="t">听见思想</div><div class="d">智能荐师 → 单人对话 → 群贤论道，把抽象议题变成可对话的具体智者。</div></div>
     <div class="arrow">→</div>
@@ -216,6 +239,45 @@ footer .big{font-size:18px;color:var(--gold2);font-family:serif;margin-bottom:10
     <div class="card"><h4><span class="num sans">2</span>三路加权 RAG</h4><p>召回打分 = 重要性 ×0.5 + 词面相关 ×0.35 + 来源可信 ×0.15，让回答既贴合人物、又有材料支撑，抑制凭空发挥。</p></div>
     <div class="card"><h4><span class="num sans">3</span>群贤多智者调度</h4><p>主持人角色负责发言顺序与追问，把并行的多个视角组织成一场有节奏的思想交锋，而非杂乱堆叠。</p></div>
   </div>
+
+  <h3>RAG 人格化召回：三路加权如何抑制幻觉</h3>
+  <figure>
+    <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;border:1px solid var(--line);border-radius:14px;background:#141009">
+      <defs>
+        <linearGradient id="wg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e6d4a0"/><stop offset="1" stop-color="#c8a866"/></linearGradient>
+      </defs>
+      <text x="30" y="40" fill="#e6d4a0" font-family="sans-serif" font-size="15">召回打分 = 重要性×0.5 + 词面相关×0.35 + 来源可信×0.15</text>
+      <!-- weight bars -->
+      <g font-family="sans-serif" font-size="13">
+        <text x="30" y="86" fill="#a89a7c">重要性</text>
+        <rect x="150" y="72" width="360" height="22" rx="4" fill="url(#wg)"/>
+        <text x="522" y="88" fill="#e6d4a0">0.50</text>
+
+        <text x="30" y="130" fill="#a89a7c">词面相关</text>
+        <rect x="150" y="116" width="252" height="22" rx="4" fill="url(#wg)" opacity="0.8"/>
+        <text x="414" y="132" fill="#e6d4a0">0.35</text>
+
+        <text x="30" y="174" fill="#a89a7c">来源可信</text>
+        <rect x="150" y="160" width="108" height="22" rx="4" fill="url(#wg)" opacity="0.6"/>
+        <text x="270" y="176" fill="#e6d4a0">0.15</text>
+      </g>
+      <!-- flow -->
+      <g font-family="sans-serif" font-size="12" text-anchor="middle">
+        <rect x="30" y="222" width="150" height="50" rx="8" fill="#1a150d" stroke="rgba(200,168,102,0.3)"/>
+        <text x="105" y="244" fill="#e6d4a0">人物思想材料</text><text x="105" y="262" fill="#6f6551">SQLite 知识库</text>
+        <text x="200" y="252" fill="#c8a866" font-size="18">→</text>
+        <rect x="222" y="222" width="150" height="50" rx="8" fill="#1a150d" stroke="rgba(200,168,102,0.3)"/>
+        <text x="297" y="244" fill="#e6d4a0">三路加权召回</text><text x="297" y="262" fill="#6f6551">Top-K 命中片段</text>
+        <text x="392" y="252" fill="#c8a866" font-size="18">→</text>
+        <rect x="414" y="222" width="150" height="50" rx="8" fill="#1a150d" stroke="rgba(200,168,102,0.3)"/>
+        <text x="489" y="244" fill="#e6d4a0">护栏约束生成</text><text x="489" y="262" fill="#6f6551">6 条 GLOBAL_RULES</text>
+        <text x="584" y="252" fill="#c8a866" font-size="18">→</text>
+        <rect x="606" y="222" width="90" height="50" rx="8" fill="url(#wg)"/>
+        <text x="651" y="252" fill="#0d0b08" font-weight="700">有据回答</text>
+      </g>
+    </svg>
+    <figcaption><b>三路加权 RAG</b>　让回答优先落在人物"最核心、最相关、最可信"的思想材料上，从检索源头压制凭空发挥。</figcaption>
+  </figure>
 </section>
 
 <!-- ========== 04 伦理护栏 ========== -->
@@ -262,6 +324,47 @@ footer .big{font-size:18px;color:var(--gold2);font-family:serif;margin-bottom:10
   <span class="tag sans">06 / 命题—实现闭环</span>
   <h2>四段旅程，逐一落地</h2>
   <p class="sub">把研究主线与产品功能并列，一眼看清"做到了哪、还差哪"。</p>
+
+  <figure>
+    <svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;border:1px solid var(--line);border-radius:14px;background:#141009">
+      <!-- ring -->
+      <circle cx="360" cy="190" r="128" fill="none" stroke="rgba(200,168,102,0.22)" stroke-width="1.5"/>
+      <!-- arc arrows hint -->
+      <text x="360" y="184" text-anchor="middle" fill="#e6d4a0" font-family="sans-serif" font-size="16">TED Talk</text>
+      <text x="360" y="208" text-anchor="middle" fill="#c8a866" font-family="sans-serif" font-size="16">→ My Talk</text>
+      <!-- 4 nodes -->
+      <g font-family="sans-serif" text-anchor="middle">
+        <!-- top: 听见 -->
+        <circle cx="360" cy="62" r="30" fill="#1a150d" stroke="#7fb47a" stroke-width="2"/>
+        <text x="360" y="60" fill="#e6d4a0" font-size="13">听见</text>
+        <text x="360" y="76" fill="#7fb47a" font-size="10">● 已跑通</text>
+        <text x="360" y="30" fill="#6f6551" font-size="11">RQ1</text>
+        <!-- right: 内化 -->
+        <circle cx="488" cy="190" r="30" fill="#1a150d" stroke="#7fb47a" stroke-width="2"/>
+        <text x="488" y="188" fill="#e6d4a0" font-size="13">内化</text>
+        <text x="488" y="204" fill="#7fb47a" font-size="10">● 已跑通</text>
+        <text x="540" y="194" fill="#6f6551" font-size="11">RQ2</text>
+        <!-- bottom: 表达 -->
+        <circle cx="360" cy="318" r="30" fill="#1a150d" stroke="#5a8fb0" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="360" y="316" fill="#e6d4a0" font-size="13">表达</text>
+        <text x="360" y="332" fill="#5a8fb0" font-size="10">◯ 待开发</text>
+        <text x="360" y="360" fill="#6f6551" font-size="11">RQ4 · My Talk</text>
+        <!-- left: 共创 -->
+        <circle cx="232" cy="190" r="30" fill="#1a150d" stroke="#c98f4a" stroke-width="2"/>
+        <text x="232" y="188" fill="#e6d4a0" font-size="13">共创</text>
+        <text x="232" y="204" fill="#c98f4a" font-size="10">◐ 增量中</text>
+        <text x="180" y="194" fill="#6f6551" font-size="11">RQ3</text>
+      </g>
+      <!-- directional arrows on ring -->
+      <g fill="#c8a866" font-size="16" font-family="sans-serif">
+        <text x="440" y="104">↘</text>
+        <text x="440" y="286">↙</text>
+        <text x="270" y="286">↖</text>
+        <text x="270" y="104">↗</text>
+      </g>
+    </svg>
+    <figcaption><b>四段闭环</b>　听见 → 内化 → 共创 → 表达，环环相扣；唯"表达"（My Talk）尚待开发，是闭合整个循环的最后一环。</figcaption>
+  </figure>
   <table>
     <tr><th>研究主线</th><th>对应功能</th><th>状态</th></tr>
     <tr><td><b>听见思想</b>（RQ1）</td><td>智能荐师 · 单人对话 · 群贤论道</td><td class="s-strong">● 已跑通</td></tr>
