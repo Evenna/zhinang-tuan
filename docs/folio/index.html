@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>张一文 · 项目经验 | 清华美院 艺术与科技</title>
+<title>张一文 · 「苏格拉底请回答」相关项目经验</title>
 <style>
 :root{
   --bg:#0b0c0d; --bg2:#101214; --card:#14171a;
@@ -22,60 +22,80 @@ body{
 }
 .wrap{max-width:940px;margin:0 auto;padding:0 24px}
 /* HERO */
-.hero{padding:96px 0 60px;text-align:center;position:relative}
+.hero{padding:96px 0 54px;text-align:center;position:relative}
 .hero .ey{font-size:13px;letter-spacing:5px;color:var(--ac);text-transform:uppercase;margin-bottom:22px}
-.hero h1{font-size:52px;font-weight:800;letter-spacing:2px;line-height:1.1;
+.hero h1{font-size:46px;font-weight:800;letter-spacing:2px;line-height:1.15;
   background:linear-gradient(120deg,#fff,var(--ac2) 55%,var(--dim));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero .sub{font-size:17px;color:var(--dim);margin-top:20px;font-weight:300;letter-spacing:1px}
+.hero .sub{font-size:16px;color:var(--dim);margin-top:20px;font-weight:300;letter-spacing:1px;max-width:640px;margin-left:auto;margin-right:auto}
 .hero .meta{margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .hero .meta span{font-size:12px;color:var(--ac);border:1px solid var(--line);
   padding:6px 14px;border-radius:20px;background:rgba(184,194,204,0.04);letter-spacing:.5px}
-.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:8px 0 60px}
-/* STAT ROW */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:70px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 18px;text-align:center;
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:8px 0 56px}
+/* THESIS 主线陈述 */
+.thesis{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 34px;margin-bottom:64px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.05)}
-.stat .n{font-size:34px;font-weight:800;color:var(--ac2);line-height:1}
-.stat .l{font-size:12px;color:var(--dim);margin-top:9px;letter-spacing:.5px}
+.thesis .t{font-size:13px;letter-spacing:2px;color:var(--ac);margin-bottom:14px;text-transform:uppercase}
+.thesis p{font-size:15.5px;color:var(--ink);opacity:.92}
+.thesis p b{color:var(--ac2);font-weight:700}
 /* SECTION */
-section{margin-bottom:78px}
-.sec-h{display:flex;align-items:baseline;gap:16px;margin-bottom:34px}
+section{margin-bottom:74px}
+.sec-h{display:flex;align-items:baseline;gap:16px;margin-bottom:30px}
 .sec-h .idx{font-size:13px;color:var(--ac);font-weight:700;letter-spacing:2px}
-.sec-h h2{font-size:28px;font-weight:700;letter-spacing:1px}
+.sec-h h2{font-size:26px;font-weight:700;letter-spacing:1px}
 .sec-h .en{font-size:13px;color:var(--dim2);letter-spacing:1px;margin-left:auto;font-weight:300}
+.sec-intro{font-size:14px;color:var(--dim);margin:-16px 0 26px;line-height:1.7}
+/* HERO PROJECT (苏格拉底主角) */
+.hero-proj{background:linear-gradient(155deg,#16191d,#101214);border:1px solid rgba(184,194,204,0.28);
+  border-radius:20px;overflow:hidden;box-shadow:0 16px 60px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.08)}
+.hero-proj .head{padding:38px 38px 30px}
+.hero-proj .flag{display:inline-block;font-size:11px;letter-spacing:2px;color:#0b0c0d;background:var(--ac);
+  font-weight:800;padding:5px 13px;border-radius:6px;margin-bottom:18px;text-transform:uppercase}
+.hero-proj h3{font-size:30px;font-weight:800;letter-spacing:.5px;margin-bottom:8px;line-height:1.2}
+.hero-proj .role{font-size:13px;color:var(--ac2);margin-bottom:20px;letter-spacing:.3px}
+.hero-proj .role b{color:var(--dim);font-weight:400}
+.hero-proj .desc{font-size:16px;color:var(--ink);opacity:.95;margin-bottom:22px}
 /* PROJECT CARD */
-.proj{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:30px;
+.proj{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:26px;
   box-shadow:0 10px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.05)}
-.proj .head{padding:32px 34px 26px}
+.proj .head{padding:30px 34px 24px}
 .proj .tag{display:inline-block;font-size:11px;letter-spacing:1.5px;color:var(--ac);
-  border:1px solid var(--line);padding:4px 12px;border-radius:6px;margin-bottom:16px;text-transform:uppercase}
-.proj h3{font-size:25px;font-weight:800;letter-spacing:.5px;margin-bottom:6px}
-.proj .role{font-size:13px;color:var(--ac2);margin-bottom:18px;letter-spacing:.5px}
+  border:1px solid var(--line);padding:4px 12px;border-radius:6px;margin-bottom:14px;text-transform:uppercase}
+.proj h3{font-size:23px;font-weight:800;letter-spacing:.5px;margin-bottom:6px}
+.proj .role{font-size:13px;color:var(--ac2);margin-bottom:16px;letter-spacing:.5px}
 .proj .role b{color:var(--dim);font-weight:400}
-.proj .desc{font-size:15px;color:var(--ink);opacity:.92;margin-bottom:20px}
-.proj .pts{list-style:none;margin-bottom:8px}
-.proj .pts li{font-size:14px;color:var(--dim);padding:7px 0 7px 22px;position:relative;line-height:1.6}
-.proj .pts li::before{content:"";position:absolute;left:0;top:14px;width:7px;height:7px;
+.proj .desc{font-size:14.5px;color:var(--ink);opacity:.9;margin-bottom:18px}
+.pts{list-style:none;margin-bottom:8px}
+.pts li{font-size:14px;color:var(--dim);padding:6px 0 6px 22px;position:relative;line-height:1.6}
+.pts li::before{content:"";position:absolute;left:0;top:13px;width:7px;height:7px;
   background:var(--ac);border-radius:2px;transform:rotate(45deg)}
-.proj .pts li b{color:var(--ink);font-weight:600}
-.proj .pts li .hl{color:var(--ac2);font-weight:700}
+.pts li b{color:var(--ink);font-weight:600}
+.pts li .hl{color:var(--ac2);font-weight:700}
+/* LINK-TO-SOCRATES 关联条 */
+.bridge{margin:20px 34px 0;padding:16px 20px;border-radius:12px;
+  background:linear-gradient(90deg,rgba(184,194,204,0.09),rgba(184,194,204,0.02));
+  border:1px solid rgba(184,194,204,0.2);border-left:3px solid var(--ac)}
+.bridge .lbl{font-size:11px;letter-spacing:1.5px;color:var(--ac);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+.bridge .txt{font-size:13.5px;color:var(--ink);opacity:.92;line-height:1.6}
+.bridge .txt b{color:var(--ac2);font-weight:700}
 .kpi{display:flex;gap:26px;flex-wrap:wrap;margin:18px 0 4px;padding:16px 0 4px;border-top:1px solid var(--line)}
 .kpi .k{text-align:left}
 .kpi .k .v{font-size:22px;font-weight:800;color:var(--ac2);line-height:1}
 .kpi .k .c{font-size:11px;color:var(--dim);margin-top:4px;letter-spacing:.5px}
+.hero-proj .kpi .v{font-size:26px}
 /* image */
-.shot{display:block;width:100%;border-top:1px solid var(--line);background:#000}
-.shots2{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.shots2{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);margin-top:22px}
 .shots2 img{width:100%;display:block;border-right:1px solid var(--line)}
 .shots2 img:last-child{border-right:none}
-.cap{font-size:11.5px;color:var(--dim2);padding:12px 34px 26px;letter-spacing:.5px}
-.stack{padding:0 34px 26px}
+.shots-hero{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.shots-hero img{width:100%;display:block;background:#000}
+.cap{font-size:11.5px;color:var(--dim2);padding:12px 34px 24px;letter-spacing:.5px}
+.stack{padding:0 34px 24px}
 .stack .st{display:inline-block;font-size:11px;color:var(--dim);background:rgba(184,194,204,0.05);
   border:1px solid var(--line);padding:4px 11px;border-radius:6px;margin:4px 6px 0 0}
 @media(max-width:720px){
-  .hero h1{font-size:36px}.stats{grid-template-columns:1fr 1fr}
-  .shots2{grid-template-columns:1fr}.shots2 img{border-right:none;border-bottom:1px solid var(--line)}
+  .hero h1{font-size:32px}.hero-proj h3{font-size:23px}
+  .shots2,.shots-hero{grid-template-columns:1fr}.shots2 img{border-right:none;border-bottom:1px solid var(--line)}
   .sec-h .en{display:none}
 }
 </style>
@@ -84,9 +104,9 @@ section{margin-bottom:78px}
 <div class="wrap">
 
   <div class="hero">
-    <div class="ey">PROJECT PORTFOLIO · 2022—2026</div>
-    <h1>张一文</h1>
-    <div class="sub">清华大学美术学院 · 信息艺术设计系 · 艺术与科技（信息设计）</div>
+    <div class="ey">RELATED EXPERIENCE · 苏格拉底请回答</div>
+    <h1>通向「苏格拉底请回答」<br>的项目经验</h1>
+    <div class="sub">张一文 · 清华大学美术学院 信息艺术设计系 · 艺术与科技（信息设计）<br>——一条从交互叙事、多模态 AI、人格化共创，最终汇聚成「苏格拉底请回答」的能力路径</div>
     <div class="meta">
       <span>专业排名 第 1</span>
       <span>GPA 3.98 / 4.0</span>
@@ -96,214 +116,184 @@ section{margin-bottom:78px}
   </div>
   <div class="hr"></div>
 
-  <div class="stats">
-    <div class="stat"><div class="n">10+</div><div class="l">完整设计/研发项目</div></div>
-    <div class="stat"><div class="n">3</div><div class="l">已上线 App</div></div>
-    <div class="stat"><div class="n">9</div><div class="l">科创竞赛奖项</div></div>
-    <div class="stat"><div class="n">A+×6</div><div class="l">满绩专业课</div></div>
+  <div class="thesis">
+    <div class="t">这份材料的主线</div>
+    <p>「苏格拉底请回答」不是凭空出现的作品，而是我过去四年一系列项目的能力汇流。<b>沉浸式交互叙事</b>（Evans）、<b>AI 多模态共创</b>（宇宙回声）、<b>AI 人格化与情感陪伴</b>（饭咪）、<b>叙事化信息设计</b>（千年调）、以及<b>产业级 AI 生成工作流</b>的落地经验——每一块能力，都在「苏格拉底请回答」里找到了它的位置。下面的每个项目，我都标注了它<b>具体支撑了「苏格拉底请回答」的哪一部分</b>。</p>
   </div>
 
-  <!-- ============ 核心项目 ============ -->
+  <!-- ============ 主角：苏格拉底请回答 ============ -->
   <section>
-    <div class="sec-h"><span class="idx">01</span><h2>核心项目</h2><span class="en">SELECTED WORKS</span></div>
+    <div class="sec-h"><span class="idx">★</span><h2>核心项目</h2><span class="en">THE CORE</span></div>
 
-    <!-- EVANS 毕设 -->
-    <div class="proj">
+    <div class="hero-proj">
       <div class="head">
-        <span class="tag">毕业设计 · 沉浸式人机交互叙事</span>
-        <h3>Evans — 人机共生的沉浸式交互叙事</h3>
-        <div class="role"><b>身份</b>&nbsp; 独立创作者（概念 / 交互设计 / 前端研发）&nbsp;&nbsp;·&nbsp;&nbsp;<b>时间</b>&nbsp; 2025.09 — 2026.06&nbsp;&nbsp;·&nbsp;&nbsp;<b>导师</b>&nbsp; 付志勇</div>
-        <div class="desc">以「共生」为核心命题的沉浸式交互装置。作品用一段「序曲—故障—自由」的三幕叙事，让观众从被 AI 引导，走向与数据流的自由共处——探讨人与智能体之间从依赖到平等的关系边界。</div>
-        <ul class="pts">
-          <li><b>三幕叙事结构：</b>全黑序曲中呼吸光点与极速打字机（<span class="hl">4ms/字符</span>）引入 → ERROR 故障叙事数据洪流涌出 → Evans 劝阻后消失、把交互权彻底交还观众。</li>
-          <li><b>实时图形系统：</b>基于 WebGL / Canvas 自研全屏粒子系统，<span class="hl">数万级粒子</span>实时渲染稳定 <span class="hl">60fps</span>；粒子球采用两极密集、赤道稀疏的自然分布与沙丘层渐变。</li>
-          <li><b>交互叙事引擎：</b>状态机驱动的幕次切换、字符流打字机、故障态渲染与观众自由态交互，全部纯前端实现、零后端依赖。</li>
-          <li><b>完整交付：</b>可交互 Web 原型 + <span class="hl">18 页</span> HTML 答辩演示系统（自建幻灯片导航框架），已部署 GitHub Pages 公网可访问。</li>
-        </ul>
-        <div class="kpi">
-          <div class="k"><div class="v">60fps</div><div class="c">全屏粒子实时渲染</div></div>
-          <div class="k"><div class="v">3 幕</div><div class="c">序曲/故障/自由交互</div></div>
-          <div class="k"><div class="v">18 页</div><div class="c">自建答辩演示系统</div></div>
-          <div class="k"><div class="v">0 后端</div><div class="c">纯前端可离线运行</div></div>
-        </div>
-      </div>
-      <div class="stack"><span class="st">WebGL</span><span class="st">Canvas 2D</span><span class="st">粒子系统</span><span class="st">GLSL</span><span class="st">交互叙事</span><span class="st">GitHub Pages</span></div>
-    </div>
-
-    <!-- 苏格拉底请回答 -->
-    <div class="proj">
-      <div class="head">
-        <span class="tag">独立产品 · AI 人机共创</span>
+        <span class="flag">核心作品 · 独立设计与全栈研发</span>
         <h3>苏格拉底请回答 — 与思想者对话的 AI 共创平台</h3>
-        <div class="role"><b>身份</b>&nbsp; 独立设计与全栈研发&nbsp;&nbsp;·&nbsp;&nbsp;<b>时间</b>&nbsp; 2025.09 — 至今&nbsp;&nbsp;·&nbsp;&nbsp;<b>形态</b>&nbsp; Web 全栈原型</div>
-        <div class="desc">针对「看 TED — 收藏 — 转发 — 遗忘」的知识消费断层（<span class="hl">72%</span> 用户观看后仅收藏、<span class="hl">15%</span> 真正内化输出），构建一个让用户与古今 255 位思想者对话、并沉淀为自己观点的 AI 共创平台。核心是把被动的 TED Talk 转化为用户自己的 My Talk。</div>
+        <div class="role"><b>身份</b>&nbsp; 独立设计 + 全栈研发（产品 / 交互 / 前后端 / AI 工程）&nbsp;&nbsp;·&nbsp;&nbsp;<b>时间</b>&nbsp; 2025.09 — 至今</div>
+        <div class="desc">针对「看 TED — 收藏 — 转发 — 遗忘」的知识消费断层（<span class="hl">72%</span> 用户观看后仅收藏、<span class="hl">15%</span> 真正内化输出、<span class="hl">57%</span> 存在明显断层），我构建了一个让用户与古今 255 位思想者对话、并把对话沉淀为自己观点的 AI 共创平台。核心命题：把被动消费的 TED Talk，转化为用户自己的 My Talk。</div>
         <ul class="pts">
-          <li><b>三大模块：</b>名人智囊（<span class="hl">255 位</span>思想者 · 覆盖约 18 个领域）、群贤论道（多智者圆桌 + AI 主持人调度）、思想人物卡（可沉淀与私密收藏的观点资产）。</li>
-          <li><b>智能荐师引擎：</b>用户提问经<span class="hl">意图五分类</span>（成长/职业/关系/创造/学习）加权映射到领域，精准推荐最契合的思想者组合。</li>
-          <li><b>人格化 RAG：</b>三路加权检索（重要度 <span class="hl">0.5</span> + 词法 <span class="hl">0.35</span> + 来源置信 <span class="hl">0.15</span>）+ 6 条反幻觉全局护栏，在角色人格与事实边界间取得平衡。</li>
+          <li><b>三大模块：</b>名人智囊（<span class="hl">255 位</span>思想者 · 覆盖约 18 个领域）、群贤论道（多智者圆桌 + AI 主持人调度）、思想人物卡（可沉淀、可私密收藏的观点资产）。</li>
+          <li><b>智能荐师引擎：</b>用户提问经<span class="hl">意图五分类</span>（成长/职业/关系/创造/学习）加权映射到领域，精准匹配最契合的思想者组合。</li>
+          <li><b>人格化 RAG：</b>三路加权检索（重要度 <span class="hl">0.5</span> + 词法 <span class="hl">0.35</span> + 来源置信 <span class="hl">0.15</span>）+ <span class="hl">6 条反幻觉全局护栏</span>，在角色人格与事实边界之间取得平衡。</li>
           <li><b>伦理设计：</b>AI 定位为「支架」而非「代笔」，正文由用户自主撰写；全局标注「非真实人物实时发言」，以思想为证据、人物为视角、学生观点为最终资产。</li>
-          <li><b>四段旅程闭环：</b>听见思想 → 内化（与角色辩论）→ 人格共创 → 表达思想，形成从输入到产出的完整学习闭环。</li>
+          <li><b>四段旅程闭环：</b>听见思想 → 内化（与角色辩论）→ 人格共创 → 表达思想（My Talk），形成从输入到产出的完整学习闭环。</li>
+          <li><b>技术架构：</b>前端单页应用 + FastAPI 后端 + SQLite + DeepSeek LLM 四层架构，全链路可运行原型。</li>
         </ul>
         <div class="kpi">
           <div class="k"><div class="v">255</div><div class="c">思想者人物库</div></div>
-          <div class="k"><div class="v">~18</div><div class="c">覆盖领域</div></div>
-          <div class="k"><div class="v">5 类</div><div class="c">意图识别分类</div></div>
-          <div class="k"><div class="v">4 层</div><div class="c">全栈技术架构</div></div>
+          <div class="k"><div class="v">5 类</div><div class="c">意图识别</div></div>
+          <div class="k"><div class="v">3 路</div><div class="c">加权 RAG 检索</div></div>
+          <div class="k"><div class="v">4 段</div><div class="c">学习旅程闭环</div></div>
         </div>
       </div>
-      <div class="stack"><span class="st">FastAPI</span><span class="st">SQLite</span><span class="st">DeepSeek LLM</span><span class="st">人格化 RAG</span><span class="st">意图分类</span><span class="st">多智能体调度</span></div>
+      <div class="shots-hero">
+        <img src="../shots/01-home.png" alt="苏格拉底请回答首页" onerror="this.style.display='none'">
+        <img src="../shots/09-roundtable.png" alt="群贤论道" onerror="this.style.display='none'">
+      </div>
+      <div class="cap">左：「你的困惑·智者有答案」首页&nbsp;·&nbsp;右：群贤论道多智者圆桌 —— 完整线上原型见 <b>evenna.github.io/zhinang-tuan</b></div>
+      <div class="stack"><span class="st">FastAPI</span><span class="st">SQLite</span><span class="st">DeepSeek LLM</span><span class="st">人格化 RAG</span><span class="st">意图分类</span><span class="st">多智能体调度</span><span class="st">全栈</span></div>
     </div>
-
   </section>
 
-  <!-- ============ 交互设计作品 ============ -->
+  <!-- ============ 能力线索 ============ -->
   <section>
-    <div class="sec-h"><span class="idx">02</span><h2>交互设计作品</h2><span class="en">INTERACTION DESIGN</span></div>
+    <div class="sec-h"><span class="idx">01</span><h2>能力线索</h2><span class="en">CAPABILITY THREADS</span></div>
+    <div class="sec-intro">以下五个项目，是「苏格拉底请回答」得以成立的能力来源。每个项目下方的<b style="color:var(--ac)">「→ 支撑了苏格拉底请回答的哪一部分」</b>，说明了这条能力如何汇入核心作品。</div>
+
+    <!-- Evans -->
+    <div class="proj">
+      <div class="head">
+        <span class="tag">能力线索 A · 沉浸式交互叙事 + 实时图形</span>
+        <h3>Evans — 人机共生的沉浸式交互叙事（毕业设计）</h3>
+        <div class="role"><b>身份</b>&nbsp; 独立创作（概念 / 交互 / 前端）&nbsp;&nbsp;·&nbsp;&nbsp;<b>时间</b>&nbsp; 2025.09 — 2026.06&nbsp;&nbsp;·&nbsp;&nbsp;<b>导师</b>&nbsp; 付志勇</div>
+        <div class="desc">以「共生」为命题的沉浸式交互装置，用「序曲—故障—自由」三幕叙事，让观众从被 AI 引导走向与数据流的自由共处——探讨人与智能体从依赖到平等的关系边界。</div>
+        <ul class="pts">
+          <li><b>三幕叙事：</b>全黑序曲呼吸光点 + 极速打字机（<span class="hl">4ms/字符</span>）→ ERROR 故障态数据洪流 → Evans 劝阻后消失、把交互权交还观众。</li>
+          <li><b>实时图形系统：</b>自研 WebGL / Canvas 全屏粒子系统，<span class="hl">数万级粒子</span>稳定 <span class="hl">60fps</span>，两极密集赤道稀疏的自然分布 + 沙丘层渐变。</li>
+          <li><b>交付：</b>可交互 Web 原型 + <span class="hl">18 页</span>自建 HTML 答辩演示系统，部署 GitHub Pages。</li>
+        </ul>
+      </div>
+      <div class="bridge">
+        <div class="lbl">→ 支撑了「苏格拉底请回答」的哪一部分</div>
+        <div class="txt">Evans 让我把<b>「人与 AI 的关系边界」</b>从哲学命题变成了可交互的体验——这正是「苏格拉底请回答」中<b>「AI 是支架而非代笔」</b>伦理设计的思想原型；而 Evans 的<b>实时图形与叙事节奏能力</b>，直接支撑了苏格拉底平台的沉浸式交互体验层。</div>
+      </div>
+      <div class="stack"><span class="st">WebGL</span><span class="st">Canvas 2D</span><span class="st">粒子系统</span><span class="st">交互叙事</span><span class="st">人机关系</span></div>
+    </div>
 
     <!-- 宇宙回声 -->
     <div class="proj">
       <div class="head">
-        <span class="tag">多模态 AI · 声光共创系统</span>
+        <span class="tag">能力线索 B · AI 多模态共创 + 数据映射</span>
         <h3>宇宙回声 ECHO VERSE — 脉冲星声纹转化与共创系统</h3>
-        <div class="role"><b>身份</b>&nbsp; 主创 / 系统设计 / AI 工程原型&nbsp;&nbsp;·&nbsp;&nbsp;<b>类型</b>&nbsp; 跨维度人机交互系统（软硬件结合）</div>
-        <div class="desc">把万亿光年外脉冲星的信号，转化为可听见的音乐与可触摸的光影。项目以「Turn light-year pulses into your cosmic earbeats」为主张，融合太空数据采集、AI 曲风模型、Web 创作平台与实体声光交互硬件，构建人类与宇宙之间的情感共振平台。</div>
+        <div class="role"><b>身份</b>&nbsp; 主创 / 系统设计 / AI 工程原型&nbsp;&nbsp;·&nbsp;&nbsp;<b>类型</b>&nbsp; 跨维度人机交互系统</div>
+        <div class="desc">把脉冲星信号转化为音乐与光影的 AI 共创系统，融合太空数据采集、AI 曲风模型、Web 创作平台与声光交互硬件，构建人与宇宙的情感共振平台。</div>
         <ul class="pts">
-          <li><b>AI 筛选与转化系统：</b>对 7 颗脉冲星原始信号做「<span class="hl">20→6 黄金分割筛选</span>」，从乐理、天文事件、哲学隐喻三个维度将时间-强度数据映射为声音与乐曲。</li>
-          <li><b>完整数据闭环：</b>太空端信号采集 → 地球端数据接收站解压音乐基因库 → 脉冲晨曲风 AI 工厂训练曲风模型 → 用户评分与创作行为反哺，持续优化筛选逻辑与模型参数。</li>
-          <li><b>三端交互：</b>网页端生成式对话音乐生成器 + 全屋投影交互系统 + 光立方交互硬件；按住麦克风即可用声音实时影响粒子运动，与脉冲星「同频闪烁」。</li>
-          <li><b>工程原型：</b>用 Python 对接 DeepSeek API 完成信号分析与 prompt→音乐/封面的生成链路，落地可运行的技术验证 Demo。</li>
+          <li><b>AI 筛选与转化：</b>对 7 颗脉冲星信号做「<span class="hl">20→6 黄金分割筛选</span>」，从乐理、天文事件、哲学隐喻三维度映射为乐曲。</li>
+          <li><b>数据闭环：</b>信号采集 → AI 曲风工厂训练 → 用户评分与创作行为反哺 → 持续优化模型，形成生成—反馈闭环。</li>
+          <li><b>工程原型：</b>用 Python 对接 DeepSeek API 完成信号分析与 prompt→内容 的生成链路。</li>
         </ul>
-        <div class="kpi">
-          <div class="k"><div class="v">7 颗</div><div class="c">脉冲星信号源</div></div>
-          <div class="k"><div class="v">20→6</div><div class="c">黄金分割 AI 筛选</div></div>
-          <div class="k"><div class="v">3 维</div><div class="c">乐理/天文/哲学映射</div></div>
-          <div class="k"><div class="v">软+硬</div><div class="c">Web+声光立方体</div></div>
-        </div>
       </div>
-      <div class="shots2"><img src="img/echoverse-ui.jpg" alt="ECHO VERSE 界面"><img src="img/echoverse-arch.jpg" alt="ECHO VERSE 系统架构"></div>
-      <div class="cap">左：脉冲星音画交互界面（首页 + 音画交互页）&nbsp;·&nbsp;右：太空端—地球端完整数据闭环架构</div>
-      <div class="stack"><span class="st">多模态生成</span><span class="st">AI 音乐系统</span><span class="st">DeepSeek</span><span class="st">数据可视化</span><span class="st">软硬件结合</span><span class="st">粒子交互</span></div>
+      <div class="bridge">
+        <div class="lbl">→ 支撑了「苏格拉底请回答」的哪一部分</div>
+        <div class="txt">宇宙回声让我第一次跑通了<b>「AI 共创 + 生成—反馈闭环」</b>的完整链路，也第一次用 DeepSeek 做<b>数据→内容的智能映射</b>。这套经验直接迁移成了苏格拉底的<b>AI 共创引擎</b>与<b>「用户反馈反哺 AI」的四段旅程闭环</b>——只是把「脉冲星信号→音乐」换成了「思想者语料→人格化回答」。</div>
+      </div>
+      <div class="stack"><span class="st">多模态生成</span><span class="st">AI 共创闭环</span><span class="st">DeepSeek</span><span class="st">数据映射</span><span class="st">Prompt 工程</span></div>
     </div>
 
     <!-- 饭咪 -->
     <div class="proj">
       <div class="head">
-        <span class="tag">AI 陪伴 · 软硬件产品</span>
-        <h3>MEALMATE 饭咪 — 缓解独居青年饮食孤独的 AI 饭搭子</h3>
+        <span class="tag">能力线索 C · AI 人格化 + 情感陪伴</span>
+        <h3>MEALMATE 饭咪 — 缓解独居孤独的 AI 饭搭子</h3>
         <div class="role"><b>身份</b>&nbsp; 产品设计 / 交互设计&nbsp;&nbsp;·&nbsp;&nbsp;<b>类型</b>&nbsp; 软硬件结合的 AI 陪伴产品</div>
-        <div class="desc">聚焦独居青年的饮食与情感困境，以用餐场景为切入点，打造一款融合陪伴、互动与健康管理的 AI「饭搭子」——一只有性格、会成长、能陪你吃饭聊天的智能宠物。</div>
+        <div class="desc">以用餐场景为切入点，打造一款有性格、会成长、能陪你吃饭聊天的 AI「饭搭子」，用情绪价值缓解独居青年的饮食与情感孤独。</div>
         <ul class="pts">
-          <li><b>性格养成系统：</b><span class="hl">36 种表情 · 16 种性格</span>，通过饮食互动培养出独一无二的宠物人格（从「好奇热情的饮食探险家」到理性稳定型）。</li>
-          <li><b>健康闭环：</b>食材购买建议、菜谱教学、体检中心（运动/情绪双维度评分）、健康日记 / 周报 / 月报，把饮食健康管理变成有陪伴感的日常。</li>
-          <li><b>情感与社交：</b>陪吃陪聊共享菜单、跨地域「搭子电话」实时连线、按「对胃口」匹配好友编号，用情绪价值缓解独居孤独。</li>
-          <li><b>软硬件一体：</b>猫咪造型实体喂食硬件 + 配套 App，能量值、拍照喂食、日记本联动，形成完整养成体验。</li>
+          <li><b>人格养成系统：</b><span class="hl">36 种表情 · 16 种性格</span>，通过互动培养出独一无二的 AI 人格。</li>
+          <li><b>陪伴与共情：</b>陪吃陪聊、搭子电话、健康日记周报月报，把功能包装成有温度的关系。</li>
         </ul>
-        <div class="kpi">
-          <div class="k"><div class="v">36 / 16</div><div class="c">表情 / 性格</div></div>
-          <div class="k"><div class="v">4 大</div><div class="c">核心功能模块</div></div>
-          <div class="k"><div class="v">软+硬</div><div class="c">硬件 + App 一体</div></div>
-        </div>
       </div>
-      <div class="shots2"><img src="img/mealmate-app.jpg" alt="饭咪 App 界面"><img src="img/mealmate-func.jpg" alt="饭咪功能"></div>
-      <div class="cap">左：饭咪硬件 + 性格/体检/日记 App 界面&nbsp;·&nbsp;右：食材购买/菜谱/陪吃陪聊/养成等核心功能</div>
-      <div class="stack"><span class="st">智能硬件</span><span class="st">情绪价值</span><span class="st">性格养成</span><span class="st">健康管理</span><span class="st">社交匹配</span></div>
+      <div class="bridge">
+        <div class="lbl">→ 支撑了「苏格拉底请回答」的哪一部分</div>
+        <div class="txt">饭咪训练了我把 <b>AI「拟人格化」</b>——让一个智能体拥有稳定、可感知的性格。这正是苏格拉底<b>「255 位思想者人格化」</b>的能力基础：如何让 AI 不只回答正确，还能像那个人一样说话；饭咪的<b>情感陪伴设计</b>也启发了苏格拉底「与思想者对话」的关系型体验。</div>
+      </div>
+      <div class="stack"><span class="st">AI 人格化</span><span class="st">性格系统</span><span class="st">情感陪伴</span><span class="st">情绪价值</span></div>
     </div>
 
     <!-- 千年调 -->
     <div class="proj">
       <div class="head">
-        <span class="tag">交互网页 · 文化叙事</span>
+        <span class="tag">能力线索 D · 叙事化信息设计</span>
         <h3>千年调 — 中国古代猫咪画卷</h3>
-        <div class="role"><b>身份</b>&nbsp; 交互设计 / 视觉设计 / 前端&nbsp;&nbsp;·&nbsp;&nbsp;<b>类型</b>&nbsp; 沉浸式交互网页 / H5</div>
-        <div class="desc">一部以「猫」为视角的中国古代文化交互画卷。用户化身一只小猫，穿行于唐、宋、明、清的历史场景，沉浸式了解古代猫咪与人、与政治、与社会的关系发展史——兼具趣味性、交互性、游戏性与考究性。</div>
+        <div class="role"><b>身份</b>&nbsp; 交互设计 / 视觉 / 前端&nbsp;&nbsp;·&nbsp;&nbsp;<b>类型</b>&nbsp; 沉浸式交互网页 / H5</div>
+        <div class="desc">以猫为视角穿行唐宋明清的中国古代文化交互画卷，把散落的历史考据编织成可漫游的叙事长卷。</div>
         <ul class="pts">
-          <li><b>叙事化信息设计：</b>以朝代为章节、以猫视角为主线，把散落的历史考据编织成可漫游的叙事长卷（书坊、猫儿房、市场、器物画作等场景）。</li>
-          <li><b>考究的内容：</b>取材真实文物与史料，如《唐苑蝶春图》、乾隆款画珐琅猫蝶图鼻烟壶等，在趣味中保证历史严谨性。</li>
-          <li><b>横向卷轴交互：</b>拖拽翻页的长卷式浏览，配合古画卷视觉语言，营造沉浸式文化体验。</li>
+          <li><b>叙事化信息组织：</b>以朝代为章节、猫视角为主线，把海量考据内容结构成可沉浸浏览的知识叙事。</li>
+          <li><b>考究与趣味平衡：</b>取材真实文物史料，在趣味交互中保证内容严谨。</li>
         </ul>
       </div>
-      <div class="shots2"><img src="img/qiannian-cover.jpg" alt="千年调封面"><img src="img/qiannian-scene.jpg" alt="千年调场景"></div>
-      <div class="cap">左：古画卷风格封面&nbsp;·&nbsp;右：唐宋明清多朝代历史场景与文物画作</div>
-      <div class="stack"><span class="st">交互网页</span><span class="st">文化叙事</span><span class="st">视觉设计</span><span class="st">信息设计</span><span class="st">H5</span></div>
-    </div>
-
-  </section>
-
-  <!-- ============ 已上线 & 工作流 ============ -->
-  <section>
-    <div class="sec-h"><span class="idx">03</span><h2>产品落地</h2><span class="en">SHIPPED &amp; DEPLOYED</span></div>
-
-    <div class="proj">
-      <div class="head">
-        <span class="tag">已上线 App</span>
-        <h3>三款已上线应用</h3>
-        <div class="role"><b>身份</b>&nbsp; 设计与产品&nbsp;&nbsp;·&nbsp;&nbsp;<b>成果</b>&nbsp; 华为 App 匠心奖（第 77 期）</div>
-        <ul class="pts">
-          <li><b>句读 — 发现文字之美：</b>为文字保留一个疗愈角落，精致图文卡片 + 每日推荐，让阅读回归仪式感。<span class="hl">获华为匠心奖第 77 期</span>推荐。</li>
-          <li><b>博物门 — 看见世界文明：</b>以名画与文物为入口的世界文明科普 App（如《戴珍珠耳环的少女》主题卡片）。</li>
-          <li><b>goodquotes — Words That Move You：</b>面向英文经典段落的摘录与灵感激发应用（Jane Eyre、Yellowface 等）。</li>
-        </ul>
+      <div class="bridge">
+        <div class="lbl">→ 支撑了「苏格拉底请回答」的哪一部分</div>
+        <div class="txt">千年调锻炼了我<b>「把庞杂知识组织成有视角、有叙事的可浏览内容」</b>的能力——这正是苏格拉底<b>整理 255 位思想者语料、把抽象思想变成可对话内容</b>时最核心的信息设计功底。同样是「以视角带内容」：千年调用猫的视角，苏格拉底用思想者的视角。</div>
       </div>
-      <div class="shots2"><img src="img/apps.jpg" alt="已上线 App"><img src="img/aiflow.jpg" alt="AI 工作流落地"></div>
-      <div class="cap">左：句读 / 博物门 / goodquotes 三款已上线应用&nbsp;·&nbsp;右：微信读书书封生成、秒剪动态花字、理想汽车 lora 训练等落地 AI 工作流</div>
-      <div class="stack"><span class="st">iOS App</span><span class="st">图文卡片</span><span class="st">产品设计</span></div>
+      <div class="stack"><span class="st">叙事化信息设计</span><span class="st">交互网页</span><span class="st">内容结构</span><span class="st">视觉设计</span></div>
     </div>
 
+    <!-- AI 工作流 -->
     <div class="proj">
       <div class="head">
-        <span class="tag">落地 AI 工作流</span>
-        <h3>产业级 AI 生成工作流</h3>
+        <span class="tag">能力线索 E · 产业级 AI 生成工作流</span>
+        <h3>落地 AI 工作流 — 从 Demo 到规模化生产</h3>
         <div class="role"><b>身份</b>&nbsp; AI 工作流设计与实现&nbsp;&nbsp;·&nbsp;&nbsp;<b>场景</b>&nbsp; 真实业务落地</div>
         <ul class="pts">
-          <li><b>微信读书 — AI 自动化书封生成：</b>构建从书名/简介到成品书封的自动化生成链路，规模化产出风格统一的封面。</li>
-          <li><b>秒剪 — AI 可编辑动态花字生成：</b>面向短视频剪辑的动态花字自动生成与二次可编辑方案。</li>
-          <li><b>理想汽车 — L6 / L9 车型 lora 模型训练：</b>针对具体车型完成 lora 训练与一致性生成，保证多场景出图的品牌一致性。</li>
-          <li><b>微信输入法 — AI 卡片生成：</b>基于 Dify workflow，输入文本即生成多种风格排版模板（商务/创意/极简/科技/教育/自然等），实测可精准匹配不同文字内容的美观排版。</li>
+          <li><b>微信读书</b> AI 自动书封生成、<b>秒剪</b> AI 动态花字、<b>理想汽车</b> L6/L9 车型 lora 训练与一致性生成、<b>微信输入法</b> Dify workflow 卡片生成。</li>
+          <li>覆盖 <span class="hl">LoRA 训练、一致性生成、Prompt 工程、workflow 编排</span> 的完整 AIGC 落地链路。</li>
         </ul>
       </div>
-      <div class="stack"><span class="st">Dify Workflow</span><span class="st">LoRA 训练</span><span class="st">一致性生成</span><span class="st">Prompt 工程</span><span class="st">AIGC 落地</span></div>
+      <div class="bridge">
+        <div class="lbl">→ 支撑了「苏格拉底请回答」的哪一部分</div>
+        <div class="txt">这些工作流让我掌握了 <b>Prompt 工程、生成一致性控制、检索与生成编排</b> 的工程能力，也让我理解了<b>如何抑制 AI 幻觉、保证输出可控</b>。它们直接构成了苏格拉底<b>人格化 RAG（三路加权检索）+ 6 条反幻觉护栏</b>的技术底座——把「让 AI 生成得好看」升级为「让 AI 生成得可信」。</div>
+      </div>
+      <div class="stack"><span class="st">Dify Workflow</span><span class="st">LoRA 训练</span><span class="st">一致性生成</span><span class="st">Prompt 工程</span><span class="st">反幻觉</span></div>
     </div>
+
   </section>
 
-  <!-- ============ 竞赛 & 学业 ============ -->
+  <!-- ============ 佐证 ============ -->
   <section>
-    <div class="sec-h"><span class="idx">04</span><h2>荣誉与学业</h2><span class="en">AWARDS &amp; ACADEMICS</span></div>
+    <div class="sec-h"><span class="idx">02</span><h2>能力佐证</h2><span class="en">CREDENTIALS</span></div>
+    <div class="sec-intro">支撑上述能力的学业与竞赛底子。</div>
 
     <div class="proj">
       <div class="head">
-        <span class="tag">科创竞赛 · 9 项奖项</span>
-        <h3>创新与竞赛能力</h3>
-        <ul class="pts">
-          <li><b>国家级：</b>睿抗机器人大赛<span class="hl">全国一等奖</span>、华为 App 匠心奖、中美青年创客大赛二等奖、国际大学生创新创业大赛十佳优胜奖。</li>
-          <li><b>校级 / 市级：</b>睿抗机器人大赛北京市一等奖、清华设计+创新创业大赛二等奖、清华挑战杯三等奖、艺术与科技创新创业大赛最佳团队奖、SDG 创新创业马拉松二等奖。</li>
-          <li><b>代表作：</b>「基于草图的雕塑图像检索系统」入选清华第 41 届挑战杯学生课外科技作品展（指导老师 徐迎庆）。</li>
-        </ul>
+        <span class="tag">已上线 App · 产品完成度佐证</span>
+        <h3>三款已上线应用 + 华为匠心奖</h3>
+        <div class="desc">句读（发现文字之美，<span class="hl">获华为匠心奖第 77 期</span>）、博物门（看见世界文明）、goodquotes（英文经典摘录）——证明我具备把设计做到<b>真实上线</b>的产品完成度，这也是苏格拉底能做成可运行全栈原型的底气。</div>
       </div>
-      <div class="shots2"><img src="img/awards.jpg" alt="竞赛奖项"><img src="img/academic.jpg" alt="学业成绩"></div>
-      <div class="cap">左：科创竞赛奖项与获奖作品&nbsp;·&nbsp;右：学业成绩与奖学金证书</div>
     </div>
 
     <div class="proj">
       <div class="head">
-        <span class="tag">学业 · Academic</span>
-        <h3>学业表现</h3>
+        <span class="tag">竞赛 & 学业</span>
+        <h3>创新能力与学业表现</h3>
         <ul class="pts">
-          <li><b>总成绩 3.98 / 4.0，专业总排名第 1</b>，自入学以来始终保持专业第一，<span class="hl">6 门专业课拿到 A+</span>。</li>
-          <li><b>奖学金：</b>2023—2024 <span class="hl">国家奖学金</span>、国家励志奖学金、清华大学综合优秀奖学金（连续两年）、清华之友-康颂奖学金。</li>
+          <li><b>9 项科创竞赛奖：</b>睿抗机器人大赛<span class="hl">全国一等奖</span>、华为 App 匠心奖、中美青年创客大赛二等奖、国际大学生创新创业大赛十佳优胜奖等。</li>
+          <li><b>学业：</b>总成绩 <span class="hl">3.98 / 4.0，专业排名第 1</span>，6 门专业课 A+，国家奖学金 + 综合优秀奖学金（连续两年）等 5 项奖学金。</li>
         </ul>
         <div class="kpi">
           <div class="k"><div class="v">3.98</div><div class="c">GPA / 4.0</div></div>
           <div class="k"><div class="v">No.1</div><div class="c">专业排名</div></div>
-          <div class="k"><div class="v">A+×6</div><div class="c">满绩专业课</div></div>
-          <div class="k"><div class="v">5 项</div><div class="c">奖学金</div></div>
+          <div class="k"><div class="v">9 项</div><div class="c">竞赛奖项</div></div>
+          <div class="k"><div class="v">3 款</div><div class="c">已上线 App</div></div>
         </div>
       </div>
+      <div class="shots2"><img src="img/awards.jpg" alt="竞赛奖项"><img src="img/academic.jpg" alt="学业成绩"></div>
+      <div class="cap">左：科创竞赛奖项与获奖作品&nbsp;·&nbsp;右：学业成绩与奖学金证书</div>
     </div>
   </section>
 
   <div class="hr"></div>
   <div style="text-align:center;padding:20px 0 70px;color:var(--dim2);font-size:12px;letter-spacing:1px">
-    张一文 · 清华大学美术学院 信息艺术设计系 · 艺术与科技（信息设计）· 2022—2026
+    张一文 · 清华大学美术学院 信息艺术设计系 · 「苏格拉底请回答」相关项目经验
   </div>
 
 </div>
