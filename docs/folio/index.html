@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>张一文 · 项目经验 | 清华美院 艺术与科技</title>
+<style>
+:root{
+  --bg:#0b0c0d; --bg2:#101214; --card:#14171a;
+  --line:rgba(190,200,210,0.16);
+  --ac:#b8c2cc; --ac2:#e2e8ee;
+  --ink:#e6eaef; --dim:#9aa4ae; --dim2:#6b747d;
+  --ok:#7fb47a; --warn:#c98f4a; --plan:#5a8fb0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:linear-gradient(160deg,#1a1f24 0%,var(--bg) 60%);
+  color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  line-height:1.75; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:940px;margin:0 auto;padding:0 24px}
+/* HERO */
+.hero{padding:96px 0 60px;text-align:center;position:relative}
+.hero .ey{font-size:13px;letter-spacing:5px;color:var(--ac);text-transform:uppercase;margin-bottom:22px}
+.hero h1{font-size:52px;font-weight:800;letter-spacing:2px;line-height:1.1;
+  background:linear-gradient(120deg,#fff,var(--ac2) 55%,var(--dim));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero .sub{font-size:17px;color:var(--dim);margin-top:20px;font-weight:300;letter-spacing:1px}
+.hero .meta{margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.hero .meta span{font-size:12px;color:var(--ac);border:1px solid var(--line);
+  padding:6px 14px;border-radius:20px;background:rgba(184,194,204,0.04);letter-spacing:.5px}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:8px 0 60px}
+/* STAT ROW */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:70px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 18px;text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05)}
+.stat .n{font-size:34px;font-weight:800;color:var(--ac2);line-height:1}
+.stat .l{font-size:12px;color:var(--dim);margin-top:9px;letter-spacing:.5px}
+/* SECTION */
+section{margin-bottom:78px}
+.sec-h{display:flex;align-items:baseline;gap:16px;margin-bottom:34px}
+.sec-h .idx{font-size:13px;color:var(--ac);font-weight:700;letter-spacing:2px}
+.sec-h h2{font-size:28px;font-weight:700;letter-spacing:1px}
+.sec-h .en{font-size:13px;color:var(--dim2);letter-spacing:1px;margin-left:auto;font-weight:300}
+/* PROJECT CARD */
+.proj{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:30px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.05)}
+.proj .head{padding:32px 34px 26px}
+.proj .tag{display:inline-block;font-size:11px;letter-spacing:1.5px;color:var(--ac);
+  border:1px solid var(--line);padding:4px 12px;border-radius:6px;margin-bottom:16px;text-transform:uppercase}
+.proj h3{font-size:25px;font-weight:800;letter-spacing:.5px;margin-bottom:6px}
+.proj .role{font-size:13px;color:var(--ac2);margin-bottom:18px;letter-spacing:.5px}
+.proj .role b{color:var(--dim);font-weight:400}
+.proj .desc{font-size:15px;color:var(--ink);opacity:.92;margin-bottom:20px}
+.proj .pts{list-style:none;margin-bottom:8px}
+.proj .pts li{font-size:14px;color:var(--dim);padding:7px 0 7px 22px;position:relative;line-height:1.6}
+.proj .pts li::before{content:"";position:absolute;left:0;top:14px;width:7px;height:7px;
+  background:var(--ac);border-radius:2px;transform:rotate(45deg)}
+.proj .pts li b{color:var(--ink);font-weight:600}
+.proj .pts li .hl{color:var(--ac2);font-weight:700}
+.kpi{display:flex;gap:26px;flex-wrap:wrap;margin:18px 0 4px;padding:16px 0 4px;border-top:1px solid var(--line)}
+.kpi .k{text-align:left}
+.kpi .k .v{font-size:22px;font-weight:800;color:var(--ac2);line-height:1}
+.kpi .k .c{font-size:11px;color:var(--dim);margin-top:4px;letter-spacing:.5px}
+/* image */
+.shot{display:block;width:100%;border-top:1px solid var(--line);background:#000}
+.shots2{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.shots2 img{width:100%;display:block;border-right:1px solid var(--line)}
+.shots2 img:last-child{border-right:none}
+.cap{font-size:11.5px;color:var(--dim2);padding:12px 34px 26px;letter-spacing:.5px}
+.stack{padding:0 34px 26px}
+.stack .st{display:inline-block;font-size:11px;color:var(--dim);background:rgba(184,194,204,0.05);
+  border:1px solid var(--line);padding:4px 11px;border-radius:6px;margin:4px 6px 0 0}
+@media(max-width:720px){
+  .hero h1{font-size:36px}.stats{grid-template-columns:1fr 1fr}
+  .shots2{grid-template-columns:1fr}.shots2 img{border-right:none;border-bottom:1px solid var(--line)}
+  .sec-h .en{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="ey">PROJECT PORTFOLIO · 2022—2026</div>
+    <h1>张一文</h1>
+    <div class="sub">清华大学美术学院 · 信息艺术设计系 · 艺术与科技（信息设计）</div>
+    <div class="meta">
+      <span>专业排名 第 1</span>
+      <span>GPA 3.98 / 4.0</span>
+      <span>国家奖学金</span>
+      <span>导师 付志勇</span>
+    </div>
+  </div>
+  <div class="hr"></div>
+
+  <div class="stats">
+    <div class="stat"><div class="n">10+</div><div class="l">完整设计/研发项目</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">已上线 App</div></div>
+    <div class="stat"><div class="n">9</div><div class="l">科创竞赛奖项</div></div>
+    <div class="stat"><div class="n">A+×6</div><div class="l">满绩专业课</div></div>
+  </div>
+
+  <!-- ============ 核心项目 ============ -->
+  <section>
+    <div class="sec-h"><span class="idx">01</span><h2>核心项目</h2><span class="en">SELECTED WORKS</span></div>
+
+    <!-- EVANS 毕设 -->
+    <div class="proj">
+      <div class="head">
+        <span class="tag">毕业设计 · 沉浸式人机交互叙事</span>
+        <h3>Evans — 人机共生的沉浸式交互叙事</h3>
+        <div class="role"><b>身份</b>&nbsp; 独立创作者（概念 / 交互设计 / 前端研发）&nbsp;&nbsp;·&nbsp;&nbsp;<b>时间</b>&nbsp; 2025.09 — 2026.06&nbsp;&nbsp;·&nbsp;&nbsp;<b>导师</b>&nbsp; 付志勇</div>
+        <div class="desc">以「共生」为核心命题的沉浸式交互装置。作品用一段「序曲—故障—自由」的三幕叙事，让观众从被 AI 引导，走向与数据流的自由共处——探讨人与智能体之间从依赖到平等的关系边界。</div>
+        <ul class="pts">
+          <li><b>三幕叙事结构：</b>全黑序曲中呼吸光点与极速打字机（<span class="hl">4ms/字符</span>）引入 → ERROR 故障叙事数据洪流涌出 → Evans 劝阻后消失、把交互权彻底交还观众。</li>
+          <li><b>实时图形系统：</b>基于 WebGL / Canvas 自研全屏粒子系统，<span class="hl">数万级粒子</span>实时渲染稳定 <span class="hl">60fps</span>；粒子球采用两极密集、赤道稀疏的自然分布与沙丘层渐变。</li>
+          <li><b>交互叙事引擎：</b>状态机驱动的幕次切换、字符流打字机、故障态渲染与观众自由态交互，全部纯前端实现、零后端依赖。</li>
+          <li><b>完整交付：</b>可交互 Web 原型 + <span class="hl">18 页</span> HTML 答辩演示系统（自建幻灯片导航框架），已部署 GitHub Pages 公网可访问。</li>
+        </ul>
+        <div class="kpi">
+          <div class="k"><div class="v">60fps</div><div class="c">全屏粒子实时渲染</div></div>
+          <div class="k"><div class="v">3 幕</div><div class="c">序曲/故障/自由交互</div></div>
+          <div class="k"><div class="v">18 页</div><div class="c">自建答辩演示系统</div></div>
+          <div class="k"><div class="v">0 后端</div><div class="c">纯前端可离线运行</div></div>
+        </div>
+      </div>
+      <div class="stack"><span class="st">WebGL</span><span class="st">Canvas 2D</span><span class="st">粒子系统</span><span class="st">GLSL</span><span class="st">交互叙事</span><span class="st">GitHub Pages</span></div>
+    </div>
+
+    <!-- 苏格拉底请回答 -->
+    <div class="proj">
+      <div class="head">
+        <span class="tag">独立产品 · AI 人机共创</span>
+        <h3>苏格拉底请回答 — 与思想者对话的 AI 共创平台</h3>
+        <div class="role"><b>身份</b>&nbsp; 独立设计与全栈研发&nbsp;&nbsp;·&nbsp;&nbsp;<b>时间</b>&nbsp; 2025.09 — 至今&nbsp;&nbsp;·&nbsp;&nbsp;<b>形态</b>&nbsp; Web 全栈原型</div>
+        <div class="desc">针对「看 TED — 收藏 — 转发 — 遗忘」的知识消费断层（<span class="hl">72%</span> 用户观看后仅收藏、<span class="hl">15%</span> 真正内化输出），构建一个让用户与古今 255 位思想者对话、并沉淀为自己观点的 AI 共创平台。核心是把被动的 TED Talk 转化为用户自己的 My Talk。</div>
+        <ul class="pts">
+          <li><b>三大模块：</b>名人智囊（<span class="hl">255 位</span>思想者 · 覆盖约 18 个领域）、群贤论道（多智者圆桌 + AI 主持人调度）、思想人物卡（可沉淀与私密收藏的观点资产）。</li>
+          <li><b>智能荐师引擎：</b>用户提问经<span class="hl">意图五分类</span>（成长/职业/关系/创造/学习）加权映射到领域，精准推荐最契合的思想者组合。</li>
+          <li><b>人格化 RAG：</b>三路加权检索（重要度 <span class="hl">0.5</span> + 词法 <span class="hl">0.35</span> + 来源置信 <span class="hl">0.15</span>）+ 6 条反幻觉全局护栏，在角色人格与事实边界间取得平衡。</li>
+          <li><b>伦理设计：</b>AI 定位为「支架」而非「代笔」，正文由用户自主撰写；全局标注「非真实人物实时发言」，以思想为证据、人物为视角、学生观点为最终资产。</li>
+          <li><b>四段旅程闭环：</b>听见思想 → 内化（与角色辩论）→ 人格共创 → 表达思想，形成从输入到产出的完整学习闭环。</li>
+        </ul>
+        <div class="kpi">
+          <div class="k"><div class="v">255</div><div class="c">思想者人物库</div></div>
+          <div class="k"><div class="v">~18</div><div class="c">覆盖领域</div></div>
+          <div class="k"><div class="v">5 类</div><div class="c">意图识别分类</div></div>
+          <div class="k"><div class="v">4 层</div><div class="c">全栈技术架构</div></div>
+        </div>
+      </div>
+      <div class="stack"><span class="st">FastAPI</span><span class="st">SQLite</span><span class="st">DeepSeek LLM</span><span class="st">人格化 RAG</span><span class="st">意图分类</span><span class="st">多智能体调度</span></div>
+    </div>
+
+  </section>
+
+  <!-- ============ 交互设计作品 ============ -->
+  <section>
+    <div class="sec-h"><span class="idx">02</span><h2>交互设计作品</h2><span class="en">INTERACTION DESIGN</span></div>
+
+    <!-- 宇宙回声 -->
+    <div class="proj">
+      <div class="head">
+        <span class="tag">多模态 AI · 声光共创系统</span>
+        <h3>宇宙回声 ECHO VERSE — 脉冲星声纹转化与共创系统</h3>
+        <div class="role"><b>身份</b>&nbsp; 主创 / 系统设计 / AI 工程原型&nbsp;&nbsp;·&nbsp;&nbsp;<b>类型</b>&nbsp; 跨维度人机交互系统（软硬件结合）</div>
+        <div class="desc">把万亿光年外脉冲星的信号，转化为可听见的音乐与可触摸的光影。项目以「Turn light-year pulses into your cosmic earbeats」为主张，融合太空数据采集、AI 曲风模型、Web 创作平台与实体声光交互硬件，构建人类与宇宙之间的情感共振平台。</div>
+        <ul class="pts">
+          <li><b>AI 筛选与转化系统：</b>对 7 颗脉冲星原始信号做「<span class="hl">20→6 黄金分割筛选</span>」，从乐理、天文事件、哲学隐喻三个维度将时间-强度数据映射为声音与乐曲。</li>
+          <li><b>完整数据闭环：</b>太空端信号采集 → 地球端数据接收站解压音乐基因库 → 脉冲晨曲风 AI 工厂训练曲风模型 → 用户评分与创作行为反哺，持续优化筛选逻辑与模型参数。</li>
+          <li><b>三端交互：</b>网页端生成式对话音乐生成器 + 全屋投影交互系统 + 光立方交互硬件；按住麦克风即可用声音实时影响粒子运动，与脉冲星「同频闪烁」。</li>
+          <li><b>工程原型：</b>用 Python 对接 DeepSeek API 完成信号分析与 prompt→音乐/封面的生成链路，落地可运行的技术验证 Demo。</li>
+        </ul>
+        <div class="kpi">
+          <div class="k"><div class="v">7 颗</div><div class="c">脉冲星信号源</div></div>
+          <div class="k"><div class="v">20→6</div><div class="c">黄金分割 AI 筛选</div></div>
+          <div class="k"><div class="v">3 维</div><div class="c">乐理/天文/哲学映射</div></div>
+          <div class="k"><div class="v">软+硬</div><div class="c">Web+声光立方体</div></div>
+        </div>
+      </div>
+      <div class="shots2"><img src="img/echoverse-ui.jpg" alt="ECHO VERSE 界面"><img src="img/echoverse-arch.jpg" alt="ECHO VERSE 系统架构"></div>
+      <div class="cap">左：脉冲星音画交互界面（首页 + 音画交互页）&nbsp;·&nbsp;右：太空端—地球端完整数据闭环架构</div>
+      <div class="stack"><span class="st">多模态生成</span><span class="st">AI 音乐系统</span><span class="st">DeepSeek</span><span class="st">数据可视化</span><span class="st">软硬件结合</span><span class="st">粒子交互</span></div>
+    </div>
+
+    <!-- 饭咪 -->
+    <div class="proj">
+      <div class="head">
+        <span class="tag">AI 陪伴 · 软硬件产品</span>
+        <h3>MEALMATE 饭咪 — 缓解独居青年饮食孤独的 AI 饭搭子</h3>
+        <div class="role"><b>身份</b>&nbsp; 产品设计 / 交互设计&nbsp;&nbsp;·&nbsp;&nbsp;<b>类型</b>&nbsp; 软硬件结合的 AI 陪伴产品</div>
+        <div class="desc">聚焦独居青年的饮食与情感困境，以用餐场景为切入点，打造一款融合陪伴、互动与健康管理的 AI「饭搭子」——一只有性格、会成长、能陪你吃饭聊天的智能宠物。</div>
+        <ul class="pts">
+          <li><b>性格养成系统：</b><span class="hl">36 种表情 · 16 种性格</span>，通过饮食互动培养出独一无二的宠物人格（从「好奇热情的饮食探险家」到理性稳定型）。</li>
+          <li><b>健康闭环：</b>食材购买建议、菜谱教学、体检中心（运动/情绪双维度评分）、健康日记 / 周报 / 月报，把饮食健康管理变成有陪伴感的日常。</li>
+          <li><b>情感与社交：</b>陪吃陪聊共享菜单、跨地域「搭子电话」实时连线、按「对胃口」匹配好友编号，用情绪价值缓解独居孤独。</li>
+          <li><b>软硬件一体：</b>猫咪造型实体喂食硬件 + 配套 App，能量值、拍照喂食、日记本联动，形成完整养成体验。</li>
+        </ul>
+        <div class="kpi">
+          <div class="k"><div class="v">36 / 16</div><div class="c">表情 / 性格</div></div>
+          <div class="k"><div class="v">4 大</div><div class="c">核心功能模块</div></div>
+          <div class="k"><div class="v">软+硬</div><div class="c">硬件 + App 一体</div></div>
+        </div>
+      </div>
+      <div class="shots2"><img src="img/mealmate-app.jpg" alt="饭咪 App 界面"><img src="img/mealmate-func.jpg" alt="饭咪功能"></div>
+      <div class="cap">左：饭咪硬件 + 性格/体检/日记 App 界面&nbsp;·&nbsp;右：食材购买/菜谱/陪吃陪聊/养成等核心功能</div>
+      <div class="stack"><span class="st">智能硬件</span><span class="st">情绪价值</span><span class="st">性格养成</span><span class="st">健康管理</span><span class="st">社交匹配</span></div>
+    </div>
+
+    <!-- 千年调 -->
+    <div class="proj">
+      <div class="head">
+        <span class="tag">交互网页 · 文化叙事</span>
+        <h3>千年调 — 中国古代猫咪画卷</h3>
+        <div class="role"><b>身份</b>&nbsp; 交互设计 / 视觉设计 / 前端&nbsp;&nbsp;·&nbsp;&nbsp;<b>类型</b>&nbsp; 沉浸式交互网页 / H5</div>
+        <div class="desc">一部以「猫」为视角的中国古代文化交互画卷。用户化身一只小猫，穿行于唐、宋、明、清的历史场景，沉浸式了解古代猫咪与人、与政治、与社会的关系发展史——兼具趣味性、交互性、游戏性与考究性。</div>
+        <ul class="pts">
+          <li><b>叙事化信息设计：</b>以朝代为章节、以猫视角为主线，把散落的历史考据编织成可漫游的叙事长卷（书坊、猫儿房、市场、器物画作等场景）。</li>
+          <li><b>考究的内容：</b>取材真实文物与史料，如《唐苑蝶春图》、乾隆款画珐琅猫蝶图鼻烟壶等，在趣味中保证历史严谨性。</li>
+          <li><b>横向卷轴交互：</b>拖拽翻页的长卷式浏览，配合古画卷视觉语言，营造沉浸式文化体验。</li>
+        </ul>
+      </div>
+      <div class="shots2"><img src="img/qiannian-cover.jpg" alt="千年调封面"><img src="img/qiannian-scene.jpg" alt="千年调场景"></div>
+      <div class="cap">左：古画卷风格封面&nbsp;·&nbsp;右：唐宋明清多朝代历史场景与文物画作</div>
+      <div class="stack"><span class="st">交互网页</span><span class="st">文化叙事</span><span class="st">视觉设计</span><span class="st">信息设计</span><span class="st">H5</span></div>
+    </div>
+
+  </section>
+
+  <!-- ============ 已上线 & 工作流 ============ -->
+  <section>
+    <div class="sec-h"><span class="idx">03</span><h2>产品落地</h2><span class="en">SHIPPED &amp; DEPLOYED</span></div>
+
+    <div class="proj">
+      <div class="head">
+        <span class="tag">已上线 App</span>
+        <h3>三款已上线应用</h3>
+        <div class="role"><b>身份</b>&nbsp; 设计与产品&nbsp;&nbsp;·&nbsp;&nbsp;<b>成果</b>&nbsp; 华为 App 匠心奖（第 77 期）</div>
+        <ul class="pts">
+          <li><b>句读 — 发现文字之美：</b>为文字保留一个疗愈角落，精致图文卡片 + 每日推荐，让阅读回归仪式感。<span class="hl">获华为匠心奖第 77 期</span>推荐。</li>
+          <li><b>博物门 — 看见世界文明：</b>以名画与文物为入口的世界文明科普 App（如《戴珍珠耳环的少女》主题卡片）。</li>
+          <li><b>goodquotes — Words That Move You：</b>面向英文经典段落的摘录与灵感激发应用（Jane Eyre、Yellowface 等）。</li>
+        </ul>
+      </div>
+      <div class="shots2"><img src="img/apps.jpg" alt="已上线 App"><img src="img/aiflow.jpg" alt="AI 工作流落地"></div>
+      <div class="cap">左：句读 / 博物门 / goodquotes 三款已上线应用&nbsp;·&nbsp;右：微信读书书封生成、秒剪动态花字、理想汽车 lora 训练等落地 AI 工作流</div>
+      <div class="stack"><span class="st">iOS App</span><span class="st">图文卡片</span><span class="st">产品设计</span></div>
+    </div>
+
+    <div class="proj">
+      <div class="head">
+        <span class="tag">落地 AI 工作流</span>
+        <h3>产业级 AI 生成工作流</h3>
+        <div class="role"><b>身份</b>&nbsp; AI 工作流设计与实现&nbsp;&nbsp;·&nbsp;&nbsp;<b>场景</b>&nbsp; 真实业务落地</div>
+        <ul class="pts">
+          <li><b>微信读书 — AI 自动化书封生成：</b>构建从书名/简介到成品书封的自动化生成链路，规模化产出风格统一的封面。</li>
+          <li><b>秒剪 — AI 可编辑动态花字生成：</b>面向短视频剪辑的动态花字自动生成与二次可编辑方案。</li>
+          <li><b>理想汽车 — L6 / L9 车型 lora 模型训练：</b>针对具体车型完成 lora 训练与一致性生成，保证多场景出图的品牌一致性。</li>
+          <li><b>微信输入法 — AI 卡片生成：</b>基于 Dify workflow，输入文本即生成多种风格排版模板（商务/创意/极简/科技/教育/自然等），实测可精准匹配不同文字内容的美观排版。</li>
+        </ul>
+      </div>
+      <div class="stack"><span class="st">Dify Workflow</span><span class="st">LoRA 训练</span><span class="st">一致性生成</span><span class="st">Prompt 工程</span><span class="st">AIGC 落地</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 竞赛 & 学业 ============ -->
+  <section>
+    <div class="sec-h"><span class="idx">04</span><h2>荣誉与学业</h2><span class="en">AWARDS &amp; ACADEMICS</span></div>
+
+    <div class="proj">
+      <div class="head">
+        <span class="tag">科创竞赛 · 9 项奖项</span>
+        <h3>创新与竞赛能力</h3>
+        <ul class="pts">
+          <li><b>国家级：</b>睿抗机器人大赛<span class="hl">全国一等奖</span>、华为 App 匠心奖、中美青年创客大赛二等奖、国际大学生创新创业大赛十佳优胜奖。</li>
+          <li><b>校级 / 市级：</b>睿抗机器人大赛北京市一等奖、清华设计+创新创业大赛二等奖、清华挑战杯三等奖、艺术与科技创新创业大赛最佳团队奖、SDG 创新创业马拉松二等奖。</li>
+          <li><b>代表作：</b>「基于草图的雕塑图像检索系统」入选清华第 41 届挑战杯学生课外科技作品展（指导老师 徐迎庆）。</li>
+        </ul>
+      </div>
+      <div class="shots2"><img src="img/awards.jpg" alt="竞赛奖项"><img src="img/academic.jpg" alt="学业成绩"></div>
+      <div class="cap">左：科创竞赛奖项与获奖作品&nbsp;·&nbsp;右：学业成绩与奖学金证书</div>
+    </div>
+
+    <div class="proj">
+      <div class="head">
+        <span class="tag">学业 · Academic</span>
+        <h3>学业表现</h3>
+        <ul class="pts">
+          <li><b>总成绩 3.98 / 4.0，专业总排名第 1</b>，自入学以来始终保持专业第一，<span class="hl">6 门专业课拿到 A+</span>。</li>
+          <li><b>奖学金：</b>2023—2024 <span class="hl">国家奖学金</span>、国家励志奖学金、清华大学综合优秀奖学金（连续两年）、清华之友-康颂奖学金。</li>
+        </ul>
+        <div class="kpi">
+          <div class="k"><div class="v">3.98</div><div class="c">GPA / 4.0</div></div>
+          <div class="k"><div class="v">No.1</div><div class="c">专业排名</div></div>
+          <div class="k"><div class="v">A+×6</div><div class="c">满绩专业课</div></div>
+          <div class="k"><div class="v">5 项</div><div class="c">奖学金</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="hr"></div>
+  <div style="text-align:center;padding:20px 0 70px;color:var(--dim2);font-size:12px;letter-spacing:1px">
+    张一文 · 清华大学美术学院 信息艺术设计系 · 艺术与科技（信息设计）· 2022—2026
+  </div>
+
+</div>
+</body>
+</html>
