@@ -3481,6 +3481,88 @@
     }
     .card-deco-corner.top-right { top: 12px; right: 12px; }
     .card-deco-corner.bottom-left { bottom: 12px; left: 12px; transform: rotate(180deg); }
+    .study-page {
+      display: none;
+      min-height: calc(100vh - 76px);
+      padding: 38px clamp(18px, 5vw, 72px) 70px;
+      background: radial-gradient(circle at 20% 0%, rgba(196,149,106,0.16), transparent 34%), #050505;
+      color: #f6f0e7;
+    }
+    .study-page.show { display: block; }
+    .study-shell { max-width: 1180px; margin: 0 auto; }
+    .study-header { display:flex; justify-content:space-between; gap:24px; align-items:flex-end; margin-bottom:28px; }
+    .study-kicker { color:var(--accent); font-size:.66rem; letter-spacing:.22em; text-transform:uppercase; }
+    .study-title { margin:6px 0 4px; font-family:'Noto Serif SC',serif; font-size:clamp(2rem,4vw,4rem); font-weight:300; }
+    .study-subtitle { margin:0; color:rgba(246,240,231,.58); max-width:680px; line-height:1.8; }
+    .study-grid { display:grid; grid-template-columns:minmax(280px,.82fr) minmax(360px,1.35fr); gap:20px; }
+    .study-panel { border:1px solid rgba(196,149,106,.22); background:rgba(18,16,14,.78); border-radius:18px; padding:22px; box-shadow:0 24px 70px rgba(0,0,0,.28); }
+    .study-panel h3 { margin:0 0 16px; font-size:1rem; font-weight:500; letter-spacing:.08em; }
+    .study-control { width:100%; box-sizing:border-box; border:1px solid rgba(255,255,255,.13); background:#0b0b0b; color:#f6f0e7; border-radius:12px; padding:12px 14px; font:inherit; }
+    textarea.study-control { min-height:118px; resize:vertical; line-height:1.7; }
+    .study-row { display:flex; gap:10px; margin-top:10px; }
+    .study-row .study-control { flex:1; }
+    .study-button { border:1px solid rgba(196,149,106,.5); background:var(--accent); color:#090807; border-radius:12px; padding:11px 18px; cursor:pointer; font-weight:600; white-space:nowrap; }
+    .study-button.secondary { background:transparent; color:var(--accent); }
+    .study-button:disabled { opacity:.45; cursor:not-allowed; }
+    .study-status { min-height:24px; margin:12px 0 0; color:rgba(246,240,231,.66); font-size:.82rem; line-height:1.6; }
+    .study-source-list { display:grid; gap:10px; margin-top:16px; max-height:360px; overflow:auto; }
+    .study-source { display:flex; align-items:flex-start; gap:10px; padding:12px; border:1px solid rgba(255,255,255,.09); border-radius:12px; background:rgba(255,255,255,.025); }
+    .study-source strong { display:block; font-size:.9rem; }
+    .study-source small { color:rgba(246,240,231,.5); line-height:1.5; }
+    .study-divider { height:1px; margin:22px 0; background:rgba(255,255,255,.08); }
+    .study-mini-title { margin:0 0 10px; color:#d5ad80; font-size:.78rem; letter-spacing:.08em; }
+    .study-help { margin:8px 0 0; color:rgba(246,240,231,.43); font-size:.72rem; line-height:1.6; }
+    .study-card-list { display:grid; gap:8px; margin-top:12px; }
+    .study-result { min-height:260px; white-space:pre-wrap; line-height:1.85; color:rgba(246,240,231,.88); }
+    .study-advisor-turn { padding:14px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+    .study-advisor-name { color:var(--accent); font-size:.78rem; letter-spacing:.08em; margin-bottom:6px; }
+    .study-final { margin-top:16px; padding:18px; border-radius:14px; background:rgba(196,149,106,.1); border:1px solid rgba(196,149,106,.22); }
+    .ted-roundtable {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      overflow-y: auto;
+      color: #f6f0e7;
+      background:
+        radial-gradient(circle at 55% 8%, rgba(114,82,51,.24), transparent 32%),
+        linear-gradient(180deg, #080807 0%, #030303 52%, #050505 100%);
+    }
+    .ted-roundtable.show { display: block; }
+    .ted-shell { width:min(1320px, calc(100% - 48px)); min-height:100%; margin:0 auto; padding:28px 0 150px; box-sizing:border-box; }
+    .ted-head { display:flex; justify-content:space-between; gap:28px; align-items:flex-start; }
+    .ted-kicker { color:#c89b67; font-size:.7rem; letter-spacing:.24em; text-transform:uppercase; }
+    .ted-title { margin:8px 0 4px; font:300 clamp(2.6rem,5vw,5rem)/1.05 'Noto Serif SC',serif; }
+    .ted-subtitle { margin:0; color:rgba(246,240,231,.5); line-height:1.8; }
+    .ted-back { border:1px solid rgba(255,255,255,.13); background:rgba(255,255,255,.045); color:#e5ddd2; border-radius:999px; padding:13px 20px; cursor:pointer; font:inherit; }
+    .ted-speakers { display:flex; justify-content:center; gap:clamp(24px,6vw,78px); margin:38px auto 30px; flex-wrap:wrap; }
+    .ted-speaker { width:128px; text-align:center; color:rgba(246,240,231,.58); font-size:.78rem; }
+    .ted-speaker img { width:104px; height:104px; display:block; margin:0 auto 10px; border-radius:50%; object-fit:cover; object-position:top center; border:1px solid rgba(196,149,106,.26); background:radial-gradient(circle at 50% 35%,#35312c,#161513 74%); }
+    .ted-thread { width:min(1040px,100%); margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+    .ted-user-message { align-self:flex-end; max-width:72%; padding:15px 21px; border-radius:17px; border:1px solid rgba(196,149,106,.28); background:#211b15; box-shadow:0 12px 32px rgba(0,0,0,.24); font-size:1rem; line-height:1.65; }
+    .ted-message-row { display:grid; grid-template-columns:56px minmax(0,1fr); gap:14px; align-items:start; }
+    .ted-message-avatar { width:54px; height:54px; border-radius:50%; object-fit:cover; object-position:top center; border:1px solid rgba(196,149,106,.22); background:#191817; }
+    .ted-message-bubble { min-height:54px; padding:15px 18px; border:1px solid rgba(255,255,255,.09); border-radius:17px; background:rgba(20,20,20,.92); box-shadow:0 10px 30px rgba(0,0,0,.18); }
+    .ted-message-name { color:#b48b61; font-size:.72rem; letter-spacing:.08em; margin-bottom:7px; }
+    .ted-message-copy { white-space:pre-wrap; line-height:1.75; color:rgba(246,240,231,.9); }
+    .ted-compose { position:fixed; z-index:81; left:50%; bottom:20px; transform:translateX(-50%); width:min(1040px,calc(100% - 48px)); display:flex; gap:12px; padding:12px; border:1px solid rgba(255,255,255,.11); border-radius:18px; background:rgba(16,16,16,.92); backdrop-filter:blur(18px); box-shadow:0 20px 60px rgba(0,0,0,.5); }
+    .ted-input { flex:1; min-width:0; resize:none; border:0; outline:0; background:transparent; color:#f6f0e7; padding:10px 12px; font:inherit; line-height:1.55; }
+    .ted-send { align-self:stretch; min-width:88px; border:0; border-radius:14px; background:#d1ad7c; color:#17120d; cursor:pointer; font:inherit; }
+    .ted-send:disabled { opacity:.5; cursor:not-allowed; }
+    @media (max-width:820px) { .study-grid{grid-template-columns:1fr}.study-header{align-items:flex-start;flex-direction:column}.study-row{flex-direction:column} }
+    @media (max-width:640px) {
+      .ted-shell { width:calc(100% - 28px); padding-top:18px; }
+      .ted-head { gap:14px; }
+      .ted-subtitle { display:none; }
+      .ted-back { padding:10px 14px; }
+      .ted-speakers { gap:16px; margin:28px auto 24px; }
+      .ted-speaker { width:82px; }
+      .ted-speaker img { width:70px; height:70px; }
+      .ted-user-message { max-width:86%; }
+      .ted-message-row { grid-template-columns:42px minmax(0,1fr); gap:9px; }
+      .ted-message-avatar { width:42px; height:42px; }
+      .ted-compose { width:calc(100% - 24px); bottom:12px; }
+    }
   </style>
 </head>
 <body>
@@ -3537,7 +3619,7 @@
         <nav class="nav-links" aria-label="Primary">
           <a href="#" class="is-active" data-view="home" id="homeNavLink">首页</a>
           <a href="#" data-view="people" id="peopleNavLink">名人智囊</a>
-          <a href="#">智慧主题</a>
+          <a href="#" data-view="study" id="studyNavLink">TED圆桌</a>
           <a href="#">用户故事</a>
           <a href="#">关于我们</a>
         </nav>
@@ -3580,6 +3662,83 @@
       <input class="people-search" id="peopleSearch" type="search" placeholder="搜索人物、领域、关键词...">
     </div>
     <div class="people-grid" id="peopleGrid"></div>
+  </section>
+
+  <section class="study-page" id="studyPage" aria-live="polite">
+    <div class="study-shell">
+      <div class="study-header">
+        <div>
+          <div class="study-kicker">TED Roundtable</div>
+          <h2 class="study-title">TED圆桌</h2>
+          <p class="study-subtitle">上传 PDF、DOCX、PPTX、文本，或导入网页 URL。系统会整理资料、选择合适的名人智囊，并围绕原文展开讨论。</p>
+        </div>
+        <button class="study-button secondary" id="studyRefresh" type="button">刷新资料库</button>
+      </div>
+      <div class="study-grid">
+        <aside class="study-panel">
+          <h3>01 · 导入研读资料</h3>
+          <input class="study-control" id="studyFile" type="file" accept=".pdf,.docx,.pptx,.txt,.md,.html,.htm,.mp4,.mov,.m4v,.webm,.mkv,.avi,application/pdf,video/*">
+          <div class="study-row">
+            <input class="study-control" id="studyUrl" type="url" placeholder="粘贴文章网址或视频 URL">
+            <select class="study-control" id="studyUrlType" style="max-width:140px">
+              <option value="auto">自动识别</option>
+              <option value="webpage">普通网页</option>
+              <option value="video">视频链接</option>
+            </select>
+            <button class="study-button" id="studyImportUrl" type="button">导入 / 解读</button>
+          </div>
+          <textarea class="study-control" id="studyTranscript" placeholder="视频转写可选：留空时由 StepFun 自动转写" style="margin-top:10px"></textarea>
+          <p class="study-help">文档和普通网页直接提取正文；视频会先提取音轨，再由 StepFun 自动转写。也可以手动提供 transcript。</p>
+          <div class="study-status" id="studyStatus"></div>
+          <div class="study-source-list" id="studySourceList"></div>
+          <div class="study-divider"></div>
+          <div class="study-mini-title">学习型表达角色卡</div>
+          <select class="study-control" id="studyCardSource"><option value="">选择已导入的视频资料</option></select>
+          <input class="study-control" id="studyCardName" type="text" maxlength="160" placeholder="角色卡显示名称（可选）" style="margin-top:10px">
+          <div class="study-row"><button class="study-button secondary" id="studyGenerateCard" type="button">生成角色卡</button></div>
+          <div class="study-card-list" id="studyCardList"></div>
+        </aside>
+        <main class="study-panel">
+          <h3>02 · 选择圆桌角色、解读方式并提问</h3>
+          <div class="study-card-list" id="studyCoachList">
+            <label class="study-source"><input type="checkbox" data-coach-role="english_expression_coach"><span><strong>英语表达教练</strong><small>检查表达结构、清晰度与语感</small></span></label>
+            <label class="study-source"><input type="checkbox" data-coach-role="critical_thinking_coach"><span><strong>批判性思维教练</strong><small>检查论证、证据、假设与反例</small></span></label>
+            <label class="study-source"><input type="checkbox" data-coach-role="peer_audience"><span><strong>同龄人听众</strong><small>提供可理解性与共鸣反馈</small></span></label>
+          </div>
+          <select class="study-control" id="studyMode">
+            <option value="guide">导读：梳理框架与核心观点</option>
+            <option value="critique">批判：检验论证与盲点</option>
+            <option value="apply">应用：转化为行动建议</option>
+            <option value="compare">比较：对照不同观点</option>
+            <option value="debate">辩论：让智囊展开交锋</option>
+          </select>
+          <textarea class="study-control" id="studyQuestion" placeholder="例如：请梳理这份资料最重要的三个观点，并指出它们对我当前决策的影响。"></textarea>
+          <div class="study-row">
+            <button class="study-button" id="studyAsk" type="button">进入TED圆桌</button>
+          </div>
+          <div class="study-result" id="studyResult">选择至少一份资料，然后提出你的问题。</div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <section class="ted-roundtable" id="tedRoundtable" aria-hidden="true">
+    <div class="ted-shell">
+      <header class="ted-head">
+        <div>
+          <div class="ted-kicker">TED ROUNDTABLE</div>
+          <h2 class="ted-title">TED圆桌</h2>
+          <p class="ted-subtitle">让智囊围绕你导入的资料展开讨论。你可以继续追问，让他们轮流回应。</p>
+        </div>
+        <button class="ted-back" id="tedBack" type="button">返回资料库</button>
+      </header>
+      <div class="ted-speakers" id="tedSpeakers"></div>
+      <main class="ted-thread" id="tedMessages"></main>
+    </div>
+    <form class="ted-compose" id="tedForm">
+      <textarea class="ted-input" id="tedInput" rows="1" maxlength="4000" placeholder="继续追问一句..."></textarea>
+      <button class="ted-send" id="tedSend" type="submit">发送</button>
+    </form>
   </section>
 
   <section class="person-chat" id="personChat" aria-hidden="true">
@@ -3819,6 +3978,18 @@ const CELEBRITIES = {
 };
 
 const API_BASE = 'http://127.0.0.1:8000/api';
+const USER_ID_STORAGE_KEY = 'zhinang-user-id-v1';
+const USER_ID = (() => {
+  try {
+    const existing = window.localStorage.getItem(USER_ID_STORAGE_KEY);
+    if (existing) return existing;
+    const created = window.crypto?.randomUUID?.() || `local-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    window.localStorage.setItem(USER_ID_STORAGE_KEY, created);
+    return created;
+  } catch (error) {
+    return 'default_user';
+  }
+})();
 const APP_MODE_STORAGE_KEY = 'zhinang-app-mode-v1';
 const DEFAULT_APP_MODE = 'preview';
 const urlMode = new URLSearchParams(window.location.search).get('mode');
@@ -6607,6 +6778,17 @@ const state = {
     conversationId: null,
     loading: false,
     messages: []
+  },
+  study: {
+    sources: [],
+    selectedSourceIds: new Set(),
+    conversationId: null,
+    loading: false,
+    participants: [],
+    messages: [],
+    speakerCards: [],
+    selectedSpeakerCardIds: new Set(),
+    selectedCoachRoles: new Set()
   }
 };
 state.portraitAdjustments = cloneAdjustmentMap(PORTRAIT_ADJUSTMENTS);
@@ -6643,6 +6825,32 @@ const personChatInput = document.getElementById('personChatInput');
 const personChatSend = document.getElementById('personChatSend');
 const homeNavLink = document.getElementById('homeNavLink');
 const peopleNavLink = document.getElementById('peopleNavLink');
+const studyNavLink = document.getElementById('studyNavLink');
+const studyPage = document.getElementById('studyPage');
+const studyFile = document.getElementById('studyFile');
+const studyUrl = document.getElementById('studyUrl');
+const studyUrlType = document.getElementById('studyUrlType');
+const studyImportUrl = document.getElementById('studyImportUrl');
+const studyRefresh = document.getElementById('studyRefresh');
+const studyStatus = document.getElementById('studyStatus');
+const studySourceList = document.getElementById('studySourceList');
+const studyMode = document.getElementById('studyMode');
+const studyQuestion = document.getElementById('studyQuestion');
+const studyAsk = document.getElementById('studyAsk');
+const studyResult = document.getElementById('studyResult');
+const studyTranscript = document.getElementById('studyTranscript');
+const studyCardSource = document.getElementById('studyCardSource');
+const studyCardName = document.getElementById('studyCardName');
+const studyGenerateCard = document.getElementById('studyGenerateCard');
+const studyCardList = document.getElementById('studyCardList');
+const studyCoachList = document.getElementById('studyCoachList');
+const tedRoundtable = document.getElementById('tedRoundtable');
+const tedBack = document.getElementById('tedBack');
+const tedSpeakers = document.getElementById('tedSpeakers');
+const tedMessages = document.getElementById('tedMessages');
+const tedForm = document.getElementById('tedForm');
+const tedInput = document.getElementById('tedInput');
+const tedSend = document.getElementById('tedSend');
 let isInputComposing = false;
 
 const STACK_PRESETS = [
@@ -7593,7 +7801,9 @@ function setNavActive(target) {
 }
 
 function showHomePage() {
+  closeTedRoundtable();
   document.body.classList.remove('people-mode');
+  studyPage?.classList.remove('show');
   peoplePage?.classList.remove('show');
   closePersonChat();
   setNavActive('home');
@@ -7655,9 +7865,11 @@ function renderPeopleGrid() {
 }
 
 async function showPeoplePage() {
+  closeTedRoundtable();
   resetResultOnly();
   document.body.classList.add('people-mode');
   peoplePage?.classList.add('show');
+  studyPage?.classList.remove('show');
   setNavActive('people');
   try {
     await loadPeoplePage();
@@ -7666,6 +7878,419 @@ async function showPeoplePage() {
     peopleGrid.innerHTML = `<div class="people-empty">${escapeHTML(normalizeApiErrorMessage(error.message || '人物加载失败。'))}</div>`;
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function showStudyPage() {
+  closeTedRoundtable();
+  resetResultOnly();
+  document.body.classList.add('people-mode');
+  peoplePage?.classList.remove('show');
+  studyPage?.classList.add('show');
+  closePersonChat();
+  setNavActive('study');
+  await Promise.all([loadStudySources(), loadSpeakerCards()]);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setStudyStatus(message, isError = false) {
+  if (!studyStatus) return;
+  studyStatus.textContent = message || '';
+  studyStatus.style.color = isError ? '#f08a78' : 'rgba(246,240,231,.66)';
+}
+
+async function loadStudySources() {
+  if (!studySourceList) return;
+  studySourceList.innerHTML = '<div class="study-status">正在加载资料库...</div>';
+  try {
+    const sources = await apiFetch(`/study/sources?user_id=${encodeURIComponent(USER_ID)}`);
+    state.study.sources = Array.isArray(sources) ? sources : [];
+    const available = new Set(state.study.sources.map((item) => item.id));
+    state.study.selectedSourceIds = new Set([...state.study.selectedSourceIds].filter((id) => available.has(id)));
+    renderStudySources();
+    renderStudyCardSources();
+  } catch (error) {
+    studySourceList.innerHTML = `<div class="study-status">${escapeHTML(normalizeApiErrorMessage(error.message || '资料加载失败。'))}</div>`;
+  }
+}
+
+function renderStudyCardSources() {
+  if (!studyCardSource) return;
+  const videos = state.study.sources.filter((source) => source.source_type === 'video');
+  studyCardSource.innerHTML = '<option value="">选择已导入的视频资料</option>' + videos.map((source) =>
+    `<option value="${escapeHTML(source.id)}">${escapeHTML(source.title)}</option>`
+  ).join('');
+}
+
+async function loadSpeakerCards() {
+  if (!studyCardList) return;
+  try {
+    const cards = await apiFetch(`/study/speaker-cards?user_id=${encodeURIComponent(USER_ID)}`);
+    state.study.speakerCards = Array.isArray(cards) ? cards : [];
+    const available = new Set(state.study.speakerCards.map((card) => card.id));
+    state.study.selectedSpeakerCardIds = new Set([...state.study.selectedSpeakerCardIds].filter((id) => available.has(id)));
+    renderSpeakerCards();
+  } catch (error) {
+    studyCardList.innerHTML = `<div class="study-status">${escapeHTML(normalizeApiErrorMessage(error.message || '角色卡加载失败。'))}</div>`;
+  }
+}
+
+function renderSpeakerCards() {
+  if (!studyCardList) return;
+  if (!state.study.speakerCards.length) {
+    studyCardList.innerHTML = '<div class="study-help">还没有角色卡。先导入视频，再从视频转写生成。</div>';
+    return;
+  }
+  studyCardList.innerHTML = state.study.speakerCards.map((card) => `
+    <label class="study-source">
+      <input type="checkbox" data-speaker-card="${escapeHTML(card.id)}" ${state.study.selectedSpeakerCardIds.has(card.id) ? 'checked' : ''}>
+      <span><strong>${escapeHTML(card.display_name)}</strong><small>${escapeHTML(card.role_title)} · ${escapeHTML(card.visibility)}</small></span>
+    </label>
+  `).join('');
+}
+
+function renderStudySources() {
+  if (!studySourceList) return;
+  if (!state.study.sources.length) {
+    studySourceList.innerHTML = '<div class="study-status">还没有资料，请先上传文件或导入网址。</div>';
+    return;
+  }
+  studySourceList.innerHTML = state.study.sources.map((source) => `
+    <label class="study-source">
+      <input type="checkbox" data-study-source="${escapeHTML(source.id)}" ${state.study.selectedSourceIds.has(source.id) ? 'checked' : ''}>
+      <span><strong>${escapeHTML(source.title)}</strong><small>${escapeHTML(source.source_type)} · ${source.section_count} 个章节 · ${source.chunk_count} 个片段<br>${escapeHTML(source.summary || '')}</small></span>
+    </label>
+  `).join('');
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || '').split(',').pop() || '');
+    reader.onerror = () => reject(reader.error || new Error('文件读取失败'));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function importStudyFile(file) {
+  if (!file) return;
+  if (file.size > 14 * 1024 * 1024) {
+    setStudyStatus('单个文件请控制在 14 MB 以内。', true);
+    return;
+  }
+  setStudyStatus(`正在解析 ${file.name}...`);
+  studyFile.disabled = true;
+  try {
+    const contentBase64 = await fileToBase64(file);
+    const source = await apiFetch('/study/sources/import-file', {
+      method: 'POST',
+      body: {
+        filename: file.name,
+        content_base64: contentBase64,
+        content_type: file.type || 'application/octet-stream',
+        user_id: USER_ID
+      }
+    });
+    state.study.selectedSourceIds.add(source.id);
+    setStudyStatus(`已导入：${source.title}`);
+    await loadStudySources();
+  } catch (error) {
+    setStudyStatus(normalizeApiErrorMessage(error.message || '文件导入失败。'), true);
+  } finally {
+    studyFile.disabled = false;
+    studyFile.value = '';
+  }
+}
+
+async function importStudyUrl() {
+  const url = String(studyUrl?.value || '').trim();
+  if (!url) return;
+  setStudyStatus('正在读取网页并提取正文...');
+  studyImportUrl.disabled = true;
+  try {
+    const source = await apiFetch('/study/sources/import-url', {
+      method: 'POST',
+      body: { url, user_id: USER_ID }
+    });
+    state.study.selectedSourceIds.add(source.id);
+    studyUrl.value = '';
+    setStudyStatus(`已导入：${source.title}`);
+    await loadStudySources();
+  } catch (error) {
+    setStudyStatus(normalizeApiErrorMessage(error.message || '网址导入失败。'), true);
+  } finally {
+    studyImportUrl.disabled = false;
+  }
+}
+
+async function importStudyVideo(file, videoUrl, extractFromPage = false) {
+  const transcript = String(studyTranscript?.value || '').trim();
+  if (!file && !videoUrl) {
+    setStudyStatus('请选择视频文件，或填写视频对象存储 URL。', true);
+    return;
+  }
+  if (file && file.size > 60 * 1024 * 1024) {
+    setStudyStatus('本地视频超过 60 MB，请改用对象存储 URL。', true);
+    return;
+  }
+  studyImportUrl.disabled = true;
+  setStudyStatus(transcript.length >= 20 ? '正在保存视频、切分转写并生成知识块...' : '正在提取视频音轨并调用 StepFun 自动转写...');
+  try {
+    const contentBase64 = file ? await fileToBase64(file) : null;
+    const source = await apiFetch('/study/sources/import-video', {
+      method: 'POST',
+      body: {
+        filename: file?.name || null,
+        content_base64: contentBase64,
+        video_url: videoUrl || null,
+        extract_from_page: extractFromPage,
+        transcript,
+        title: file?.name ? file.name.replace(/\.[^.]+$/, '') : null,
+        user_id: USER_ID,
+        metadata: { import_origin: 'ted_roundtable' }
+      }
+    });
+    state.study.selectedSourceIds.add(source.id);
+    if (studyFile) studyFile.value = '';
+    if (studyUrl) studyUrl.value = '';
+    if (studyUrlType) studyUrlType.value = 'auto';
+    if (studyTranscript) studyTranscript.value = '';
+    setStudyStatus(`视频资料已进入研读库：${source.title}`);
+    await loadStudySources();
+    if (studyCardSource) studyCardSource.value = source.id;
+  } catch (error) {
+    setStudyStatus(normalizeApiErrorMessage(error.message || '视频导入失败。'), true);
+  } finally {
+    studyImportUrl.disabled = false;
+  }
+}
+
+async function importStudyMaterial() {
+  const file = studyFile?.files?.[0];
+  const url = String(studyUrl?.value || '').trim();
+  const transcript = String(studyTranscript?.value || '').trim();
+  const urlType = String(studyUrlType?.value || 'auto');
+  if (!file && !url) {
+    setStudyStatus('请选择文件或粘贴网址。', true);
+    return;
+  }
+  const fileIsVideo = Boolean(file && (String(file.type || '').startsWith('video/') || /\.(mp4|mov|m4v|webm|mkv|avi)$/i.test(file.name)));
+  const urlIsDirectVideo = /\.(mp4|mov|m4v|webm|mkv|avi)(?:[?#]|$)/i.test(url);
+  const urlIsKnownVideoPage = /(?:youtube\.com|youtu\.be|ted\.com\/talks|bilibili\.com\/video|vimeo\.com)/i.test(url);
+  const useVideoPageExtractor = !file && (urlType === 'video' || (urlType === 'auto' && urlIsKnownVideoPage));
+  const treatAsVideo = fileIsVideo || (!file && urlType !== 'webpage' && (urlType === 'video' || urlIsDirectVideo || urlIsKnownVideoPage || transcript.length >= 20));
+  if (treatAsVideo) {
+    await importStudyVideo(file || null, file ? '' : url, useVideoPageExtractor && !urlIsDirectVideo);
+    return;
+  }
+  if (file) await importStudyFile(file);
+  else await importStudyUrl();
+}
+
+async function generateSpeakerCard() {
+  const sourceId = String(studyCardSource?.value || '');
+  if (!sourceId) {
+    setStudyStatus('请先选择一份视频资料。', true);
+    return;
+  }
+  studyGenerateCard.disabled = true;
+  setStudyStatus('正在从视频观点与表达方式生成学习型角色卡...');
+  try {
+    const card = await apiFetch('/study/speaker-cards/generate', {
+      method: 'POST',
+      body: {
+        source_document_id: sourceId,
+        display_name: String(studyCardName?.value || '').trim() || null,
+        user_id: USER_ID,
+        consent_status: 'learning_use_only',
+        visibility: 'private'
+      }
+    });
+    state.study.selectedSpeakerCardIds.add(card.id);
+    if (studyCardName) studyCardName.value = '';
+    await loadSpeakerCards();
+    setStudyStatus(`已生成学习型表达角色卡：${card.display_name}`);
+  } catch (error) {
+    setStudyStatus(normalizeApiErrorMessage(error.message || '角色卡生成失败。'), true);
+  } finally {
+    studyGenerateCard.disabled = false;
+  }
+}
+
+function cleanTedReply(content) {
+  let value = String(content || '').trim();
+  const suffixes = [
+    /\s*\[资料\s*[:：][^\]]+\]\s*$/i,
+    /\s*\[[^\]]*(?:｜|\|)[^\]]*\]\s*$/i,
+    /\s*（资料\s*[:：][^）]+）\s*$/i
+  ];
+  let previous = '';
+  while (value && previous !== value) {
+    previous = value;
+    suffixes.forEach((pattern) => { value = value.replace(pattern, '').trim(); });
+  }
+  return value;
+}
+
+async function resolveTedParticipant(participant) {
+  const slug = participant.person_slug || participant.speaker_slug || '';
+  const speakerCard = state.study.speakerCards.find((card) => card.id === slug);
+  if (speakerCard) {
+    return { slug, name: participant.person_name || speakerCard.display_name, image: buildPortraitFallback(speakerCard.display_name, '学习型角色卡') };
+  }
+  const cached = state.people.find((person) => person.slug === slug);
+  if (cached) return { slug, name: participant.person_name || cached.name, image: cached.image };
+  try {
+    const detail = await apiFetch(`/people/${encodeURIComponent(slug)}`);
+    return {
+      slug,
+      name: participant.person_name || detail.chinese_name || slug,
+      image: normalizePortrait(detail.portrait_asset, detail.english_name, detail.chinese_name || slug, detail.domain_category)
+    };
+  } catch (_) {
+    const name = participant.person_name || slug || '智囊';
+    return { slug, name, image: buildPortraitFallback(name, '智囊') };
+  }
+}
+
+async function updateTedParticipants(response) {
+  const planned = Array.isArray(response?.plan?.participants) ? response.plan.participants : [];
+  const fallback = (Array.isArray(response?.turns) ? response.turns : [])
+    .filter((turn) => turn.speaker_role !== 'moderator')
+    .map((turn) => ({ person_slug: turn.speaker_slug, person_name: turn.speaker_name }));
+  const unique = [...new Map((planned.length ? planned : fallback)
+    .filter((item) => item.person_slug)
+    .map((item) => [item.person_slug, item])).values()];
+  state.study.participants = await Promise.all(unique.map(resolveTedParticipant));
+}
+
+function tedParticipantFor(slug, name) {
+  return state.study.participants.find((person) => person.slug === slug) || {
+    slug: slug || 'moderator',
+    name: name || '主持人',
+    image: buildPortraitFallback(name || '主持人', 'TED圆桌')
+  };
+}
+
+function renderTedRoundtable() {
+  if (!tedSpeakers || !tedMessages) return;
+  tedSpeakers.innerHTML = state.study.participants.map((person) => `
+    <div class="ted-speaker">
+      <img src="${escapeHTML(person.image)}" alt="${escapeHTML(person.name)}">
+      <div>${escapeHTML(person.name)}</div>
+    </div>
+  `).join('');
+  tedMessages.innerHTML = state.study.messages.map((message) => {
+    if (message.role === 'user') {
+      return `<div class="ted-user-message">${escapeHTML(message.content)}</div>`;
+    }
+    const person = tedParticipantFor(message.speakerSlug, message.speakerName);
+    return `
+      <div class="ted-message-row">
+        <img class="ted-message-avatar" src="${escapeHTML(person.image)}" alt="${escapeHTML(person.name)}">
+        <div class="ted-message-bubble">
+          <div class="ted-message-name">${escapeHTML(message.speakerName || person.name)}</div>
+          <div class="ted-message-copy">${escapeHTML(cleanTedReply(message.content))}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openTedRoundtable() {
+  tedRoundtable?.classList.add('show');
+  tedRoundtable?.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  tedRoundtable?.scrollTo({ top: 0 });
+}
+
+function closeTedRoundtable() {
+  tedRoundtable?.classList.remove('show');
+  tedRoundtable?.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+async function appendTedResponse(response) {
+  const turns = (Array.isArray(response.turns) ? response.turns : [])
+    .filter((turn) => turn.speaker_role !== 'moderator' && cleanTedReply(turn.content));
+  for (const turn of turns.slice(0, 2)) {
+    state.study.messages.push({
+      role: 'assistant',
+      speakerSlug: turn.speaker_slug,
+      speakerName: turn.speaker_name || turn.speaker_slug || '智囊',
+      content: cleanTedReply(turn.content)
+    });
+    renderTedRoundtable();
+    await wait(620);
+  }
+  const finalAnswer = cleanTedReply(response.final_answer);
+  if (finalAnswer) {
+    state.study.messages.push({ role: 'assistant', speakerSlug: 'moderator', speakerName: '主持人总结', content: finalAnswer });
+    renderTedRoundtable();
+  }
+}
+
+async function requestTedRoundtable(question, resetConversation = false) {
+  const sourceIds = [...state.study.selectedSourceIds];
+  if (!sourceIds.length) {
+    setStudyStatus('请至少选择一份资料。', true);
+    return;
+  }
+  if (question.length < 2 || state.study.loading) return;
+  state.study.loading = true;
+  if (studyAsk) studyAsk.disabled = true;
+  if (tedSend) tedSend.disabled = true;
+  if (resetConversation) {
+    state.study.conversationId = null;
+    studyResult.textContent = '主持人正在阅读资料并选择合适的智囊...';
+  } else {
+    state.study.messages.push({ role: 'user', content: question });
+    renderTedRoundtable();
+  }
+  try {
+    const participantRefs = [
+      ...[...state.study.selectedSpeakerCardIds].map((id) => ({ type: 'speaker_card', id })),
+      ...[...state.study.selectedCoachRoles].map((id) => ({ type: 'coach_role', id }))
+    ].slice(0, 3);
+    const response = await apiFetch('/study/roundtable/respond', {
+      method: 'POST',
+      body: {
+        question,
+        source_ids: sourceIds,
+        discussion_mode: studyMode.value,
+        conversation_id: resetConversation ? null : state.study.conversationId,
+        user_id: USER_ID,
+        max_participants: 3,
+        participant_refs: participantRefs,
+        history: state.study.messages.slice(-10).map((item) => ({ role: item.role, content: item.content }))
+      }
+    });
+    state.study.conversationId = response.conversation_id || state.study.conversationId;
+    await updateTedParticipants(response);
+    if (resetConversation) state.study.messages = [{ role: 'user', content: question }];
+    await appendTedResponse(response);
+    renderTedRoundtable();
+    openTedRoundtable();
+    studyResult.textContent = 'TED圆桌已生成，并在独立对话界面中打开。';
+    setStudyStatus('TED圆桌已生成。会话摘要仅在达到阈值时更新。');
+    requestAnimationFrame(() => { tedRoundtable.scrollTop = tedRoundtable.scrollHeight; });
+  } catch (error) {
+    const message = normalizeApiErrorMessage(error.message || 'TED圆桌生成失败。');
+    if (resetConversation) studyResult.textContent = message;
+    else {
+      state.study.messages.push({ role: 'assistant', speakerName: '系统', content: message });
+      renderTedRoundtable();
+    }
+    setStudyStatus(message, true);
+  } finally {
+    state.study.loading = false;
+    if (studyAsk) studyAsk.disabled = false;
+    if (tedSend) tedSend.disabled = false;
+  }
+}
+
+async function askStudyRoundtable() {
+  const question = String(studyQuestion?.value || '').trim();
+  await requestTedRoundtable(question, true);
 }
 
 function filterPeoplePage() {
@@ -7760,6 +8385,7 @@ async function sendPersonChatMessage(question) {
       body: {
         person_slug: state.selectedPerson.slug,
         question: clean,
+        user_id: USER_ID,
         history,
         conversation_id: state.personChat.conversationId
       }
@@ -8573,6 +9199,7 @@ async function fetchRoundtableDiscussion(question) {
     method: 'POST',
     body: {
       question: buildRoundtableRequestQuestion(question),
+      user_id: USER_ID,
       person_slugs: (state.currentCards || []).map((card) => card.slug).filter(Boolean),
       top_k: Math.min(Math.max((state.currentCards || []).length, 1), 5),
       history: buildRoundtableHistory(),
@@ -8581,8 +9208,8 @@ async function fetchRoundtableDiscussion(question) {
   });
 }
 
-async function playRoundtableResponse(response, shouldSummarize = false) {
-  const answers = response.answers || [];
+async function playRoundtableResponse(response) {
+  const answers = (response.answers || []).slice(0, 2);
   for (const item of answers) {
     state.roundtable.activeSpeakerSlug = item.person_slug || '';
     const speech = normalizeShortSpeech(item.answer, 20, '', item.person_name);
@@ -8599,11 +9226,11 @@ async function playRoundtableResponse(response, shouldSummarize = false) {
     await wait(520);
   }
 
-  state.roundtable.activeSpeakerSlug = 'moderator';
-  const synthesis = shouldSummarize
-    ? normalizeShortSpeech(response.synthesis, 20, '先做一小步验证。')
+  const synthesis = response.synthesis
+    ? normalizeShortSpeech(response.synthesis, 200, '')
     : '';
-  if (shouldSummarize && synthesis) {
+  if (synthesis) {
+    state.roundtable.activeSpeakerSlug = 'moderator';
     state.roundtable.messages.push({
       type: 'system',
       role: 'assistant',
@@ -8643,7 +9270,10 @@ async function submitRoundtableMessage(question) {
       conversationId: response.conversation_id || null,
       error: ''
     };
-    await playRoundtableResponse(response, nextRoundCount % 3 === 0);
+    if (PREVIEW_CARD_MODE && nextRoundCount % 5 !== 0) {
+      response.synthesis = '';
+    }
+    await playRoundtableResponse(response);
   } catch (error) {
     state.roundtable = {
       ...state.roundtable,
@@ -9124,6 +9754,7 @@ async function fetchAnswerForCard(cardData) {
     body: {
       person_slug: cardData.slug,
       question: buildAnswerRequestQuestion(state.promptQuestion),
+      user_id: USER_ID,
       history: [],
       conversation_id: cardData.conversationId
     }
@@ -9674,6 +10305,52 @@ peopleNavLink?.addEventListener('click', (event) => {
   showPeoplePage();
 });
 
+studyNavLink?.addEventListener('click', (event) => {
+  event.preventDefault();
+  showStudyPage();
+});
+
+studyFile?.addEventListener('change', () => {
+  const file = studyFile.files?.[0];
+  if (file) setStudyStatus(`已选择：${file.name}，点击“导入 / 解读”开始处理。`);
+});
+studyImportUrl?.addEventListener('click', importStudyMaterial);
+studyRefresh?.addEventListener('click', loadStudySources);
+studyAsk?.addEventListener('click', askStudyRoundtable);
+studyGenerateCard?.addEventListener('click', generateSpeakerCard);
+tedBack?.addEventListener('click', closeTedRoundtable);
+tedForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const value = String(tedInput?.value || '').trim();
+  if (!value) return;
+  tedInput.value = '';
+  await requestTedRoundtable(value, false);
+});
+tedInput?.addEventListener('keydown', (event) => {
+  if ((event.key === 'Enter' || event.key === 'NumpadEnter') && !event.shiftKey) {
+    event.preventDefault();
+    tedForm?.requestSubmit();
+  }
+});
+studySourceList?.addEventListener('change', (event) => {
+  const input = event.target.closest('input[data-study-source]');
+  if (!input) return;
+  if (input.checked) state.study.selectedSourceIds.add(input.dataset.studySource);
+  else state.study.selectedSourceIds.delete(input.dataset.studySource);
+});
+studyCardList?.addEventListener('change', (event) => {
+  const input = event.target.closest('input[data-speaker-card]');
+  if (!input) return;
+  if (input.checked) state.study.selectedSpeakerCardIds.add(input.dataset.speakerCard);
+  else state.study.selectedSpeakerCardIds.delete(input.dataset.speakerCard);
+});
+studyCoachList?.addEventListener('change', (event) => {
+  const input = event.target.closest('input[data-coach-role]');
+  if (!input) return;
+  if (input.checked) state.study.selectedCoachRoles.add(input.dataset.coachRole);
+  else state.study.selectedCoachRoles.delete(input.dataset.coachRole);
+});
+
 peopleSearch?.addEventListener('input', filterPeoplePage);
 
 peopleGrid?.addEventListener('click', (event) => {
@@ -9700,6 +10377,7 @@ personChatInput?.addEventListener('keydown', (event) => {
 });
 
 function resetAll() {
+  closeTedRoundtable();
   state.question = '';
   state.category = '';
   state.promptQuestion = '';
@@ -9708,6 +10386,7 @@ function resetAll() {
   state.requestInFlight = false;
   document.body.classList.remove('result-mode');
   document.body.classList.remove('people-mode');
+  studyPage?.classList.remove('show');
   input.value = '';
   charCount.textContent = '0';
   chips.forEach((chip) => chip.classList.remove('selected'));

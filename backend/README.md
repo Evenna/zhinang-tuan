@@ -26,6 +26,11 @@ backend/
 - 按人物检索知识片段的轻量 RAG
 - DeepSeek 聊天接口集成
 - 单人智囊回答与多人群体智囊回答
+- TED 研读资料库：文本、PDF、Office 文档、网页与视频链接导入
+- StepFun ASR 视频转写，以及 transcript 分段、主题、观点与金句整理
+- 基于视频内容生成学习型 SpeakerCard
+- 内置人物、SpeakerCard 与教练角色混合圆桌
+- UserMemory、SessionSummary、偏好与事实提取、跨会话召回和阈值式记忆维护
 - 从 `data/people_dataset_v1.json` 导入数据库
 
 ## 快速启动
@@ -59,6 +64,10 @@ uvicorn app.main:app --reload --port 8000
 - `DEEPSEEK_BASE_URL`
 - `DEEPSEEK_MODEL`
 - `DEEPSEEK_API_KEY`
+- `STEPFUN_API_KEY`（只有自动视频转写需要）
+- `STEPFUN_BASE_URL`
+- `STEPFUN_ASR_MODEL`
+- `FFMPEG_PATH`
 - `MAX_CONTEXT_CHUNKS`
 - `RECOMMENDATION_TOP_K`
 
@@ -94,6 +103,19 @@ python -m app.tasks.import_people_data --force-rebuild
 - `POST /api/recommend`
 - `POST /api/chat/respond`
 - `POST /api/chat/group`
+- `POST /api/roundtable/respond`
+- `GET|POST /api/study/sources`
+- `POST /api/study/sources/import-file`
+- `POST /api/study/sources/import-url`
+- `POST /api/study/sources/import-video`
+- `POST /api/study/speaker-cards/generate`
+- `GET /api/study/speaker-cards`
+- `POST /api/study/roundtable/respond`
+- `GET /api/memory`
+- `GET /api/memory/summaries/{conversation_id}`
+- `DELETE /api/memory/{memory_id}`
+
+自动转写视频前，请确保系统能执行 `ffmpeg`。视频页面链接由 `yt-dlp` 提取；直接媒体 URL 也可以使用。已有转写文本时可直接提交 `transcript`，无需配置 ASR。
 
 ## 关键实现位置
 
