@@ -3,249 +3,285 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>苏格拉底请回答 · 智囊团 — 产品实现与技术方案</title>
+<title>苏格拉底请回答 · 产品实现补充材料</title>
 <style>
-  :root{
-    --bg:#0b0a08; --bg2:#141109; --ink:#f4ecda; --muted:#9c927c;
-    --gold:#c8a557; --gold2:#e6c877; --line:rgba(200,165,87,.22);
-    --card:rgba(28,23,14,.72); --card-b:rgba(200,165,87,.14);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    background:
-      radial-gradient(1200px 700px at 50% -10%, rgba(200,165,87,.10), transparent 60%),
-      linear-gradient(180deg,#0b0a08,#0e0c07 40%,#0b0a08);
-    color:var(--ink);
-    font-family:"Songti SC","Noto Serif SC",Georgia,"Times New Roman",serif;
-    line-height:1.85; -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
-  a{color:var(--gold2);text-decoration:none}
-  a:hover{text-decoration:underline}
+:root{
+  --bg:#0d0b08; --bg2:#141009; --card:#1a150d; --line:rgba(200,168,102,0.16);
+  --gold:#c8a866; --gold2:#e6d4a0; --ink:#ece5d3;
+  --dim:#a89a7c; --dim2:#6f6551; --ok:#7fb47a; --warn:#c98f4a; --plan:#5a8fb0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:radial-gradient(1200px 700px at 50% -8%,#1c160c 0%,var(--bg) 60%);
+  color:var(--ink); font-family:"Songti SC","SimSun","Source Han Serif SC",Georgia,serif;
+  line-height:1.85; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:960px;margin:0 auto;padding:0 28px}
+.sans{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif}
 
-  /* ===== HERO ===== */
-  header.hero{
-    text-align:center;padding:120px 28px 70px;position:relative;
-    border-bottom:1px solid var(--line);
-  }
-  .kicker{letter-spacing:.42em;font-size:12px;color:var(--gold);
-    text-transform:uppercase;margin-bottom:26px;font-family:Georgia,serif}
-  h1.title{font-size:clamp(38px,6vw,72px);font-weight:600;letter-spacing:.04em;
-    line-height:1.2;background:linear-gradient(180deg,#fff5df,#c8a557);
-    -webkit-background-clip:text;background-clip:text;color:transparent}
-  .subtitle{margin-top:22px;font-size:clamp(16px,2.2vw,21px);color:var(--muted);
-    font-style:italic;letter-spacing:.02em}
-  .concept{margin-top:34px;display:inline-flex;align-items:center;gap:16px;
-    padding:12px 26px;border:1px solid var(--line);border-radius:999px;
-    background:rgba(200,165,87,.05);font-size:15px;letter-spacing:.12em}
-  .concept b{color:var(--gold2)}
-  .meta{margin-top:40px;font-size:13px;color:var(--muted);letter-spacing:.08em}
+/* ===== Cover ===== */
+.cover{min-height:92vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.cover::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(600px 320px at 20% 30%,rgba(200,168,102,0.10),transparent 70%);
+  pointer-events:none}
+.eyebrow{letter-spacing:.42em;font-size:12px;color:var(--gold);text-transform:uppercase;margin-bottom:26px}
+.cover h1{font-size:clamp(40px,8vw,82px);line-height:1.05;font-weight:400;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px}
+.cover .en{font-size:15px;letter-spacing:.28em;color:var(--dim2);margin:14px 0 30px}
+.cover .lead{font-size:19px;color:var(--dim);max-width:620px;line-height:1.9}
+.cover .meta{margin-top:44px;font-size:13px;color:var(--dim2);border-top:1px solid var(--line);padding-top:20px;display:flex;gap:28px;flex-wrap:wrap}
+.cover .meta b{color:var(--ink);font-weight:400}
+.scrollhint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.3em;color:var(--dim2);animation:fade 2.4s ease-in-out infinite}
+@keyframes fade{0%,100%{opacity:.3}50%{opacity:.9}}
 
-  /* ===== SECTIONS ===== */
-  section{padding:78px 0;border-bottom:1px solid rgba(200,165,87,.10)}
-  .eyebrow{font-size:12px;letter-spacing:.34em;color:var(--gold);
-    text-transform:uppercase;font-family:Georgia,serif;margin-bottom:14px}
-  h2{font-size:clamp(26px,3.6vw,40px);font-weight:600;letter-spacing:.03em;margin-bottom:8px}
-  .lead{color:var(--muted);font-size:17px;max-width:760px;margin-top:10px}
-  h3{font-size:20px;color:var(--gold2);margin:34px 0 12px;font-weight:600;letter-spacing:.03em}
-  p{margin:12px 0;font-size:16.5px}
-  .muted{color:var(--muted)}
+/* ===== Section frame ===== */
+section{padding:74px 0;border-top:1px solid var(--line)}
+.tag{display:inline-block;font-size:11px;letter-spacing:.32em;color:var(--gold);
+  border:1px solid var(--line);border-radius:20px;padding:5px 15px;margin-bottom:22px}
+h2{font-size:clamp(26px,4.5vw,40px);font-weight:400;line-height:1.25;margin-bottom:10px;color:var(--gold2)}
+.sub{color:var(--dim);font-size:15px;margin-bottom:34px;max-width:680px}
+h3{font-size:21px;font-weight:400;color:var(--gold2);margin:38px 0 14px}
+p{color:var(--ink);margin-bottom:16px}
+.muted{color:var(--dim)}
+a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--line)}
 
-  /* screenshots */
-  .shot{margin:30px 0;border:1px solid var(--card-b);border-radius:14px;overflow:hidden;
-    box-shadow:0 24px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06)}
-  .shot img{display:block;width:100%;height:auto}
-  .cap{font-size:13.5px;color:var(--muted);margin-top:12px;text-align:center;letter-spacing:.04em}
+/* cards */
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(2,1fr)}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:linear-gradient(160deg,var(--card),var(--bg2));border:1px solid var(--line);
+  border-radius:14px;padding:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.05)}
+.card h4{font-size:17px;font-weight:400;color:var(--gold2);margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.card p{font-size:14.5px;color:var(--dim);margin:0}
+.num{font-family:sans-serif;font-size:12px;color:var(--gold);border:1px solid var(--line);
+  border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;flex:none}
 
-  /* architecture layers */
-  .arch{display:flex;flex-direction:column;gap:0;margin-top:26px;border-radius:14px;overflow:hidden;
-    border:1px solid var(--card-b)}
-  .layer{padding:22px 26px;background:var(--card);border-bottom:1px solid rgba(200,165,87,.10);
-    display:flex;gap:22px;align-items:flex-start}
-  .layer:last-child{border-bottom:none}
-  .layer .n{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
-    border:1px solid var(--line);color:var(--gold2);font-family:Georgia,serif;font-size:15px;
-    background:rgba(200,165,87,.06)}
-  .layer .t b{color:var(--ink);font-size:17px}
-  .layer .t span{color:var(--muted);font-size:14.5px;display:block;margin-top:5px}
-  .layer .tag{margin-left:auto;flex:none;font-size:12px;color:var(--gold);
-    border:1px solid var(--line);border-radius:999px;padding:4px 12px;letter-spacing:.06em}
+/* stat row */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:8px 0 6px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:22px 16px;text-align:center}
+.stat b{display:block;font-family:sans-serif;font-size:34px;font-weight:600;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.stat span{display:block;font-size:12.5px;color:var(--dim);margin-top:9px}
 
-  /* highlight cards */
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:26px}
-  .hcard{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:24px;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
-  .hcard .ic{font-size:13px;color:var(--gold);letter-spacing:.2em;font-family:Georgia,serif}
-  .hcard h4{font-size:18px;margin:10px 0 8px;color:var(--gold2);font-weight:600}
-  .hcard p{font-size:15px;color:var(--muted);margin:6px 0}
-  code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13.5px;color:var(--gold2);
-    background:rgba(200,165,87,.08);padding:2px 7px;border-radius:5px}
+/* figure */
+figure{margin:26px 0}
+figure img{width:100%;border-radius:14px;border:1px solid var(--line);display:block;box-shadow:0 24px 60px rgba(0,0,0,0.5)}
+figcaption{font-size:13px;color:var(--dim2);margin-top:12px;text-align:center;font-family:sans-serif}
+figcaption b{color:var(--gold);font-weight:500}
 
-  /* rules */
-  .rules{margin-top:24px;display:grid;gap:12px}
-  .rule{display:flex;gap:14px;align-items:flex-start;background:var(--card);
-    border:1px solid var(--card-b);border-radius:12px;padding:16px 20px}
-  .rule .dot{flex:none;color:var(--gold);font-size:18px;line-height:1.5}
-  .rule p{margin:0;font-size:15.5px}
+/* table */
+table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:13.5px;margin:6px 0}
+th,td{border:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}
+th{background:var(--bg2);color:var(--gold2);font-weight:500;letter-spacing:.02em}
+td{color:var(--dim)}
+td b{color:var(--ink);font-weight:500}
+.s-strong{color:var(--ok)}.s-mid{color:var(--warn)}.s-weak{color:var(--dim2)}.s-plan{color:var(--plan)}
 
-  /* table */
-  .tblwrap{margin-top:26px;border:1px solid var(--card-b);border-radius:14px;overflow:hidden}
-  table{width:100%;border-collapse:collapse;font-size:15px}
-  th,td{padding:15px 18px;text-align:left;border-bottom:1px solid rgba(200,165,87,.10);vertical-align:top}
-  th{background:rgba(200,165,87,.07);color:var(--gold2);font-weight:600;letter-spacing:.04em;font-size:13.5px}
-  td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
-  td .st{font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line)}
-  .done{color:#8fce9b;border-color:rgba(143,206,155,.4)!important}
-  .wip{color:var(--gold2)}
-  tr:last-child td{border-bottom:none}
+/* pipeline */
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:14px 0}
+.step{flex:1;min-width:150px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:18px;position:relative}
+.step .k{font-family:sans-serif;font-size:11px;letter-spacing:.2em;color:var(--gold);margin-bottom:8px}
+.step .t{font-size:15px;color:var(--gold2);margin-bottom:6px}
+.step .d{font-size:13px;color:var(--dim)}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:20px;padding:0 6px}
+@media(max-width:760px){.arrow{transform:rotate(90deg);padding:6px 0}}
 
-  footer{padding:70px 28px 90px;text-align:center;color:var(--muted);font-size:14px}
-  footer .links{margin-top:18px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
-  .badge{display:inline-block;margin:0 4px;font-size:12px;color:var(--gold);
-    border:1px solid var(--line);border-radius:6px;padding:3px 10px;letter-spacing:.05em}
-  @media(max-width:640px){.layer{flex-direction:column;gap:12px}.layer .tag{margin-left:0}}
+/* quote */
+.quote{border-left:2px solid var(--gold);padding:6px 0 6px 22px;margin:20px 0;color:var(--dim);font-size:16px;font-style:italic}
+
+/* boundary badges */
+.pill{display:inline-block;font-family:sans-serif;font-size:11.5px;padding:3px 10px;border-radius:6px;border:1px solid var(--line);margin:2px 4px 2px 0}
+.pill.ai{color:var(--plan);border-color:rgba(90,143,176,0.4)}
+.pill.user{color:var(--gold2);border-color:rgba(200,168,102,0.4)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim2);font-size:13px;text-align:center;font-family:sans-serif}
+footer .big{font-size:18px;color:var(--gold2);font-family:serif;margin-bottom:10px}
+.li{color:var(--dim);font-size:14.5px;margin:7px 0;padding-left:20px;position:relative}
+.li::before{content:"—";position:absolute;left:0;color:var(--gold)}
+.note{font-size:12.5px;color:var(--dim2);font-family:sans-serif;background:var(--bg2);border:1px dashed var(--line);border-radius:10px;padding:14px 16px;margin:18px 0}
 </style>
 </head>
 <body>
-
-<header class="hero">
-  <div class="kicker">AI Think Tank · Product Dossier</div>
-  <h1 class="title">苏格拉底请回答</h1>
-  <div class="subtitle">你的困惑，智者有答案 —— 连接跨越时空的智慧，找到属于你的指引</div>
-  <div class="concept"><span>核心理念</span><b>TED Talk → My Talk</b><span>听见思想 · 内化思想 · 表达思想</span></div>
-  <div class="meta">产品实现与技术方案 · 补充材料 &nbsp;|&nbsp; 清华美院 艺术与科技 · 张一文 &nbsp;|&nbsp; 2026 毕业设计</div>
-</header>
-
 <div class="wrap">
 
-<!-- 0 现状 -->
-<section>
-  <div class="eyebrow">Status</div>
-  <h2>不是概念稿，是已跑通的全链路原型</h2>
-  <p class="lead">飞书文档已完整论述了市场背景、竞品分析、四维能力框架与 RQ1–4 研究设计。本补充材料只补文档尚未展开的一层——<b style="color:var(--gold2)">产品是如何被真正实现的</b>。以下五个界面均为本地前后端连通后驱动真实 AI 生成的实拍，而非效果图。</p>
-  <p class="muted">调研期人物库为 144 位，上线原型已扩展至 <b style="color:var(--gold2)">255 位</b>（约 18 个思想领域），是一次从研究到工程的迭代收敛。</p>
-</section>
-
-<!-- 界面实拍 -->
-<section>
-  <div class="eyebrow">Live Product</div>
-  <h2>五个真实界面</h2>
-  <p class="lead">首页 · 名人智囊库 · 智能荐师 · 单人对话 · 群贤论道。</p>
-
-  <div class="shot"><img src="shots/01-home.png" alt="首页"></div>
-  <div class="cap">① 首页 —— 一句发问即可进入，「你的困惑，智者有答案」</div>
-
-  <div class="shot"><img src="shots/02-people.png" alt="名人智囊库"></div>
-  <div class="cap">② 名人智囊库 —— 255 位真实思想人物卡，覆盖哲学 / 文学 / 科学 / 商业 / 艺术 / 历史等约 18 个领域</div>
-
-  <div class="shot"><img src="shots/07-recommend.png" alt="智能荐师"></div>
-  <div class="cap">③ 智能荐师 —— 输入「我该追求稳定，还是冒险去做热爱的事？」，系统据意图推荐奥威尔 / 第欧根尼 / 苏格拉底 / 可可·香奈儿</div>
-
-  <div class="shot"><img src="shots/08-single-chat.png" alt="单人对话"></div>
-  <div class="cap">④ 单人对话 —— 与乔布斯对谈：「别试图消除不确定性——它是最好的过滤器。」人格化、有据、克制</div>
-
-  <div class="shot"><img src="shots/09-roundtable.png" alt="群贤论道"></div>
-  <div class="cap">⑤ 群贤论道 —— 同一问题，多位智者各持立场发言，形成有主持人的思想圆桌</div>
-</section>
-
-<!-- 四层架构 -->
-<section>
-  <div class="eyebrow">Architecture</div>
-  <h2>四层技术架构</h2>
-  <p class="lead">一条从用户提问到人格化回答的清晰链路，每一层职责单一、可独立验证。</p>
-  <div class="arch">
-    <div class="layer"><div class="n">01</div><div class="t"><b>前端交互层</b><span>单页应用，暗金衬线视觉；负责荐师、单人对话、群贤论道三种交互形态的呈现与状态管理</span></div><div class="tag">HTML / JS SPA</div></div>
-    <div class="layer"><div class="n">02</div><div class="t"><b>接口服务层</b><span>三大核心接口：<code>/api/recommend</code> 荐师、<code>/api/chat/respond</code> 单人对话、<code>/api/chat/group</code> 群贤论道</span></div><div class="tag">FastAPI</div></div>
-    <div class="layer"><div class="n">03</div><div class="t"><b>知识检索层</b><span>每位人物的知识切片存于结构化库，按问题实时排序召回最相关的语料作为人格依据</span></div><div class="tag">SQLite · RAG</div></div>
-    <div class="layer"><div class="n">04</div><div class="t"><b>生成层</b><span>将人格 Prompt + 召回语料 + 全局护栏拼装后交由大模型生成，保证「像本人 · 有依据 · 不越界」</span></div><div class="tag">DeepSeek LLM</div></div>
+<header class="cover">
+  <div class="eyebrow">产品实现补充材料 · Supplementary Dossier</div>
+  <h1>苏格拉底<br>请回答</h1>
+  <div class="en sans">SOCRATES, PLEASE ANSWER — FROM TED TALK TO MY TALK</div>
+  <p class="lead">一个把"我看过一个好演讲"变成"我形成了一个能被讨论的观点"的观点共创产品。本材料承接开题文档的调研与定位论证，补全其后的<b style="color:var(--gold2)">产品实现、技术方案与工程证据</b>层。</p>
+  <div class="meta sans">
+    <span><b>模块</b> 名人智囊 · 议题圆桌 · 思想人物卡</span>
+    <span><b>状态</b> 全链路可交互原型已跑通</span>
+    <span><b>形态</b> Web 应用 · FastAPI + RAG + LLM</span>
   </div>
-</section>
+  <div class="scrollhint sans">向下滚动 ↓</div>
+</header>
 
-<!-- 三大技术亮点 -->
-<section>
-  <div class="eyebrow">Highlights</div>
-  <h2>三个技术亮点</h2>
-  <div class="grid">
-    <div class="hcard">
-      <div class="ic">01 · RECOMMEND</div>
-      <h4>意图五分类智能荐师</h4>
-      <p>将用户提问归入 career / relationship / growth / creative / study 五类意图（默认 growth），再把意图映射到对应思想领域并加权，让「问什么」精准匹配「谁能答」。</p>
-    </div>
-    <div class="hcard">
-      <div class="ic">02 · PERSONA RAG</div>
-      <h4>三路加权的人格化 RAG</h4>
-      <p>召回语料的排序融合三个信号：</p>
-      <p><code>重要性 × 0.5 + 词面相关 × 0.35 + 来源权威 × 0.15</code></p>
-      <p>既保证答得像本人，又保证每句话有据可循。</p>
-    </div>
-    <div class="hcard">
-      <div class="ic">03 · ROUNDTABLE</div>
-      <h4>群贤论道多智者引擎</h4>
-      <p>同一问题并行驱动多位智者独立发言，各持立场、互不复读，并由主持人视角做阶段性收束——把「一对一咨询」升级为「思想的碰撞现场」。</p>
-    </div>
+<!-- ========== 01 从命题到实现 ========== -->
+<section id="bridge">
+  <span class="tag sans">01 / 定位承接</span>
+  <h2>从"听见思想"到"表达思想"</h2>
+  <p class="sub">开题文档已论证市场断层与四条研究主线。本材料回答下一个问题：<b style="color:var(--gold2)">这些命题，在产品里被做成了什么。</b></p>
+  <p>调研发现，72% 的人观看 TED 是为了获得新观点，但只有约 15% 的人最终输出过一个完整的观点——中间 57% 的断层，正是"看—收藏—转发—遗忘"四步循环的产物。我们把这条断层拆成四段可被产品干预的旅程，并让每一段对应一个已实现（或规划中）的功能模块。</p>
+  <div class="flow sans">
+    <div class="step"><div class="k">RQ1 · 已实现</div><div class="t">听见思想</div><div class="d">智能荐师 → 单人对话 → 群贤论道，把抽象议题变成可对话的具体智者。</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="k">RQ2 · 已实现</div><div class="t">内化思想</div><div class="d">与角色辩论，用可控的挑战强度逼出用户自己的立场。</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="k">RQ3 · 增量中</div><div class="t">人格共创</div><div class="d">自建角色 / 视频蒸馏人格，界定"AI 支架"与"用户自写"的边界。</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="k">RQ4 · 规划中</div><div class="t">表达思想</div><div class="d">My Talk：把内化的观点沉淀为可被讨论、可复用的思想人物卡。</div></div>
   </div>
+  <p class="muted" style="margin-top:20px">核心概念一以贯之：<b style="color:var(--gold2)">TED Talk → My Talk</b>。TED 是证据、人物是视角、而学生自己的观点才是最终资产。</p>
 </section>
 
-<!-- 反幻觉 -->
-<section>
-  <div class="eyebrow">Guardrails</div>
-  <h2>反幻觉护栏 · GLOBAL_RULES</h2>
-  <p class="lead">代笔真实人物最大的伦理与体验风险是「编造」。系统在每一次生成前都注入一组全局约束，直接对应 RQ3 关于「AI 代笔边界」的研究命题。</p>
-  <div class="rules">
-    <div class="rule"><span class="dot">◆</span><p>忠于人物设定，同时保持有用、清晰、脚踏实地。</p></div>
-    <div class="rule"><span class="dot">◆</span><p><b>不虚构</b>历史事实、引语、作品或生平事件。</p></div>
-    <div class="rule"><span class="dot">◆</span><p>当召回语料不足时，<b>谨慎作答并主动声明哪些内容不确定</b>。</p></div>
-    <div class="rule"><span class="dot">◆</span><p>不宣称对用户拥有私人的、未经告知的了解。</p></div>
-    <div class="rule"><span class="dot">◆</span><p>回答始终贴合用户的具体问题，保持实用与相关。</p></div>
+<!-- ========== 02 产品全链路 ========== -->
+<section id="walkthrough">
+  <span class="tag sans">02 / 全链路导览</span>
+  <h2>一次完整的观点生长过程</h2>
+  <p class="sub">以下五个界面均为当前原型真实截图，串起从"带着困惑进入"到"多方观点碰撞"的完整闭环。</p>
+
+  <div class="stats sans">
+    <div class="stat"><b>255</b><span>可对话思想人物<br>（调研期 144 → 上线 255）</span></div>
+    <div class="stat"><b>~18</b><span>覆盖思想领域</span></div>
+    <div class="stat"><b>5</b><span>意图分类维度</span></div>
+    <div class="stat"><b>3</b><span>核心对话模式</span></div>
   </div>
+
+  <figure>
+    <img src="shots/01-home.png" alt="首页">
+    <figcaption><b>入口 · 首页</b>　"你的困惑，智者有答案。"——以一句提问作为进入产品的唯一门槛，降低表达的心理成本。</figcaption>
+  </figure>
+
+  <figure>
+    <img src="shots/02-people.png" alt="名人智囊库">
+    <figcaption><b>名人智囊 · 255 位思想人物</b>　跨约 18 个领域的可对话人物库，每一位都是一个"视角"，而非百科词条。</figcaption>
+  </figure>
+
+  <h3>① 智能荐师：把模糊困惑翻译成合适的视角</h3>
+  <p>用户输入一句真实困惑，系统先做<b style="color:var(--gold2)">意图五分类</b>（职业 / 关系 / 成长 / 创造 / 学习，默认归入"成长"），命中领域给予加权（+0.18），再从人物库中挑出最能形成"有用分歧"的一组智者——刻意让立场彼此不完全一致，制造可供思辨的张力。</p>
+  <figure>
+    <img src="shots/07-recommend.png" alt="智能荐师">
+    <figcaption><b>智能荐师</b>　面对"我该追求稳定，还是冒险去做热爱的事？"，系统推荐奥威尔、第欧根尼、苏格拉底与香奈儿——四种截然不同的人生答案。</figcaption>
+  </figure>
+
+  <h3>② 单人对话：与一个视角深入</h3>
+  <p>选定一位智者后进入一对一对话。回答由检索增强生成（RAG）驱动，人物的思想材料被加权召回后交给大模型生成——语气与立场贴合人物，但每一句都受反幻觉护栏约束（见第 04 节）。</p>
+  <figure>
+    <img src="shots/08-single-chat.png" alt="单人对话">
+    <figcaption><b>单人对话 · Steve Jobs</b>　"别试图消除不确定性——它是最好的过滤器……"人格化的语气，克制的边界。</figcaption>
+  </figure>
+
+  <h3>③ 群贤论道：让多个视角互相碰撞</h3>
+  <p>同一个议题抛给多位智者，加上一位"主持人"角色调度发言顺序与追问。用户不再是接收单一答案，而是旁观一场被组织过的思想交锋——这正是从"听见"走向"内化"的关键一跃。</p>
+  <figure>
+    <img src="shots/09-roundtable.png" alt="群贤论道">
+    <figcaption><b>群贤论道</b>　奥威尔、第欧根尼、苏格拉底、香奈儿围绕同一议题各执一词，观点在碰撞中显影。</figcaption>
+  </figure>
 </section>
 
-<!-- 2026 增量 -->
-<section>
-  <div class="eyebrow">Roadmap 2026</div>
-  <h2>已实现的能力增量</h2>
-  <p class="lead">在调研原型之上，进一步补齐了「从听见到共创」的能力。</p>
-  <div class="grid">
-    <div class="hcard"><div class="ic">USER-CREATED</div><h4>用户自建角色</h4><p>用户可创建属于自己的思想人物，把私人语料变成可对话的智者。</p></div>
-    <div class="hcard"><div class="ic">MULTIMODAL</div><h4>多模态视频蒸馏人格</h4><p>上传 TED 等演讲视频，系统提炼其观点、论证方式与语言风格，蒸馏为可对话的人格。</p></div>
-    <div class="hcard"><div class="ic">DEBATE</div><h4>与角色辩论</h4><p>从「听智者说」进阶到「和智者辩」，在交锋中内化思想、检验自己的立场。</p></div>
+<!-- ========== 03 技术架构 ========== -->
+<section id="architecture">
+  <span class="tag sans">03 / 技术方案</span>
+  <h2>四层架构，一条思想的流水线</h2>
+  <p class="sub">从用户敲下一句困惑，到屏幕上浮现一位智者的回答，请求穿过四个各司其职的层。</p>
+
+  <div class="flow sans">
+    <div class="step"><div class="k">L1 · 交互层</div><div class="t">Web 前端</div><div class="d">单页应用，承载首页 / 人物库 / 荐师 / 单人 / 群贤五大界面。</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="k">L2 · 接口层</div><div class="t">FastAPI</div><div class="d">三大接口统一编排：荐师、单人应答、群贤组局。</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="k">L3 · 知识层</div><div class="t">SQLite 检索</div><div class="d">255 位人物的思想材料入库，供加权召回。</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="k">L4 · 生成层</div><div class="t">DeepSeek LLM</div><div class="d">在护栏约束下生成人格化、有据可依的回答。</div></div>
   </div>
-</section>
 
-<!-- 命题-实现闭环 -->
-<section>
-  <div class="eyebrow">Closed Loop</div>
-  <h2>研究命题 → 产品实现 闭环</h2>
-  <p class="lead">四条研究主线各自映射到已落地的产品能力，唯一待开发的是最后的「表达」层。</p>
-  <div class="tblwrap">
+  <h3>三大接口</h3>
   <table>
-    <thead><tr><th>研究主线</th><th>对应命题</th><th>产品实现</th><th>状态</th></tr></thead>
-    <tbody>
-      <tr><td>听见思想</td><td>RQ1</td><td>智能荐师 · 单人对话 · 群贤论道</td><td><span class="st done">已实现</span></td></tr>
-      <tr><td>人格共创</td><td>RQ3</td><td>多模态视频蒸馏人格 · 用户自建角色</td><td><span class="st done">已实现</span></td></tr>
-      <tr><td>内化思想</td><td>RQ2</td><td>与角色辩论</td><td><span class="st done">已实现</span></td></tr>
-      <tr><td>表达思想</td><td>RQ4</td><td>My Talk 发布层（讲稿教练 / 开口陪练 / 发布）</td><td><span class="st wip">🚧 待开发</span></td></tr>
-    </tbody>
+    <tr><th>接口</th><th>职责</th><th>关键输入</th></tr>
+    <tr><td><b>/api/recommend</b></td><td>意图五分类 + 领域加权，推荐一组有分歧的智者</td><td><code>question</code></td></tr>
+    <tr><td><b>/api/chat/respond</b></td><td>单人对话：RAG 召回 + 人格化生成</td><td>人物 + 对话历史</td></tr>
+    <tr><td><b>/api/chat/group</b></td><td>群贤论道：多智者 + 主持人调度</td><td>议题 + 智者组</td></tr>
   </table>
+
+  <h3>三个工程亮点</h3>
+  <div class="grid g3">
+    <div class="card"><h4><span class="num sans">1</span>意图五分类荐师</h4><p>把一句模糊困惑映射到职业/关系/成长/创造/学习五维，命中领域加权（+0.18），刻意挑选立场相异的智者以制造"有用分歧"。</p></div>
+    <div class="card"><h4><span class="num sans">2</span>三路加权 RAG</h4><p>召回打分 = 重要性 ×0.5 + 词面相关 ×0.35 + 来源可信 ×0.15，让回答既贴合人物、又有材料支撑，抑制凭空发挥。</p></div>
+    <div class="card"><h4><span class="num sans">3</span>群贤多智者调度</h4><p>主持人角色负责发言顺序与追问，把并行的多个视角组织成一场有节奏的思想交锋，而非杂乱堆叠。</p></div>
   </div>
 </section>
 
-</div>
+<!-- ========== 04 伦理护栏 ========== -->
+<section id="guardrails">
+  <span class="tag sans">04 / 伦理与边界</span>
+  <h2>让 AI 当支架，不当代笔</h2>
+  <p class="sub">这是一个培养"用户自己观点"的产品——所以最重要的技术决策，是明确 AI 该在哪里停手。</p>
 
-<footer>
-  <div>《苏格拉底请回答》· 智囊团 —— TED Talk 到 My Talk 的思想共生</div>
-  <div style="margin-top:14px">
-    <span class="badge">255 人物库</span>
-    <span class="badge">意图五分类</span>
-    <span class="badge">三路加权 RAG</span>
-    <span class="badge">群贤论道</span>
-    <span class="badge">反幻觉护栏</span>
+  <p>生成层受一组全局护栏（GLOBAL_RULES，共 6 条）约束，核心是：智者的回答须基于其真实思想材料，不臆造事实、不虚构语录，并在界面上明确标注这是<b style="color:var(--gold2)">"非真实人物的实时发言"</b>。这直接回应了开题 RQ3 关于"AI 支架边界"与主题 E 的设计命题。</p>
+
+  <div class="quote">AI 可以给你脚手架，但墙要你自己砌。</div>
+
+  <h3>支架的边界：AI 做什么，用户做什么</h3>
+  <div class="grid g2">
+    <div class="card"><h4>AI 可提供的四类支架</h4><p>
+      <span class="pill ai sans">生成立场</span>
+      <span class="pill ai sans">给出反例</span>
+      <span class="pill ai sans">梳理结构</span>
+      <span class="pill ai sans">提供问题候选</span><br><br>
+      AI 负责扩展视野、制造张力、提供思考的起点。</p></div>
+    <div class="card"><h4>必须由用户完成的部分</h4><p>
+      <span class="pill user sans">My Talk 正文</span>
+      <span class="pill user sans">最终立场</span><br><br>
+      观点的核心表达由用户亲自写就，AI 仅协助；系统标识 AI 协助比例，保证"这是我的观点"这一前提不被稀释。</p></div>
   </div>
-  <div class="links">
-    <span class="muted">清华美院 艺术与科技 · 张一文 · 导师 付志勇 · 2026</span>
+
+  <div class="note sans">设计原则（回应主题 D/F）：思想人物卡默认<b>私密</b>，缓解公开表达的心理压力；社区定位始终坚持"以 TED 为证据、以人物为视角、以学生观点为最终资产"，而非制造名人语录的消费流。</div>
+</section>
+
+<!-- ========== 05 路线图 ========== -->
+<section id="roadmap">
+  <span class="tag sans">05 / 演进路线</span>
+  <h2>2026 增量：从对话走向共创</h2>
+  <p class="sub">当前原型已跑通"听见 + 内化"，下一阶段的三项增量将把产品推向"人格共创"与"表达"。</p>
+  <div class="grid g3">
+    <div class="card"><h4>自建角色</h4><p>让用户从零塑造一个专属的思想人物——定义其立场、语气与知识边界，把"消费视角"升级为"创造视角"。</p></div>
+    <div class="card"><h4>视频蒸馏人格</h4><p>从演讲/访谈视频中蒸馏出人物的观点与表达风格，快速扩充人物库并提升人格保真度。</p></div>
+    <div class="card"><h4>与角色辩论</h4><p>可调挑战强度的对抗式对话，用受控的压力逼出并锤炼用户自己的立场（对应 RQ2）。</p></div>
   </div>
+</section>
+
+<!-- ========== 06 闭环 ========== -->
+<section id="loop">
+  <span class="tag sans">06 / 命题—实现闭环</span>
+  <h2>四段旅程，逐一落地</h2>
+  <p class="sub">把研究主线与产品功能并列，一眼看清"做到了哪、还差哪"。</p>
+  <table>
+    <tr><th>研究主线</th><th>对应功能</th><th>状态</th></tr>
+    <tr><td><b>听见思想</b>（RQ1）</td><td>智能荐师 · 单人对话 · 群贤论道</td><td class="s-strong">● 已跑通</td></tr>
+    <tr><td><b>内化思想</b>（RQ2）</td><td>与角色辩论（可调挑战强度）</td><td class="s-strong">● 已跑通</td></tr>
+    <tr><td><b>人格共创</b>（RQ3）</td><td>自建角色 · 视频蒸馏人格</td><td class="s-mid">◐ 增量中</td></tr>
+    <tr><td><b>表达思想</b>（RQ4）</td><td>My Talk 观点发布与社区沉淀</td><td class="s-plan">◯ 唯一待开发</td></tr>
+  </table>
+  <p class="muted" style="margin-top:22px">最后一段——把观点真正"说出去"——是整个闭环唯一尚未开发的环节，也是从"苏格拉底请回答"走向"我来回答"的临门一脚。</p>
+</section>
+
+<footer class="wrap">
+  <div class="big">苏格拉底请回答 · Socrates, Please Answer</div>
+  <div>清华大学美术学院 · 艺术与科技　|　导师：付志勇　|　作者：张一文</div>
+  <div style="margin-top:8px">本材料为产品实现与技术方案补充，配合开题研究文档使用。</div>
+  <div style="margin-top:14px;font-size:11px;opacity:.6">界面文案与截图均取自当前可交互原型；人物回答由 AI 在护栏约束下生成，非真实人物实时发言。</div>
 </footer>
 
+</div>
 </body>
 </html>
+
+
+
