@@ -21,6 +21,7 @@ class RetrievedChunk(BaseModel):
 class ChatRequest(BaseModel):
     person_slug: str
     question: str = Field(min_length=2, max_length=4000)
+    user_id: str = Field(default='default_user', min_length=1, max_length=120)
     history: list[ConversationTurn] = Field(default_factory=list)
     conversation_id: Optional[str] = None
 
@@ -42,6 +43,7 @@ class GroupAdvisorAnswer(BaseModel):
 
 class GroupChatRequest(BaseModel):
     question: str = Field(min_length=2, max_length=4000)
+    user_id: str = Field(default='default_user', min_length=1, max_length=120)
     person_slugs: list[str] = Field(default_factory=list)
     top_k: int = Field(default=3, ge=1, le=5)
     history: list[ConversationTurn] = Field(default_factory=list)

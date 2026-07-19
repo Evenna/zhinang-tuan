@@ -14,7 +14,7 @@ DEFAULT_DATASET_PATH = PROJECT_ROOT / 'data' / 'people_dataset_v1.json'
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', extra='ignore')
+    model_config = SettingsConfigDict(env_file=BACKEND_ROOT / '.env', env_file_encoding='utf-8', extra='ignore')
 
     app_name: str = 'AI Think Tank Backend'
     debug: bool = False
@@ -29,6 +29,14 @@ class Settings(BaseSettings):
     deepseek_base_url: str = 'https://api.deepseek.com'
     deepseek_model: str = 'deepseek-chat'
     deepseek_api_key: Optional[str] = None
+    deepseek_timeout_seconds: float = 60.0
+    deepseek_max_retries: int = 2
+    deepseek_trust_env: bool = False
+    stepfun_api_key: Optional[str] = None
+    stepfun_base_url: str = 'https://api.stepfun.com/step_plan/v1'
+    stepfun_asr_model: str = 'stepaudio-2.5-asr'
+    stepfun_timeout_seconds: float = 180.0
+    ffmpeg_path: str = 'ffmpeg'
     max_context_chunks: int = 5
     recommendation_top_k: int = 5
     import_dataset_path: Path = DEFAULT_DATASET_PATH

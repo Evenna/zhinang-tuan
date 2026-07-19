@@ -7,6 +7,14 @@
 - 前端预览版：默认进入本地预览模式，适合快速调 UI、交互、人物排版
 - 完整版：前端接 FastAPI 后端，调用 DeepSeek 生成推荐和人物回答
 
+完整版还包含：
+
+- TED 圆桌：上传 PDF、DOCX、PPTX、文本，或导入网页和视频链接后围绕原文讨论
+- 学习型表达角色卡：根据视频转写生成观点、表达风格与讨论主题，不复刻或冒充真人
+- 多来源圆桌：支持内置人物、SpeakerCard、表达教练和批判性思维教练共同参与
+- 长期用户记忆：按阈值生成会话摘要，提取偏好与事实，并在跨会话回答中召回
+- 动态发言调度：每轮按人设匹配度选择最多两人，兼顾近期出场频率；主持人每五轮总结一次
+
 ## 项目结构
 
 ```text
@@ -145,6 +153,16 @@ uvicorn app.main:app --reload --port 8000
 - `POST /api/recommend`
 - `POST /api/chat/respond`
 - `POST /api/chat/group`
+- `POST /api/roundtable/respond`
+- `GET|POST /api/study/sources`
+- `POST /api/study/sources/import-file`
+- `POST /api/study/sources/import-url`
+- `POST /api/study/sources/import-video`
+- `POST /api/study/speaker-cards/generate`
+- `POST /api/study/roundtable/respond`
+- `GET /api/memory`
+
+视频自动转写需要安装 `ffmpeg` 并配置 `STEPFUN_API_KEY`。如果已经有 transcript，也可以直接随视频链接提交，不会调用 ASR。
 
 ## 数据与素材说明
 
