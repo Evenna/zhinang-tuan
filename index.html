@@ -1456,15 +1456,19 @@
       object-fit: contain;
       object-position: center center;
       filter: drop-shadow(0 12px 16px rgba(0,0,0,0.16));
-      transform: translateX(-50%) translateY(-8%) translateZ(36px);
+      transform:
+        translateX(calc(-50% + var(--portrait-x, 0px)))
+        translateY(calc(-8% + var(--portrait-y, 0px)))
+        scale(
+          calc(var(--portrait-scale, 1) * var(--portrait-flip, 1)),
+          var(--portrait-scale, 1)
+        );
+      transform-origin: center center;
       image-rendering: auto;
       opacity: 1;
       mix-blend-mode: normal;
       isolation: isolate;
       transition: transform 0.65s ease, filter 0.4s ease;
-    }
-    .poster-cutout.main {
-      transform: translateX(-50%) translateY(-8%) translateZ(36px);
     }
     .poster-cutout.echo {
       display: none;
@@ -1474,22 +1478,11 @@
       transform:
         translateX(calc(-50% + var(--portrait-x, 0px)))
         translateY(calc(-8% + var(--portrait-y, 0px)))
-        translateZ(36px)
         scale(
           calc(var(--portrait-scale, 1) * var(--portrait-flip, 1) * 1.035),
           calc(var(--portrait-scale, 1) * 1.035)
         );
       filter: drop-shadow(0 18px 22px rgba(0,0,0,0.18));
-    }
-    .poster-cutout.main {
-      transform:
-        translateX(calc(-50% + var(--portrait-x, 0px)))
-        translateY(calc(-8% + var(--portrait-y, 0px)))
-        translateZ(36px)
-        scale(
-          calc(var(--portrait-scale, 1) * var(--portrait-flip, 1)),
-          var(--portrait-scale, 1)
-        );
     }
     .card.is-editing .card-front::before {
       border-color: rgba(196,149,106,0.95);
@@ -3851,7 +3844,7 @@ window.__setAppMode = (nextMode) => {
 const PREVIEW_CARD_MODE = APP_MODE !== 'api';
 const MIN_QUESTION_LENGTH = PREVIEW_CARD_MODE ? 1 : 2;
 const PREVIEW_EDIT_MODE = false;
-const HOME_PREVIEW_EDIT_MODE = false;
+const HOME_PREVIEW_EDIT_MODE = new URLSearchParams(window.location.search).get('homeedit') === '1';
 const HOME_FIGURE_STORAGE_KEY = 'zhinang-home-figure-adjustments-v1';
 const HOME_SIGNATURE_STORAGE_KEY = 'zhinang-home-signature-adjustments-v1';
 const ADJUST_MODE = urlMode === 'adjust';
@@ -6869,17 +6862,11 @@ function getAvatarAdjustments(slug) {
 }
 
 function loadHomeFigureAdjustments() {
-  if (!HOME_PREVIEW_EDIT_MODE) {
-    return cloneAdjustmentMap(HOME_FIGURE_ADJUSTMENTS);
-  }
   try {
     const stored = window.localStorage.getItem(HOME_FIGURE_STORAGE_KEY);
-    if (!stored) {
-      return cloneAdjustmentMap(HOME_FIGURE_ADJUSTMENTS);
-    }
     return {
       ...cloneAdjustmentMap(HOME_FIGURE_ADJUSTMENTS),
-      ...JSON.parse(stored)
+      ...(stored ? JSON.parse(stored) : {})
     };
   } catch (error) {
     return cloneAdjustmentMap(HOME_FIGURE_ADJUSTMENTS);
@@ -6887,17 +6874,11 @@ function loadHomeFigureAdjustments() {
 }
 
 function loadHomeSignatureAdjustments() {
-  if (!HOME_PREVIEW_EDIT_MODE) {
-    return cloneAdjustmentMap(HOME_SIGNATURE_ADJUSTMENTS);
-  }
   try {
     const stored = window.localStorage.getItem(HOME_SIGNATURE_STORAGE_KEY);
-    if (!stored) {
-      return cloneAdjustmentMap(HOME_SIGNATURE_ADJUSTMENTS);
-    }
     return {
       ...cloneAdjustmentMap(HOME_SIGNATURE_ADJUSTMENTS),
-      ...JSON.parse(stored)
+      ...(stored ? JSON.parse(stored) : {})
     };
   } catch (error) {
     return cloneAdjustmentMap(HOME_SIGNATURE_ADJUSTMENTS);
@@ -9607,7 +9588,7 @@ async function generateCards() {
     loading.classList.remove('show');
     document.body.classList.remove('result-mode');
     inputSection.style.display = 'block';
-    removeHomeFigureEditor();
+    setupHomeFigureEditor();
     showStatus(normalizeApiErrorMessage(error.message || '联调失败，请检查本地后端服务。'), 'error');
   } finally {
     loadingText.textContent = '智囊团正在洗牌';
@@ -9719,7 +9700,7 @@ function resetAll() {
   closePersonChat();
   inputSection.style.display = 'block';
   applyAllHomeFigureAdjustments();
-  removeHomeFigureEditor();
+  setupHomeFigureEditor();
   showStatus('', '');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -9734,11 +9715,11 @@ function resetResultOnly() {
   cardsEl.classList.remove('show');
   resetBtn.classList.remove('show');
   inputSection.style.display = 'block';
-  removeHomeFigureEditor();
+  setupHomeFigureEditor();
 }
 
 applyAllHomeFigureAdjustments();
-removeHomeFigureEditor();
+setupHomeFigureEditor();
 if (ADJUST_MODE) {
   initAdjustmentWorkbench();
 }
