@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>从「苏格拉底请回答」到一个可发表的 HCI 研究议程</title>
+<style>
+:root{
+  --bg:#fbfaf8; --paper:#ffffff; --ink:#1a1a1c; --ink2:#3d3d42; --dim:#6e6e76;
+  --line:#e4e0da; --acc:#8a3b2e; --acc2:#b8654f; --soft:#f3efe9;
+  --blue:#2f4a63; --green:#3d5a45;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  font-size:16.5px; line-height:1.85; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:0 28px 120px;}
+/* header */
+header{
+  border-bottom:1px solid var(--line); padding:72px 0 44px; margin-bottom:56px;
+  position:relative;
+}
+.kicker{font-size:12.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--acc); font-weight:600; margin-bottom:22px}
+h1{font-size:41px; line-height:1.28; margin:0 0 20px; font-weight:700; letter-spacing:-.01em}
+h1 em{font-style:normal; color:var(--acc); }
+.sub{font-size:17px; color:var(--ink2); max-width:760px; line-height:1.75}
+.meta{margin-top:28px; font-size:13px; color:var(--dim); display:flex; gap:22px; flex-wrap:wrap}
+/* layout */
+.grid{display:grid; grid-template-columns:200px 1fr; gap:56px; align-items:start}
+nav.toc{position:sticky; top:32px; font-size:13.5px; line-height:1.6}
+nav.toc b{display:block; font-size:11px; letter-spacing:.18em; color:var(--dim); text-transform:uppercase; margin-bottom:14px; font-weight:600}
+nav.toc a{display:block; color:var(--ink2); text-decoration:none; padding:5px 0 5px 12px; border-left:2px solid transparent; transition:.15s}
+nav.toc a:hover{color:var(--acc); border-left-color:var(--acc)}
+nav.toc a small{color:var(--dim); font-size:11.5px; display:block}
+/* sections */
+section{margin-bottom:76px; scroll-margin-top:28px}
+h2{font-size:27px; margin:0 0 8px; font-weight:700; letter-spacing:-.005em}
+h2 .num{color:var(--acc); font-size:15px; font-variant-numeric:tabular-nums; margin-right:12px; font-weight:600; vertical-align:2px}
+h3{font-size:19px; margin:40px 0 12px; font-weight:650}
+h4{font-size:15.5px; margin:26px 0 8px; font-weight:650; color:var(--ink)}
+p{margin:0 0 18px}
+ul,ol{margin:0 0 20px; padding-left:22px}
+li{margin:0 0 9px}
+strong{font-weight:650}
+.lead{font-size:18px; color:var(--ink2)}
+.rule{height:1px; background:var(--line); margin:0 0 34px}
+/* callouts */
+.note{background:var(--soft); border-left:3px solid var(--acc); padding:20px 24px; margin:26px 0; font-size:15.5px; color:var(--ink2)}
+.note b{color:var(--acc)}
+.warn{background:#fdf6f4; border-left:3px solid var(--acc2)}
+/* cards */
+.card{border:1px solid var(--line); border-radius:10px; padding:26px 28px; margin:26px 0; background:var(--paper)}
+.card.six{border-top:3px solid var(--acc)}
+.card-head{display:flex; align-items:baseline; gap:14px; margin-bottom:6px; flex-wrap:wrap}
+.card-head .idx{font-size:12px; letter-spacing:.16em; color:var(--acc); font-weight:700}
+.card-head h3{margin:0; font-size:20px}
+.card .q{font-size:15.5px; color:var(--ink2); font-style:italic; border-left:2px solid var(--line); padding-left:16px; margin:14px 0 20px}
+.kv{display:grid; grid-template-columns:88px 1fr; gap:6px 18px; font-size:15px; margin:14px 0 6px}
+.kv dt{color:var(--dim); font-size:12.5px; letter-spacing:.06em; padding-top:3px}
+.kv dd{margin:0; color:var(--ink2)}
+.tag{display:inline-block; font-size:11.5px; padding:2px 9px; border-radius:20px; background:var(--soft); color:var(--ink2); margin:0 6px 6px 0; border:1px solid var(--line)}
+.tag.hot{background:#f7ece8; color:var(--acc); border-color:#e8d3cc}
+/* table */
+table{width:100%; border-collapse:collapse; margin:24px 0; font-size:14.5px}
+th{text-align:left; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); font-weight:600; padding:0 12px 10px 0; border-bottom:1px solid var(--ink); vertical-align:bottom}
+td{padding:13px 12px 13px 0; border-bottom:1px solid var(--line); vertical-align:top; color:var(--ink2)}
+td:first-child{color:var(--ink); font-weight:600; white-space:nowrap}
+td .s{display:block; font-size:12.5px; color:var(--dim); font-weight:400; margin-top:3px}
+.hl{background:#fdf9ef}
+/* refs */
+.refs{font-size:14px; line-height:1.7}
+.refs li{margin-bottom:11px; color:var(--ink2)}
+.refs .yr{color:var(--dim); font-size:12.5px}
+/* steps */
+.step{display:grid; grid-template-columns:74px 1fr; gap:20px; padding:20px 0; border-top:1px solid var(--line)}
+.step:last-child{border-bottom:1px solid var(--line)}
+.step .w{font-size:12.5px; letter-spacing:.1em; color:var(--acc); font-weight:700; padding-top:4px}
+.step .b b{display:block; margin-bottom:4px; font-size:15.5px}
+.step .b span{color:var(--ink2); font-size:14.5px}
+footer{border-top:1px solid var(--line); padding-top:28px; font-size:13px; color:var(--dim)}
+@media(max-width:860px){
+  .grid{grid-template-columns:1fr; gap:0}
+  nav.toc{display:none}
+  h1{font-size:30px} .wrap{padding:0 18px 90px}
+  .kv{grid-template-columns:1fr; gap:2px 0}
+  .kv dt{padding-top:10px}
+  table{font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Research Agenda · HCI · 2026.11</div>
+  <h1>从「苏格拉底请回答」<br>到一个<em>可发表</em>的 HCI 研究议程</h1>
+  <p class="sub">你已经有一个跑起来的平台，缺的不是想法，是<b>把一个作品拆成可被审稿人接受的「知识贡献」的那套转换工序</b>。这份文档做三件事：找出平台里真正新的东西、把它翻译成六个可执行的研究命题、给出到 DIS 2027 / CHI 2028 的时间表与写作骨架。</p>
+  <div class="meta">
+    <span>基于 CHI / CSCW / DIS / UIST 官网实时截稿信息</span>
+    <span>假定对象：《苏格拉底请回答》人格化 RAG + 群贤论道</span>
+  </div>
+</header>
+
+<div class="grid">
+<nav class="toc">
+  <b>目录</b>
+  <a href="#s1">01 先校准认知<small>平台不是贡献</small></a>
+  <a href="#s2">02 你已在哪五条对话里<small>文献地形</small></a>
+  <a href="#s3">03 六个可切的研究命题<small>核心</small></a>
+  <a href="#s4">04 最小可发表研究<small>样本/分析/周数</small></a>
+  <a href="#s5">05 投稿地图与真实 deadline<small>时间窗</small></a>
+  <a href="#s6">06 论文骨架与死法<small>写作</small></a>
+  <a href="#s7">07 12 周执行计划<small>排期</small></a>
+  <a href="#s8">08 合作、资源与坑<small>落地</small></a>
+  <a href="#s9">09 文献清单<small>要核原文</small></a>
+</nav>
+
+<main>
+
+<section id="s1">
+<h2><span class="num">01</span>先校准认知：HCI 顶会不发表平台</h2>
+<div class="rule"></div>
+
+<p class="lead">这是所有设计背景的人第一次投 CHI 时最痛的一课：审稿人不评价你的产品好不好用、美不美、有没有社会价值。他们只问一句——<b>「这篇论文让领域多知道了什么，是之前不知道的？」</b></p>
+
+<p>Wobbrock 与 Kientz 在 <em>Interactions</em> 上把 HCI 的贡献分成七类，这张表值得你打印出来贴在墙上，因为它决定了你每一个决定该怎么描述：</p>
+
+<table>
+<tr><th>贡献类型</th><th>是什么</th><th>你的平台能产出的难度</th></tr>
+<tr><td>Empirical</td><td>新发现：人怎么用、怎么误解、怎么被改变</td><td>★★☆ 最现实，你有一手用户</td></tr>
+<tr><td>Artifact</td><td>新系统/新交互技术本身即贡献</td><td>★★★ 单靠「我做了个 AI 对话 App」不够</td></tr>
+<tr><td>Methodological</td><td>新的研究或评估方法</td><td>★★★★ 门槛高，但稀缺</td></tr>
+<tr><td>Theoretical</td><td>新概念、新框架、新解释</td><td>★★★★ 需要读得够深</td></tr>
+<tr><td>Dataset</td><td>被社区复用的数据集</td><td>★★☆ 你不难有：255 人物 × 海量对话</td></tr>
+<tr><td>Review</td><td>系统性综述</td><td>★★★ 门槛是时间不是天赋</td></tr>
+<tr><td>Opinion</td><td>立场鲜明的观点文章</td><td>★★★ 通常要已有声望</td></tr>
+</table>
+
+<div class="note">
+<b>最关键的一句转换：</b>不要说「我做了一个让人和先贤对话的平台」；要说「<b>我发现，当 AI 以历史人物的口吻回答时，用户对错误的容忍度显著上升——而加入『先贤反问』这一设计可以把它压回去</b>」。前者是产品描述，后者是知识。<b>同一个东西，两种说法，只有后者能进 CHI。</b>
+</div>
+
+<h3>顶刊还是顶会？先说实话</h3>
+<p>HCI 的「顶刊」是 <b>TOCHI</b>（ACM Transactions on Computer-Human Interaction）。它要求的是完整、被多轮打磨过的研究计划，通常由已有博士团队完成，单独一作投中的概率对你的时间线不现实。HCI 真正的通货是<b>顶会</b>：CHI、CSCW、UIST、DIS。它们的审稿严格度不低于期刊（CHI 现在有 revise-and-resubmit 阶段，两轮），在清华、MIT Media Lab、RCA 的评估体系里都算顶刊级产出。</p>
+<p>所以路线是：<b>先拿 DIS / CSCW 或 CHI 全文，把「研究能力」这件事做出来一次，再谈 TOCHI 或 IJHCI 的扩展版</b>（会议论文扩展 30% 新内容投期刊，是标准路径，不算一稿多投）。</p>
+</section>
+
+<section id="s2">
+<h2><span class="num">02</span>你其实已经站在五条对话的交点上</h2>
+<div class="rule"></div>
+<p class="lead">好消息：你的平台不是凭空长出来的，它正卡在 2023 年之后 HCI 最热的五个话题中间。坏消息：这五个话题每一个都已经有人在做，你必须知道他们在哪，才知道自己还能站在哪。</p>
+
+<h3>① 人机对话中的「权威幻觉」与过度依赖</h3>
+<p>从 <b>Amershi 等人的《Guidelines for Human-AI Interaction》</b>（CHI 2019，18 条被引用到烂的准则）开始，这条线一直在问：人为什么过度信任 AI？<b>Buçinca 等人的「认知强制函数」</b>（CSCW 2021）证明，让用户先自己判断再看 AI 建议，能显著降低过度依赖；<b>Passi 与 Vorvoreanu</b> 的综述把「overreliance」拆成四类机制。更早的根在 <b>Risko & Gilbert 的「cognitive offloading」</b>（2016）和 <b>Lee & See 的信任校准模型</b>（2004）。</p>
+<p><b>你的位置：</b>这个领域几乎所有研究都用「工具型 AI」（决策建议、写作、诊断）。<b>没有人研究过「当 AI 扮演一个有权威光环的历史人物时，过度依赖会被放大多少」</b>。孔子说一句错的，用户比 ChatGPT 说同样的话更容易信。这是一个干净的、没人占的空位。</p>
+
+<h3>② 人格化 LLM 的设计张力</h3>
+<p><b>Shanahan 等人《Role play with large language models》</b>（Nature 2023）从认知科学角度说明 LLM 对话本质是角色扮演；HCI 这边，<b>Luger & Sellen 的《Like Having a Really Bad PA》</b>（CHI 2016）早就指出对话式 Agent 的期望落差；<b>Yang 等人《Re-examining Whether, Why, and How Human-AI Interaction Is Uniquely Difficult to Design》</b>（CHI 2020）给了「输出不确定性」这一设计困难的经典分析；<b>Weisz 等人《Design Principles for Generative AI Applications》</b>（CHI 2024）是最新的设计准则综述。</p>
+<p><b>你的位置：</b>你的 255 人物库 + 人设提示词 + 三路加权 RAG + 6 条反幻觉护栏，本质是在解一个<b>「人设保真」与「事实保真」互相冲突</b>的工程问题。这个张力在文献里被提到过，但没人系统研究过：<b>当人设要求「像苏轼那样说话」而事实要求「这句话苏轼没说过」时，该怎么设计？用户更接受哪种妥协？</b></p>
+
+<h3>③ 多智能体辩论与观点多样性</h3>
+<p>LLM 辩论（multi-agent debate）在 NLP 里是性能技巧，在 HCI 里几乎没有人把它当<b>「让用户看见分歧」的界面</b>来研究。相关根：<b>Nass & Moon 的 CASA 范式</b>（2000，人对待计算机会用社会规则）、<b>Epley 等人的拟人化三因素理论</b>（2007）。而「分歧是否有价值」的社会科学根在群体决策研究（隐性的群体极化 vs. 建设性分歧）。</p>
+<p><b>你的位置：</b>「群贤论道」是<b>可量化</b>的：让 N 个先贤对同一问题发言，测量立场多样性（pairwise stance divergence）在轮次中如何变化。如果发现「多智能体一辩论就收敛到中庸共识」——这是个漂亮的负面发现，CHI 很爱收；如果是「能维持真分歧」——那是设计贡献。<b>这条门槛最低、最容易做出数据。</b></p>
+
+<h3>④ 数字招魂的伦理</h3>
+<p>把孔子、鲁迅做成可对话对象，在西方文献里叫 deadbots / griefbots / digital necromancy。<b>Hollanek 与 Nowaczyk-Basińska 的《Griefbots, Deadbots, Postmortem Avatars》</b>（Philosophy & Technology, 2024）是这条线最常被引的伦理分析；FAccT 与 CSCW 上近年密集出现「AI 代言逝者/历史人物」的伦理讨论。</p>
+<p><b>你的位置：</b>中国语境几乎是空白：<b>「文化代言权」</b>——谁有权让孔子说话？当 AI 用先贤口吻说出他从未说过的话，是文化传承还是文化挪用？你作为设计师兼建构者（builder）来写这个，比纯伦理学者有说服力，因为你手里有真实系统的决策日志。</p>
+
+<h3>⑤ 非西方认识论进入 HCI</h3>
+<p>从 <b>Irani 等人的 transnational HCI</b>（2010）到 <b>Ali 的 decolonial computing</b>，再到近年 CHI 上关于「非西方知识体系作为设计资源」的持续讨论。这条线的味道很明确：<b>不是「我们把西方方法用到中国」，而是「中国的思想传统本身能生发出不同的交互形式」</b>。苏格拉底式 elenchus（反诘）与中国的「启发」「因材施教」「不愤不启」是两套不同的教学交互逻辑——这个对比在 HCI 里还没被认真做过。</p>
+<p>另外你还有一个别人没有的场景：<b>线下展览/装置里的 AI 对话</b>（你做过 MR 与月球展的 Agent）。公共空间中的 AI 对话体验，是 DIS / TEI / C&amp;C 的天然题材。</p>
+
+<div class="note warn">
+<b>要点：</b>上面每条线你都不需要「先读完全部文献」。你需要的是每条线读 <b>3–5 篇</b>：一篇奠基（老）、一篇近三年的代表（新）、一篇综述（省时间）。见最后一节的书单。
+</div>
+</section>
+<section id="s3">
+<h2><span class="num">03</span>六个可切的研究命题</h2>
+<div class="rule"></div>
+<p class="lead">以下每一条都是<b>独立可发表</b>的——不要想着「一篇论文把我的平台全讲了」，那是必死。选一条，做深，其余当作 future work。</p>
+
+<div class="card six">
+<div class="card-head"><span class="idx">命题 01</span><h3>「先贤光环」会不会放大 AI 过度依赖</h3>
+<span class="tag hot">最容易出结果</span><span class="tag">实验</span></div>
+<p class="q">同一个错误答案，由「历史人物的口吻」说出，是否比由中性 AI 说出更容易被用户接受？加入「先贤反问」这一认知强制函数后，能否把依赖压回去？</p>
+<dl class="kv">
+<dt>为什么新</dt><dd>overreliance 文献做的是工具型 AI（决策、写作、诊断），<b>从没有人把「人格权威」当作一个操纵变量</b>。而你恰好有 255 个人格可以在同一系统内做对照——这在方法上是天然的优势，别人要复现得重搭一整套人设系统。</dd>
+<dt>怎么做</dt><dd>被试内设计，4 个条件：①裸 LLM ②中性 AI ③历史人物人设 ④历史人物人设 + 先贤反问（"在你接受这句话之前，容我问你——"）。任务用<b>埋了错的</b>知识问答（你人工构造 20 题，错在细节而非常识），测：错误采纳率、自信度评级、是否主动质疑。N=40–60，单次 45 分钟，线上即可。</dd>
+<dt>证据链</dt><dd>Buçinca et al. 2021（认知强制函数）→ Passi &amp; Vorvoreanu 2022（overreliance 机制）→ Risko &amp; Gilbert 2016（认知让渡）→ Nass &amp; Moon 2000（CASA：人会自动套用社会脚本）。</dd>
+<dt>投哪里</dt><dd>CHI 全文（首选）／ CSCW（若强调社会后果）／ IUI</dd>
+<dt>风险</dt><dd>伦理审查要过（涉及轻微欺骗，需 debrief）。若效应不显著，反而好写——「人格不放大依赖」本身是个有价值的中性结论。<b>这条是你最该先做的一条</b>，因为它同时产出一个可复用实验平台。</dd>
+</dl>
+</div>
+
+<div class="card six">
+<div class="card-head"><span class="idx">命题 02</span><h3>人设保真 vs 事实保真：历史人物该不该「不知道」</h3>
+<span class="tag">内容分析＋用户研究</span></div>
+<p class="q">当人设要求"像苏轼那样说话"而事实要求"苏轼没说过这句话"，四种妥协策略（硬拒绝／软转向／以人物口吻承认不确定／脱离人设默认）里，用户最能接受哪一种？系统在真实对话里又是怎么选的？</p>
+<dl class="kv">
+<dt>为什么新</dt><dd>你的 6 条反幻觉护栏是个工程方案，但<b>没有研究把它当作设计议题来评估</b>。「人设一致性」在 LLM 评测里被当作指标，在 HCI 里还没被当作<b>用户体验的取舍</b>。这是典型的"设计张力"论文，DIS 与 CHI 都很吃这一套。</dd>
+<dt>怎么做</dt><dd>两段式：<b>(a) 内容分析</b>——从你的日志里抽 600–1000 条真实对话（255 人物分层抽样），两人独立编码「触发边界的情形→系统实际策略→用户后续反应」。<b>(b) 受控呈现</b>——把四种策略做成四种回法，同一批用户各评（感知真实性、信任、继续对话意愿），N≈30。</dd>
+<dt>证据链</dt><dd>Shanahan et al. 2023（角色扮演本质）→ Weisz et al. 2024（生成式 AI 设计准则）→ Yang et al. 2020（输出不确定性作为设计困难）。</dd>
+<dt>投哪里</dt><dd>DIS（首选，设计味浓）／ CHI ／ IUI</dd>
+<dt>风险</dt><dd>必须有真实日志（所以平台要先补一份结构化日志，见第 04 节）。若日志量不足，退化成人造对话语料，说服力下降一档。</dd>
+</dl>
+</div>
+
+<div class="card six">
+<div class="card-head"><span class="idx">命题 03</span><h3>群贤论道里，「分歧」是真的还是演的</h3>
+<span class="tag hot">可量化</span><span class="tag">计算内容分析</span></div>
+<p class="q">多个先贤智能体对同一问题的立场多样性，会随轮次收敛到中庸共识，还是能维持真实分歧？用户看到的是"被制造出来的多样性"吗？</p>
+<dl class="kv">
+<dt>为什么新</dt><dd>multi-agent debate 在 NLP 里是提准确率的技巧，<b>没人研究它作为"让用户看见分歧"的界面是否名副其实</b>。而且"LLM 群聊一辩论就趋同"这个现象，社区有大量直觉，缺一个系统的实证。你手上有系统、有日志、有可控的人格变量——这是别人拿不到的实验材料。</dd>
+<dt>怎么做</dt><dd>选 15 个问题 × 6 组人物组合 × 5 轮，共 450 条对话。用「立场标注」（人工双编码 100 条建立准则，kappa ≥ .7，再用 LLM 辅助标全量，人工抽检 20%）计算两两立场距离随轮次的变化曲线。若收敛显著，接着做用户研究：用户在收敛 vs 未收敛版本上的"获得新视角"评分。</dd>
+<dt>证据链</dt><dd>Nass &amp; Moon 2000（社会脚本）→ 群体决策中的群体极化/趋同文献 → 近两年 CHI 上关于"AI 生成观点多样性"的讨论。</dd>
+<dt>投哪里</dt><dd>CSCW（首选，最认这种"社会计算+批判"的组合）／ CHI</dd>
+<dt>风险</dt><dd>立场度量方法要经得起推敲，审稿人会死磕"你怎么定义立场距离"。建议用两套度量（嵌入距离 + 人工量表）互证。</dd>
+</dl>
+</div>
+
+<div class="card six">
+<div class="card-head"><span class="idx">命题 04</span><h3>谁有权让孔子说话：文化代言权的伦理设计</h3>
+<span class="tag">伦理＋设计</span><span class="tag hot">中国语境空白</span></div>
+<p class="q">把历史文化人物做成可对话对象，其伦理边界在哪里？"文化代言权"应当如何被设计进系统（免责、标注、内容审核、可撤回）？</p>
+<dl class="kv">
+<dt>为什么新</dt><dd>西方有完整的 deadbots/griefbots 伦理讨论（Hollanek &amp; Nowaczyk-Basińska 2024），<b>但那是"逝去的亲人"语境；"逝去的文明偶像"是另一套伦理——涉及文化归属、集体记忆、教育责任</b>。中国语境几乎空白，而你是建构者（builder），能拿出真实的设计决策日志，这种"从系统内部看伦理"的视角是纯伦理学者写不出的。</dd>
+<dt>怎么做</dt><dd>价值敏感设计（VSD）三阶段：概念调研（12–15 位深访：文化研究者、教师、学生用户）+ 经验研究（你的系统日志）+ 技术调研（现有的免责/标注机制怎么做）。产出一个<b>可操作的设计框架</b>（4–6 条原则 + 系统实现），而不是空谈。</dd>
+<dt>证据链</dt><dd>Friedman et al. 的价值敏感设计 → Hollanek &amp; Nowaczyk-Basińska 2024 → FAccT 近年"AI 与文化遗产"议题。</dd>
+<dt>投哪里</dt><dd>DIS（首选）／ FAccT ／ CSCW</dd>
+<dt>风险</dt><dd>容易写成"正确但无用"的伦理作文。救命稻草是<b>把结论落到具体 UI 与系统机制上</b>，并给出"如果不这么做会发生什么"的真实案例。</dd>
+</dl>
+</div>
+
+<div class="card six">
+<div class="card-head"><span class="idx">命题 05</span><h3>从"听到"到"内化"：AI 对话真的改变人吗</h3>
+<span class="tag">纵向</span><span class="tag">最难但最有分量</span></div>
+<p class="q">与先贤对话四周之后，用户的反思水平、行动与自我认知有变化吗？相比"和普通 AI 聊天"，人格化对话是否带来更多内化？</p>
+<dl class="kv">
+<dt>为什么新</dt><dd>你的平台最初的问题设定就是"72% 的人只是在看，只有 15% 真正内化"——<b>这个断层本身就是一篇论文的核心动机</b>。文献里大量研究测"满意度/参与度"，很少测"反思与行动"，更少做纵向对照。</dd>
+<dt>怎么做</dt><dd>4 周纵向对照（人格化 vs 中性 AI），N=40–60（流失率按 50% 预留，入组 80–120）。前测/后测用成熟量表：<b>自我反思与洞察量表（SRIS）</b>、<b>意义感量表（MLQ）</b>；过程用每周日记法 + 日志行为指标；后测加 12 人半结构访谈。</dd>
+<dt>证据链</dt><dd>自我反思研究（Grant 2001, SRIS）→ Steger 的 MLQ → Sengers et al. 2005 反思式设计 → 长期部署研究的方法讨论。</dd>
+<dt>投哪里</dt><dd>CHI ／ CSCW ／ TOCHI（若做得够扎实，这是唯一有资格冲 TOCHI 的一条）</dd>
+<dt>风险</dt><dd>周期长、流失高、效应小。<b>不要把它当第一篇</b>，当第二篇——第一篇（命题 01 或 03）攒下的用户池正好用在这里。</dd>
+</dl>
+</div>
+
+<div class="card six">
+<div class="card-head"><span class="idx">命题 06</span><h3>两套"追问"传统：苏格拉底反诘 vs 中国式启发</h3>
+<span class="tag">跨文化设计</span><span class="tag">理论野心最大</span></div>
+<p class="q">西方 elenchus（连续反诘、逼出矛盾）与中国"不愤不启、不悱不发"（等待时机、点到为止）作为两种对话策略，在中国用户与国际用户身上会产生怎样不同的批判性反思？</p>
+<dl class="kv">
+<dt>为什么新</dt><dd>这是唯一能把你的作品从"AI 应用"抬到"非西方认识论进入 HCI"的命题。<b>不是"把西方方法用到中国"，而是"中国的教学传统本身能生发出不同的交互形式"</b>——这正是 transnational HCI / decolonial computing 那条线缺的实证。</dd>
+<dt>怎么做</dt><dd>把两种策略实现为两种对话 policy（同样的知识库、同样的人设，只换追问逻辑），做 2×2（策略 × 用户文化背景）被试间实验，N≈80；主指标是批判性反思量表 + 对话文本的论证深度编码。</dd>
+<dt>证据链</dt><dd>Irani et al. 2010（transnational HCI）→ Ali 的 decolonial computing → 中国教育哲学（《论语》"不愤不启"）作为设计资源的合法性论证。</dd>
+<dt>投哪里</dt><dd>CHI ／ DIS ／ C&amp;C（Creativity &amp; Cognition）</dd>
+<dt>风险</dt><dd>容易变成"文化本质主义"被审稿人打（"你怎么定义中国用户"）。<b>要明确说：我们比较的是两种对话策略，不是两种人</b>。这条建议放在第三篇。</dd>
+</dl>
+</div>
+
+<h3>三条备选：短平快，适合练手与占位</h3>
+<ul>
+<li><b>数据集论文：</b>把 255 人物人设卡 + 三路加权 RAG 的语料结构 + 真实对话日志整理成可复用数据集，配一份详细的数据卡（datasheet）。投 CHI / CSCW 的 dataset 类，或用 <b>CHI Posters（2027/1/21 截稿，≤4 页）</b>先占位。</li>
+<li><b>装置/展览场景：</b>公共空间中 AI 对话体验的田野研究（你做过线下展与 MR 伴侣），投 DIS Pictorials / TEI / C&amp;C。Pictorials 是"以图为主"的投稿类型，对设计背景的人极其友好。</li>
+<li><b>方法论小论文：</b>"怎么评估一个知识问答型 AI 的人设一致性"——给出一套评测协议。方法类贡献稀缺，但要求你对已有评测方法足够熟。</li>
+</ul>
+</section>
+
+<section id="s4">
+<h2><span class="num">04</span>「最小可发表研究」：规模、分析、周数</h2>
+<div class="rule"></div>
+<p class="lead">设计背景最常犯的错是「做得太大、做得太晚、做到没有时间分析」。下面这些数字是让你<b>刚好跨过审稿门槛</b>的下限，不是理想值。</p>
+
+<table>
+<tr><th>研究类型</th><th>常见规模</th><th>分析</th><th>周期</th></tr>
+<tr><td>受控实验<span class="s">命题 01 / 06</span></td><td>被试内 40–60 人；被试间每组 30+，总 80–120</td><td>混合效应模型 / RM-ANOVA；报告效应量与置信区间，别只报 p</td><td>6–8 周<span class="s">含招募与伦理</span></td></tr>
+<tr><td>内容分析<span class="s">命题 02 / 03</span></td><td>400–1000 条单元；2 名独立编码员</td><td>编码手册 → 预试 50 条 → Cohen's κ ≥ .7 → 全量编码 → 分歧协商</td><td>4–6 周</td></tr>
+<tr><td>深度访谈<span class="s">命题 04</span></td><td>12–20 人，60–75 分钟/人</td><td>反身性主题分析（Braun &amp; Clarke 六步）；报告饱和判断</td><td>5–7 周</td></tr>
+<tr><td>纵向部署<span class="s">命题 05</span></td><td>入组 80–120，目标留存 40–60</td><td>前/后测配对 + 混合模型；日记法补质性</td><td>10–14 周</td></tr>
+<tr><td>设计研究 / RtD<span class="s">备选一、二</span></td><td>1 个系统 + 1 轮评估</td><td>标注组合（annotated portfolio）：用「作品 + 注解」论证知识，而非用数据</td><td>8–12 周</td></tr>
+</table>
+
+<h3>但真正的门槛不在样本，在「研究基建」</h3>
+<p>你现在跑的是一个产品，不是一个研究工具。要产出一篇能被审的论文，这四件事必须先补上——<b>它们加起来大概两周，但省掉它们会让整个研究废掉</b>：</p>
+<ol>
+<li><b>结构化日志。</b>每次对话必须落库：用户 ID（可撤回的匿名 ID）、人物、轮次、触发边界的情形、系统采用的策略、响应延迟、用户是否追问/退出。没有这个，命题 02 和 03 直接做不了。</li>
+<li><b>知情同意与数据使用说明。</b>真实用户数据用于研究，必须显式同意，且能被撤回删除。CHI 的 "Policy on Research Involving Human Participants" 会检查这一段——审稿人常在方法节里专门找它。</li>
+<li><b>量表与前后测入口。</b>SRIS、MLQ 这些量表要嵌进产品流程（别发问卷星链接，流失率会翻倍）。</li>
+<li><b>一个实验开关。</b>能对同一用户切换「裸 LLM / 中性 AI / 人格 / 人格+反问」四种模式——这是命题 01 的全部技术需求，也是最好实现的一个。</li>
+</ol>
+
+<div class="note">
+<b>伦理提示：</b>你的研究涉及"让人以为在跟历史人物对话"，属于<b>轻度欺骗（mild deception）</b>。必须：事先告知"这是 AI 模拟，不是真人在扮演"（这条不能省，否则整篇论文会被 reject）、实验后 debrief、允许随时退出。清华有伦理审查流程，走一次大概 2–4 周，要提前排。
+</div>
+</section>
+
+<section id="s5">
+<h2><span class="num">05</span>投稿地图：现在能投什么</h2>
+<div class="rule"></div>
+<p class="lead">以下日期是 2026 年 11 月从各会议官网实时抓取的，以官网为准（会议会改）。</p>
+
+<table>
+<tr><th>场地</th><th>定位</th><th>最近可投窗口</th><th>难度</th></tr>
+<tr class="hl"><td>DIS 2027</td><td>设计取向最强的主场。RtD、批判设计、Pictorials 都在这。<span class="s">2027/6/28–7/2，线下+线上</span></td><td><b>摘要 2027/1/11<br>全文 2027/1/18</b><span class="s">7,000–8,000 词为宜，&lt;4,000 或 &gt;12,000 会被 desk reject</span></td><td>中高</td></tr>
+<tr class="hl"><td>CHI 2027 Posters</td><td>≤4 页（不含参考文献），练手与占位的最佳入口。<span class="s">CHI 2027 在匹兹堡，2027/5/10–14</span></td><td><b>2027/1/21</b><span class="s">通知 2/18</span></td><td>低</td></tr>
+<tr><td>CHI 2027 全文</td><td>已截止（2026/9/10），R&amp;R 阶段 2026/12/3（仅限被邀修订）</td><td>只能等下一轮</td><td>—</td></tr>
+<tr class="hl"><td>CHI 2028 全文</td><td>HCI 最高声望的主场</td><td><b>约 2027 年 9 月</b>（按历年 9 月上旬推断，官网未发布）</td><td>高</td></tr>
+<tr><td>CSCW / PACM HCI</td><td>社会计算与质性研究的家，<b>滚动投稿、无固定截稿</b>，中了他就能在 CSCW 2027（费城）讲</td><td>随时可投，按月度批次处理</td><td>高</td></tr>
+<tr><td>UIST 2027</td><td>偏界面技术实现<span class="s">2027/10/26–29，维也纳</span></td><td>摘要 2027/3/31 / 全文 2027/4/7<span class="s">技术门槛高，暂不建议</span></td><td>很高</td></tr>
+<tr><td>IUI 2028</td><td>智能界面，对"AI 与人的交互机制"很对口</td><td>约 2027 年 8 月（2027 轮已截止）</td><td>中</td></tr>
+<tr><td>TEI 2028 / C&amp;C</td><td>实体与具身交互 / 创造与认知</td><td>TEI 约 2027 年 8 月，C&amp;C 约 2027 年 1–2 月</td><td>中</td></tr>
+<tr><td>CHI EA（Extended Abstracts）</td><td>Workshop、Doctoral Consortium、SRC</td><td>通常与 Posters 同期</td><td>低</td></tr>
+</table>
+
+<h3>策略：两条腿走，别把宝押在一次投稿上</h3>
+<p><b>腿一（保命）：</b>2027/1/21 的 CHI 2027 Posters。4 页，把命题 01 的<b>初步实验</b>（N=20 也行）写出来。中了 → 你在 CHI 上有一篇、有海报、有机会当面认识审稿人；不中 → 损失 3 周。</p>
+<p><b>腿二（正餐）：</b>2027/1/18 的 DIS 2027 全文，或者直接瞄准 CHI 2028 的 9 月。DIS 的好处是<b>对设计取向的宽容度最高</b>，你可以用 annotated portfolio 的方式论证，不必硬凑统计显著性。</p>
+<div class="note warn">
+<b>时间账要算清楚：</b>今天是 2026 年 11 月底。DIS 全文要 1 月 18 日交，<b>只剩 7 周</b>——7 周做不完一个受控实验 + 分析 + 写作。所以现实的组合是：<b>1 月投 CHI Posters（用命题 01 的小样本结果）+ 9 月投 CHI 2028 全文（用命题 01 或 03 的完整研究）</b>。DIS 2028 明年秋冬还有一轮，不必挤这一次。
+</div>
+</section>
+
+<section id="s6">
+<h2><span class="num">06</span>论文骨架，以及七种死法</h2>
+<div class="rule"></div>
+<p class="lead">CHI 系论文不是"报告我做了什么"，是一条<b>论证链</b>。8,000 词里，每一节都在为同一个 claim 服务。</p>
+
+<h3>骨架（以命题 01 为例，8,000 词）</h3>
+<table>
+<tr><th>节</th><th>词数</th><th>要写什么（以及最常见的错）</th></tr>
+<tr><td>Introduction</td><td>900</td><td>现象 → 缺口 → 「我们做了什么」→ 三条贡献。<b>错法：</b>开头讲产品愿景。</td></tr>
+<tr><td>Related Work</td><td>1,600</td><td>三段式：overreliance 研究 → 人格化/拟人化 → 认知强制函数。<b>错法：</b>文献罗列不成论证，读完不知道你补哪个洞。</td></tr>
+<tr><td>Formative Study</td><td>1,000</td><td>先做个小调研（10 人访谈或日志分析）证明"这个问题真实存在"。<b>这一段是中国学生最常省掉的，也是最该有的。</b></td></tr>
+<tr><td>System / Design</td><td>1,200</td><td>四个条件怎么实现的，配系统图。<b>错法：</b>贴截图代替设计理由。</td></tr>
+<tr><td>Study</td><td>1,200</td><td>被试、任务、变量、流程、伦理。要能被人照着复现。</td></tr>
+<tr><td>Findings</td><td>1,200</td><td>数据 + 图。每张图对应一个 claim。</td></tr>
+<tr><td>Discussion</td><td>1,300</td><td>为什么是这样 → 对设计的意义 → 对理论的回响。<b>这里是拿分的地方，别写成总结。</b></td></tr>
+<tr><td>Limitations &amp; Future Work</td><td>400</td><td>主动交代弱点，比被审稿人抓出来好。</td></tr>
+</table>
+
+<h3>七种死法（设计背景投稿的高频拒稿理由）</h3>
+<ol>
+<li><b>「这只是一个应用。」</b> 通篇在讲产品功能，没有抽象出可迁移的知识。解药：每个发现后面加一句"这对其他 AI 对话系统意味着什么"。</li>
+<li><b>「贡献不清晰。」</b> Intro 里没有明确写 "We contribute: (1)… (2)… (3)…"。解药：照抄这个句式。</li>
+<li><b>「评估不足。」</b> 只有用户说"很好玩""很有启发"，没有测量。解药：至少一个可量化的主指标 + 一个质性维度。</li>
+<li><b>「新颖性不足，已有 X 做过。」</b> 解药：Related Work 里主动点名最接近的三篇，逐条说"它做了什么 / 我们不同在哪"。</li>
+<li><b>「设计理据缺失。」</b> 界面长这样是因为"我觉得好看"。解药：每个设计决策都要回指文献或 formative study。</li>
+<li><b>「伦理讨论缺席。」</b> 尤其你做的题材（模拟历史人物）。解药：单独一小节 + 系统里的具体机制。</li>
+<li><b>「写作不可读。」</b> 长句、术语堆叠、图说不清。解药：找一位英文好的合作者做 language pass，或用专业润色。这一条刷掉的稿子比你想象的多。</li>
+</ol>
+</section>
+
+<section id="s7">
+<h2><span class="num">07</span>12 周执行计划（到 CHI 2027 Posters）</h2>
+<div class="rule"></div>
+<p class="lead">目标：<b>2027 年 1 月 21 日</b>前交出一篇 4 页 CHI Poster，内容是命题 01 的初步实验（N=20–30）。同时把研究基建补完，为 9 月的 CHI 2028 全文铺路。</p>
+
+<div class="step"><div class="w">第 1–2 周</div><div class="b"><b>选题锁定 + 文献 15 篇</b><span>定命题 01；读 15 篇（每条线 3–5 篇），写一页"文献地图"给自己看。同时读两篇范文：一篇 CHI 最佳论文奖的实验类、一篇 DIS 的设计张力类，逐段拆结构。</span></div></div>
+<div class="step"><div class="w">第 3–4 周</div><div class="b"><b>研究基建</b><span>日志埋点 + 四模式实验开关 + 知情同意页 + 伦理审查提交。这四周的产出是"平台变成研究工具"，不是新功能。</span></div></div>
+<div class="step"><div class="w">第 5–6 周</div><div class="b"><b>造任务 + 预试</b><span>20 道埋错的知识题；找 5 人跑预试，修流程（时长、指导语、埋错是否自然）。伦理批下来才能正式招人。</span></div></div>
+<div class="step"><div class="w">第 7–8 周</div><div class="b"><b>跑实验 N=25</b><span>线上，每人 45 分钟。同步开始写 Intro + Related Work（别等数据齐了才动笔）。</span></div></div>
+<div class="step"><div class="w">第 9–10 周</div><div class="b"><b>分析 + 画图</b><span>主要指标 + 描述统计 + 效应量；做 3 张图（系统图、条件对比图、典型对话片段）。</span></div></div>
+<div class="step"><div class="w">第 11 周</div><div class="b"><b>写成 4 页</b><span>Poster 论文是压缩版：Intro(0.5) / Related(0.7) / System(0.8) / Study(0.8) / Findings(0.8) / Discussion(0.4)。给两个不同背景的人读，问"你读完知道我们发现了什么吗"。</span></div></div>
+<div class="step"><div class="w">第 12 周</div><div class="b"><b>内审 + 提交</b><span>找有 CHI 经验的人看（这一步的收益大于再改两周）。1 月 18 日锁稿，1 月 21 日交。</span></div></div>
+
+<div class="note">
+<b>并行的第二件事：</b>9 月 CHI 2028 全文需要 N=50–60 和更完整的分析。所以第 7–8 周那批 25 人，<b>就当成全文的 pilot</b>——同样的流程，之后扩样本即可，不用重来。这就是"一次搭台、两次唱戏"。
+</div>
+</section>
+
+<section id="s8">
+<h2><span class="num">08</span>找谁合作，以及三个现实提醒</h2>
+<div class="rule"></div>
+
+<h3>合作：你需要一个「懂审稿」的人</h3>
+<p>一作是你（设计、系统、用户洞察都是你的），但你几乎一定需要一个<b>有 CHI/CSCW 发表记录的通讯作者</b>。原因很实际：审稿人看到全设计背景的作者名单，会预设"这篇大概没有方法"；有一个 HCI 研究的合作者，这个预设就消失了。而且 R&amp;R 阶段需要有人帮你有策略地回应审稿意见——这是纯经验，没有捷径。</p>
+<p>找人的顺序建议：<b>①</b> 你导师付志勇老师的关系网里有没有做人机交互实证研究的（服务设计、智能设计方向常有）；<b>②</b> 清华计算机系、美术学院信息艺术设计系里近年有 CHI/TEI 论文的老师和博士生（你自己去 Google Scholar 搜 "Tsinghua CHI 2024" 这类，比问人快）；<b>③</b> 中科院软件所、浙大、同济的人机交互组；<b>④</b> 港中文、港理工、新加坡 NUS 的 HCI 组，他们对"中国语境 + AI 伦理"题材很感兴趣，且更愿意带新人。<b>发邮件时附一页 research summary + 你能提供的数据，别说"求指导"。</b></p>
+
+<h3>三个提醒，都不是技术问题</h3>
+<p><b>① 不要等平台"完善"了再做研究。</b> 你现在的系统已经够做命题 01 和 03。研究不需要产品成熟，需要变量可控。</p>
+<p><b>② 第一篇的目标是"投中"，不是"投好"。</b> 设计背景的人常把第一篇当毕生之作，结果两年过去一篇没有。先拿 CHI Posters 或 DIS Pictorials 破零，心理状态会完全不同。</p>
+<p><b>③ 中文期刊可以作为副线。</b> 《装饰》《包装工程》《南京艺术学院学报》都发设计研究，周期短、对设计背景友好。但注意：<b>中英文不能一稿多投</b>；正确的做法是先发会议，再扩写成中文期刊的"扩展版"并注明来源。</p>
+</section>
+
+<section id="s9">
+<h2><span class="num">09</span>文献清单</h2>
+<div class="rule"></div>
+<div class="note warn">
+<b>务必核原文。</b>下面这些是我按记忆列出的、这条线上最该读的条目，作者与年份我确信，但<b>卷期页码可能有偏差</b>。用 Google Scholar 搜标题核对，别直接照抄进参考文献——CHI 审稿人对参考文献错误很敏感。
+</div>
+
+<h3>A · 方法与贡献观（先读这四篇，决定你怎么想问题）</h3>
+<ul class="refs">
+<li>Wobbrock, J. O., &amp; Kientz, J. A. <b>Research contributions in human-computer interaction.</b> <i>Interactions</i>, 2016. <span class="yr">— 七类贡献，本文第 1 节的理论来源</span></li>
+<li>Zimmerman, J., Forlizzi, J., &amp; Evenson, S. <b>Research through design as a method for interaction design research in HCI.</b> CHI 2007. <span class="yr">— RtD 的奠基文献</span></li>
+<li>Gaver, W., &amp; Bowers, J. <b>Annotated portfolios.</b> <i>Interactions</i>, 2012. <span class="yr">— 设计作品怎么论证知识，DIS 最吃这一套</span></li>
+<li>Braun, V., &amp; Clarke, V. <b>Using thematic analysis in psychology.</b> 2006. <span class="yr">— 质性分析的六步法，访谈类研究必引</span></li>
+</ul>
+
+<h3>B · 过度依赖与信任校准</h3>
+<ul class="refs">
+<li>Amershi, S., et al. <b>Guidelines for human-AI interaction.</b> CHI 2019.</li>
+<li>Buçinca, Z., Malaya, M. B., &amp; Gajos, K. Z. <b>To trust or to think: Cognitive forcing functions can reduce overreliance on AI in AI-assisted decision-making.</b> CSCW 2021. <span class="yr">— 命题 01 的直接理论支点</span></li>
+<li>Passi, S., &amp; Vorvoreanu, M. <b>Overreliance on AI: Literature review.</b> Microsoft Research, 2022.</li>
+<li>Risko, E. F., &amp; Gilbert, S. J. <b>Cognitive offloading.</b> <i>Trends in Cognitive Sciences</i>, 2016.</li>
+<li>Lee, J. D., &amp; See, K. A. <b>Trust in automation: Designing for appropriate reliance.</b> 2004.</li>
+</ul>
+
+<h3>C · 人格化 Agent 与对话设计</h3>
+<ul class="refs">
+<li>Nass, C., &amp; Moon, Y. <b>Machines and mindlessness: Social responses to computers.</b> 2000. <span class="yr">— CASA 范式</span></li>
+<li>Epley, N., Waytz, A., &amp; Cacioppo, J. T. <b>On seeing human: A three-factor theory of anthropomorphism.</b> 2007.</li>
+<li>Luger, E., &amp; Sellen, A. <b>Like having a really bad PA: The gulf between user expectation and experience of conversational agents.</b> CHI 2016.</li>
+<li>Shanahan, M., McDonell, K., &amp; Reynolds, L. <b>Role play with large language models.</b> <i>Nature</i>, 2023. <span class="yr">— 「人设只是角色扮演」的理论依据</span></li>
+<li>Yang, Q., et al. <b>Re-examining whether, why, and how human-AI interaction is uniquely difficult to design.</b> CHI 2020.</li>
+<li>Weisz, J. D., et al. <b>Design principles for generative AI applications.</b> CHI 2024.</li>
+</ul>
+
+<h3>D · 反思、内化与伦理</h3>
+<ul class="refs">
+<li>Sengers, P., et al. <b>Reflective design.</b> Critical Computing 2005.</li>
+<li>Grant, A. M. <b>Rethinking psychological mindedness: Self-reflection and insight scale (SRIS).</b> 2001. <span class="yr">— 命题 05 的主量表</span></li>
+<li>Steger, M. F., et al. <b>The meaning in life questionnaire (MLQ).</b> 2006.</li>
+<li>Hollanek, T., &amp; Nowaczyk-Basińska, K. <b>Griefbots, deadbots, postmortem avatars: On responsible applications of generative AI in the digital afterlife industry.</b> <i>Philosophy &amp; Technology</i>, 2024. <span class="yr">— 命题 04 的起点</span></li>
+<li>Friedman, B., et al. <b>Value sensitive design.</b> <span class="yr">— 方法论框架</span></li>
+</ul>
+
+<h3>E · 非西方认识论与跨文化 HCI</h3>
+<ul class="refs">
+<li>Irani, L., et al. <b>Postcolonial computing: A lens on design and development.</b> CHI 2010.</li>
+<li>Ali, S. M. <b>Decolonizing information systems / decolonial computing.</b> <span class="yr">— 近年多条相关论述，搜作者名即可</span></li>
+<li>Bardzell, J., &amp; Bardzell, S. <b>Humanistic HCI.</b> 2015. <span class="yr">— 设计研究如何谈"价值"，命题 04/06 的方法基础</span></li>
+</ul>
+
+<h3>F · 怎么读、怎么找到新的</h3>
+<p>最重要的一条：<b>去 ACM Digital Library 或 Google Scholar 搜一篇最像你的论文，然后打开它的「Cited by」和「References」。</b> 这两个列表比任何综述都快。再往下：把 CHI 2024/2025/2026 的 proceedings 里含 "conversational agent" "persona" "overreliance" 的标题全扫一遍——<b>只看标题，15 分钟，你就能知道这个方向现在最热的说法是什么</b>，这在写 Intro 第一段时非常有用。</p>
+</section>
+
+</main>
+
+<footer>
+  <p><b>一句话结论：</b>不要试图把这个平台写成一篇论文。先做<b>命题 01</b>（先贤光环是否放大过度依赖）——实验成本最低、能同时搭出可复用的实验平台、负结果也能发。用 2027/1/21 的 CHI Posters 破零，用 2027 年 9 月的 CHI 2028 全文做正餐。</p>
+  <p style="margin-top:14px">会议日期于 2026 年 11 月实抓自 CHI / DIS / CSCW / UIST 官网；文献条目请以 Google Scholar 原文核对。生成时间 2026-11-26。</p>
+</footer>
+</div>
+</div>
+</body>
+</html>
