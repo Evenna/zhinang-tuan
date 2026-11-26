@@ -4350,7 +4350,7 @@
           <dl class="story-stats" aria-label="Current advisor’s sample community">
             <div class="story-stat"><dt>People</dt><dd><span class="story-rolling-number" id="storyPeopleNumber" aria-label="0"></span></dd></div>
             <div class="story-stat"><dt>Topics explored</dt><dd><span class="story-rolling-number" id="storyTopicsNumber" aria-label="0"></span></dd></div>
-            <div class="story-stats-note">Community preview</div>
+            <div class="story-stats-note">Illustrative community</div>
           </dl>
         </div>
         <h2 id="storyPreviewHeadline">What if I chose for myself?</h2>
@@ -4377,7 +4377,10 @@
           <div class="story-author"><span id="storyPreviewName"></span><span class="story-demo-label">Sample story</span></div>
         </div>
         <p id="storyPreviewQuestion"></p>
-        <button class="story-ask" id="storyAsk" type="button">Explore this question <span aria-hidden="true">↗</span></button>
+        <div class="story-actions">
+          <button class="story-read" id="storyRead" type="button">Read their conversation</button>
+          <button class="story-ask" id="storyAsk" type="button">Ask my own version <span aria-hidden="true">↗</span></button>
+        </div>
         <div class="story-pagination" aria-label="Story navigation">
           <button id="storyPrev" class="story-direction" type="button" aria-label="Previous advisor">←</button>
           <div class="story-progress" id="storyDots"></div>
@@ -4664,7 +4667,7 @@ const CELEBRITIES = {
   }
 };
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = window.ASK_SOCRATES_API || 'http://127.0.0.1:8000/api';
 const APP_MODE_STORAGE_KEY = 'zhinang-app-mode-v1';
 const DEFAULT_APP_MODE = 'api';
 const urlMode = new URLSearchParams(window.location.search).get('mode');
@@ -8622,6 +8625,7 @@ function renderStoryCommunity(logicalIndex) {
   const advisor = window.STORY_COMMUNITY?.advisors[STORY_ADVISOR_GROUPS[logicalIndex]];
   if (!advisor || !window.StoryCommunityScene) return;
   if (!storyCommunityScene) storyCommunityScene = new window.StoryCommunityScene(storyLibrary, updateCommunityStory);
+  window.__storyScene = storyCommunityScene;
   storyCommunityScene.setAdvisor(advisor);
   storyCommunityScene.scheduleLayout();
 }

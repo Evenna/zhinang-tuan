@@ -268,3 +268,96 @@ class StoryCommunityScene {
   hideHint() { this.hint.hidden = true; }
 }
 window.StoryCommunityScene = StoryCommunityScene;
+
+/* Full conversation reader: opens a past session (1:1 chat + roundtable + what happened next). */
+(() => {
+  const esc = value => String(value ?? '').replace(/[&<>"]/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[ch]));
+  const titleCase = slug => String(slug).split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+  const portrait = slug => `assets/character_cutouts/${slug}.png`;
+  const advisorName = slug => {
+    const person = (window.ASK_SOCRATES_CATALOG || window.ASK_SOCRATES_PREVIEW?.people || []).find(item => item.slug === slug);
+    return person?.english_name || titleCase(slug);
+  };
+  const imgTag = (src, alt) => `<img src="${esc(src)}" alt="${esc(alt)}" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=this.src.replace(/\\.png$/,'.webp')}">`;
+  let overlay = null;
+
+  function ensureOverlay() {
+    if (overlay) return overlay;
+    overlay = document.createElement('div');
+    overlay.className = 'story-transcript';
+    overlay.hidden = true;
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.addEventListener('click', event => {
+      if (event.target === overlay || event.target.closest('.st-close')) close();
+      const ask = event.target.closest('[data-st-ask]');
+      if (ask) { close(); document.getElementById('storyAsk')?.click(); }
+    });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !overlay.hidden) close(); });
+    document.body.append(overlay);
+    return overlay;
+  }
+
+  function close() { if (overlay) { overlay.hidden = true; document.body.style.overflow = ''; } }
+
+  async function loadFull(user, advisor) {
+    const api = window.ASK_SOCRATES_API;
+    if (api && user.id) {
+      try {
+        const response = await fetch(`${api}/stories/${user.id}`);
+        if (response.ok) return await response.json();
+      } catch (error) { /* fall back to the bundled copy */ }
+    }
+    return {...user, advisor_slug: advisor.slug, advisor_name: advisor.name};
+  }
+
+  async function open(user, advisor) {
+    if (!user || !advisor) return;
+    const root = ensureOverlay();
+    root.innerHTML = '<div class="st-panel"><button class="st-close" type="button" aria-label="Close">×</button><div class="st-meta">Loading…</div></div>';
+    root.hidden = false;
+    document.body.style.overflow = 'hidden';
+    const story = await loadFull(user, advisor);
+    const date = story.date ? new Date(story.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : '';
+    const chat = (story.conversation || []).map(turn => {
+      const mine = turn.role === 'user';
+      return `<div class="st-msg ${mine ? 'is-user' : ''}">${mine ? imgTag(story.avatar, story.name) : imgTag(portrait(story.advisor_slug), story.advisor_name)}
+        <div class="st-bubble"><span class="st-who">${esc(mine ? story.name.split(' ')[0] : story.advisor_name)}</span>${esc(turn.text)}</div></div>`;
+    }).join('');
+    const table = (story.roundtable || []).map(turn => `<div class="st-msg">${imgTag(portrait(turn.speaker), turn.speaker)}
+        <div class="st-bubble"><span class="st-who">${esc(turn.speaker === story.advisor_slug ? story.advisor_name : advisorName(turn.speaker))}</span>${esc(turn.text)}</div></div>`).join('');
+    const guests = [...new Set((story.roundtable || []).map(turn => turn.speaker).filter(slug => slug !== story.advisor_slug))].map(advisorName);
+    root.innerHTML = `<div class="st-panel">
+      <button class="st-close" type="button" aria-label="Close">×</button>
+      <div class="st-head">${imgTag(story.avatar, story.name)}<div>
+        <div class="st-name">${esc(story.name)}</div>
+        <div class="st-meta">${[story.age && `${story.age}`, story.role, story.city].filter(Boolean).map(esc).join(' · ')}</div>
+        <div class="st-meta">${esc(date)}</div></div></div>
+      <div class="st-kicker">Asked ${esc(story.advisor_name)}</div>
+      <div class="st-headline">${esc(story.headline)}</div>
+      <div class="st-question">“${esc(story.question)}”</div>
+      <div class="st-context">${esc(story.context)}</div>
+      <div class="st-tags">${(story.topics || []).map(tag => `<span>${esc(tag)}</span>`).join('')}</div>
+      <div class="st-section">One-on-one with ${esc(story.advisor_name)}</div>${chat}
+      ${table ? `<div class="st-section">Roundtable${guests.length ? ` · with ${esc(guests.join(' & '))}` : ''}</div>${table}` : ''}
+      ${story.outcome ? `<div class="st-section">What happened next</div><div class="st-outcome">${esc(story.outcome)}</div>` : ''}
+      <div class="st-foot"><span>♥ ${esc(story.resonance ?? 0)} found this useful · ${esc(story.saves ?? 0)} saved</span>
+        <button class="story-read" type="button" data-st-ask>Ask my own version ↗</button></div>
+      <div class="st-note">Illustrative story — the user is fictional; advisor replies are AI personas.</div>
+    </div>`;
+    root.querySelector('.st-panel').scrollTop = 0;
+  }
+
+  window.openStoryTranscript = open;
+  document.addEventListener('click', event => {
+    if (!event.target.closest('#storyRead')) return;
+    const scene = window.__storyScene;
+    if (scene) open(scene.selectedUser, scene.advisor);
+  });
+  document.addEventListener('dblclick', event => {
+    const tile = event.target.closest('[data-community-user]');
+    const scene = window.__storyScene;
+    if (!tile || !scene) return;
+    open(scene.advisor.users.find(item => item.id === tile.dataset.communityUser), scene.advisor);
+  });
+})();

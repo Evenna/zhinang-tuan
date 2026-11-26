@@ -80,8 +80,27 @@ window.ASK_SOCRATES_PREVIEW = {
   }
 };
 '''.replace('CATALOG', data)
+    adapter += '''
+window.ASK_SOCRATES_CATALOG = window.ASK_SOCRATES_PREVIEW.people;
+// Live mode: when the backend in api-config.js answers, drop the static adapter so every call goes to the real API.
+(function () {
+  const base = window.ASK_SOCRATES_API;
+  if (!base) return;
+  const ctrl = new AbortController();
+  setTimeout(() => ctrl.abort(), 6000);
+  fetch(base + '/health', {signal: ctrl.signal}).then(r => r.ok ? r.json() : null).then(h => {
+    if (!h || h.status !== 'ok') return;
+    delete window.ASK_SOCRATES_PREVIEW;
+    document.documentElement.dataset.live = 'true';
+    document.querySelectorAll('.tagline').forEach(el => { if (el.textContent === 'INTERACTIVE PREVIEW') el.textContent = 'LIVE'; });
+  }).catch(() => {});
+})();
+'''
     (DEST / 'public-preview.js').write_text(adapter)
-    source = source.replace('<script src="assets/story-community.js">', '<script src="public-preview.js"></script>\n<script src="assets/story-community.js">', 1)
+    api_config = DEST / 'api-config.js'
+    if not api_config.exists():
+        api_config.write_text("window.ASK_SOCRATES_API = '';\n")
+    source = source.replace('<script src="assets/story-community.js">', '<script src="api-config.js"></script>\n<script src="public-preview.js"></script>\n<script src="assets/story-community.js">', 1)
     source = source.replace('<span class="tagline">SOCRATES</span>', '<span class="tagline">INTERACTIVE PREVIEW</span>')
     (DEST / 'index.html').write_text(source)
     (DEST / '.nojekyll').write_text('')

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from typing import Any
 
@@ -16,9 +17,16 @@ JSON_FENCE_RE = re.compile(r'```(?:json)?\s*(.*?)\s*```', re.IGNORECASE | re.DOT
 
 class MiniMaxService:
     def __init__(self) -> None:
-        self.base_url = settings.minimax_base_url.rstrip('/')
-        self.api_key = settings.minimax_api_key
-        self.model = settings.minimax_model
+        # Fall back to DeepSeek (OpenAI-compatible) when no MiniMax key is configured.
+        self.use_deepseek = not settings.minimax_api_key and bool(settings.deepseek_api_key)
+        if self.use_deepseek:
+            self.base_url = settings.deepseek_base_url.rstrip('/')
+            self.api_key = settings.deepseek_api_key
+            self.model = settings.deepseek_model
+        else:
+            self.base_url = settings.minimax_base_url.rstrip('/')
+            self.api_key = settings.minimax_api_key
+            self.model = settings.minimax_model
 
     async def chat(self, messages: list[dict[str, str]], *, temperature: float = 0.8, max_tokens: int = 900) -> str:
         if not self.api_key:
@@ -32,13 +40,16 @@ class MiniMaxService:
             'max_completion_tokens': max_tokens,
             'thinking': {'type': 'disabled'},
         }
+        if self.use_deepseek:
+            payload.pop('thinking', None)
+            payload.pop('max_completion_tokens', None)
         headers = {
             'Authorization': f'Bearer {self.api_key}',
             'Content-Type': 'application/json',
         }
         url = f'{self.base_url}/chat/completions'
         try:
-            async with httpx.AsyncClient(timeout=90.0) as client:
+            async with httpx.AsyncClient(timeout=float(os.environ.get("LLM_TIMEOUT", "90"))) as client:
                 response = await client.post(url, json=payload, headers=headers)
                 response.raise_for_status()
         except httpx.HTTPStatusError as exc:

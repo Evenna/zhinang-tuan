@@ -19,7 +19,7 @@ def health(db: Session = Depends(get_db)) -> dict[str, object]:
         'status': 'ok',
         'database': 'ok',
         'llm_provider': 'minimax',
-        'llm_configured': bool(settings.minimax_api_key),
+        'llm_configured': bool(settings.minimax_api_key or settings.deepseek_api_key),
         'agent_provider': 'deepseek',
         'agent_configured': bool(settings.deepseek_api_key),
     }

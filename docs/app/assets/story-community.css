@@ -145,3 +145,47 @@
   .story-library.is-compact-story .story-intro { width: min(410px, 34%); }
   .story-library.is-compact-story #storyPreviewHeadline { font-size: clamp(26px, 2.5vw, 38px); margin-top: 14px; }
 }
+
+/* Stats sit right beside the "Stories" title instead of floating at the far edge. */
+.story-intro-top { justify-content: flex-start; gap: 26px; }
+.story-intro-copy { flex: 0 0 auto; }
+.story-stats { padding-left: 22px; }
+.story-rolling-number { color: #ffcf7a; text-shadow: 0 0 18px rgba(255, 196, 92, 0.35); }
+.story-stat dt { color: rgba(246,240,231,0.72); }
+@media (max-width: 700px) { .story-intro-top { gap: 16px; } }
+
+/* Secondary action + full conversation reader. */
+.story-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+.story-actions .story-ask { margin-top: 0; }
+.story-read { border: 1px solid #d4af7b; background: #d4af7b; color: #15130f; border-radius: 99px; padding: 9px 16px; font: inherit; font-size: 10px; letter-spacing: 0.025em; cursor: pointer; }
+.story-read:hover { background: #ffcf7a; border-color: #ffcf7a; }
+.story-user-tile { cursor: pointer; }
+.story-transcript[hidden] { display: none; }
+.story-transcript { position: fixed; inset: 0; z-index: 900; display: flex; justify-content: flex-end; background: rgba(8,7,6,0.62); backdrop-filter: blur(6px); animation: stFade 220ms ease; }
+@keyframes stFade { from { opacity: 0; } }
+@keyframes stSlide { from { transform: translateX(40px); opacity: 0; } }
+.st-panel { width: min(640px, 100%); height: 100%; overflow-y: auto; background: #12110e; color: #f2ebdf; border-left: 1px solid rgba(212,175,123,0.25); padding: 36px 40px 60px; animation: stSlide 280ms cubic-bezier(.2,.7,.2,1); }
+.st-close { position: sticky; top: 0; float: right; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(212,175,123,0.5); background: #12110e; color: #eee; font-size: 16px; cursor: pointer; }
+.st-head { display: flex; gap: 16px; align-items: center; }
+.st-head img { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; filter: grayscale(0.5) sepia(0.15); }
+.st-name { font-size: 16px; font-weight: 600; }
+.st-meta { font-size: 11px; color: rgba(242,235,223,0.55); margin-top: 4px; letter-spacing: 0.02em; }
+.st-kicker { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #cbb07c; margin-top: 28px; }
+.st-headline { font-family: 'Barlow Condensed', Impact, sans-serif; font-weight: 700; font-size: 40px; line-height: 1.02; margin-top: 10px; }
+.st-question { font-family: Georgia, serif; font-size: 15px; line-height: 1.6; color: rgba(242,235,223,0.85); margin-top: 14px; }
+.st-context { font-size: 12px; line-height: 1.65; color: rgba(242,235,223,0.55); margin-top: 10px; }
+.st-tags { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.st-tags span { font-size: 10px; border: 1px solid rgba(203,176,124,0.45); color: #ded4c3; border-radius: 99px; padding: 4px 10px; }
+.st-section { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #cbb07c; margin: 34px 0 14px; display: flex; align-items: center; gap: 10px; }
+.st-section::after { content: ''; flex: 1; height: 1px; background: rgba(212,175,123,0.2); }
+.st-msg { display: flex; gap: 12px; margin: 14px 0; align-items: flex-start; }
+.st-msg img { flex: none; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; background: #2a2620; }
+.st-msg.is-user { flex-direction: row-reverse; }
+.st-bubble { max-width: 82%; font-size: 13px; line-height: 1.65; padding: 11px 15px; border-radius: 14px; background: #1f1c17; border: 1px solid rgba(212,175,123,0.14); }
+.st-msg.is-user .st-bubble { background: #2b2519; border-color: rgba(212,175,123,0.32); color: #fff7e8; }
+.st-who { display: block; font-size: 10px; letter-spacing: 0.06em; color: #cbb07c; margin-bottom: 4px; }
+.st-outcome { font-family: Georgia, serif; font-size: 14px; line-height: 1.7; border-left: 2px solid #ffcf7a; padding: 4px 0 4px 16px; color: #f6efe2; }
+.st-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 30px; font-size: 11px; color: rgba(242,235,223,0.5); flex-wrap: wrap; }
+.st-foot .story-read { font-size: 11px; }
+.st-note { font-size: 10px; color: rgba(242,235,223,0.32); margin-top: 26px; }
+@media (max-width: 700px) { .st-panel { padding: 24px 20px 48px; } .st-headline { font-size: 32px; } }
