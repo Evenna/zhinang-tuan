@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>智囊团 · 问问他们</title>
+  <title>Ask Socrates</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=Cormorant+Garamond:wght@400;500;600&family=Cormorant+Infant:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=EB+Garamond:wght@400;500;600&family=Libre+Bodoni:wght@400;500;600&family=Lora:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;500;600&family=Prata&family=Sorts+Mill+Goudy:ital@0;1&family=Spectral:wght@400;500;600&family=Vidaloka&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Alegreya:wght@400;500;600&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=Cormorant+Garamond:wght@400;500;600&family=Cormorant+Infant:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=EB+Garamond:wght@400;500;600&family=Libre+Bodoni:wght@400;500;600&family=Lora:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;500;600&family=Prata&family=Sorts+Mill+Goudy:ital@0;1&family=Spectral:wght@400;500;600&family=Vidaloka&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #060606;
@@ -16,8 +16,8 @@
       --accent: #d4af7b;
       --accent-light: rgba(212, 175, 123, 0.12);
       --card-bg: rgba(255,255,255,0.06);
-      --font-serif: 'Noto Serif SC', 'STSong', 'SimSun', serif;
-      --font-sans: 'Noto Sans SC', 'PingFang SC', sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: Arial, Helvetica, sans-serif;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -51,7 +51,9 @@
       display: none;
     }
     body.people-mode .divider-wrap,
-    body.people-mode .footer {
+    body.people-mode .footer,
+    body.subpage-mode .divider-wrap,
+    body.subpage-mode .footer {
       display: none;
     }
 
@@ -76,7 +78,8 @@
         radial-gradient(circle at 50% 62%, rgba(193,152,99,0.08), transparent 26%),
         linear-gradient(180deg, #060606 0%, #020202 100%);
     }
-    body.people-mode .home-hero {
+    body.people-mode .home-hero,
+    body.subpage-mode .home-hero {
       position: sticky;
       top: 0;
       z-index: 35;
@@ -92,7 +95,12 @@
     body.people-mode .home-hero::after,
     body.people-mode .home-figures,
     body.people-mode .hero-center,
-    body.people-mode .hero-notes {
+    body.people-mode .hero-notes,
+    body.subpage-mode .home-hero::before,
+    body.subpage-mode .home-hero::after,
+    body.subpage-mode .home-figures,
+    body.subpage-mode .hero-center,
+    body.subpage-mode .hero-notes {
       display: none;
     }
     .home-hero::before {
@@ -159,9 +167,9 @@
     }
     .logo {
       font-family: var(--font-serif);
-      font-size: 1.08rem;
+      font-size: 1rem;
       font-weight: 500;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.02em;
       color: var(--ink);
       line-height: 1;
     }
@@ -176,7 +184,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: clamp(20px, 3vw, 42px);
+      gap: clamp(14px, 1.6vw, 28px);
       justify-self: center;
     }
     .nav-links a {
@@ -454,9 +462,525 @@
       text-decoration: none;
       transition: all 0.25s ease;
     }
-    .nav-btn:hover {
+    .nav-btn:hover,
+    .nav-btn.is-active {
       transform: translateY(-1px);
-      border-color: rgba(212,175,123,0.26);
+      border-color: rgba(212,175,123,0.4);
+      color: var(--accent);
+    }
+    .site-page {
+      display: none;
+      min-height: 100vh;
+      padding: 48px clamp(18px, 4vw, 54px) 96px;
+      background:
+        linear-gradient(90deg, transparent 0, transparent calc(50% - 1px), rgba(255,255,255,0.025) 50%, transparent calc(50% + 1px)),
+        radial-gradient(circle at 50% -8%, rgba(196,149,106,0.16), transparent 38%),
+        linear-gradient(180deg, #070707 0%, #020202 100%);
+    }
+    .site-page.show {
+      display: block;
+      animation: sitePageIn 420ms cubic-bezier(0.23, 1, 0.32, 1) both;
+    }
+    @keyframes sitePageIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .site-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+    .site-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: end;
+      gap: 32px;
+      padding-bottom: 28px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .site-head .people-title {
+      font-size: clamp(2.6rem, 5.6vw, 4.8rem);
+      letter-spacing: -0.01em;
+    }
+    .site-head-note {
+      max-width: 34ch;
+      justify-self: end;
+      color: rgba(246,240,231,0.5);
+      font-size: 0.84rem;
+      line-height: 1.85;
+      text-align: right;
+    }
+
+    /* Themes — oversized type menu */
+    #themesPage.site-page {
+      padding: 0;
+      height: calc(100vh - 101px);
+      min-height: 0;
+      overflow: hidden;
+      background: #050505;
+    }
+    .theme-menu {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+    }
+    .theme-aside {
+      position: absolute;
+      left: clamp(24px, 4vw, 56px);
+      top: 18%;
+      z-index: 2;
+      width: min(240px, 34vw);
+      color: #f4f4f4;
+    }
+    .theme-aside-kicker {
+      color: rgba(255,255,255,0.42);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .theme-aside-title {
+      margin-top: 28px;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .theme-aside-copy,
+    .theme-aside-meta {
+      margin-top: 10px;
+      color: rgba(255,255,255,0.78);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .theme-index {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      padding-right: 78px;
+    }
+    .theme-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: max-content;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #3a3a3a;
+      font: inherit;
+      cursor: pointer;
+    }
+    .theme-row:active .theme-title {
+      transform: scale(0.985);
+    }
+    .theme-title {
+      font-family: var(--font-sans);
+      font-size: clamp(58px, 11.2vw, 164px);
+      font-weight: 500;
+      letter-spacing: -0.05em;
+      line-height: 0.92;
+      white-space: nowrap;
+      transition: color 180ms ease;
+    }
+    .theme-row.is-active {
+      color: #fff;
+      z-index: 2;
+    }
+    .theme-mark {
+      position: absolute;
+      right: 0.12em;
+      top: 50%;
+      width: 64px;
+      height: 64px;
+      display: none;
+      place-items: center;
+      border: 1.5px solid #fff;
+      border-radius: 50%;
+      transform: translate(18%, -50%);
+      pointer-events: none;
+    }
+    .theme-row.is-active .theme-mark {
+      display: grid;
+    }
+    .theme-mark span {
+      font-size: 22px;
+      line-height: 1;
+    }
+    .theme-num {
+      position: absolute;
+      right: -62px;
+      top: 18%;
+      color: #6d6d6d;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+    .theme-row.is-active .theme-num {
+      color: #d8d8d8;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .theme-row:hover { color: #fff; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .theme-title { transition: none; }
+    }
+
+    /* Stories — diagonal photo ribbon */
+    #storiesPage.site-page {
+      padding: 0;
+      height: calc(100vh - 101px);
+      min-height: 0;
+      overflow: hidden;
+      background: #050505;
+    }
+    .story-library {
+      position: relative;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+      background: transparent;
+      perspective: 1600px;
+      perspective-origin: 50% 42%;
+      touch-action: pan-y pinch-zoom;
+    }
+    .story-canvas-label {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      z-index: 6;
+      transform: translateX(-50%);
+      color: rgba(246,240,231,0.28);
+      font-size: 11px;
+      letter-spacing: 0.36em;
+    }
+    .story-tilt {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      width: 0;
+      height: 0;
+      transform: translate(-50%, -36%) rotateX(42deg) rotateZ(-32deg);
+      transform-style: preserve-3d;
+    }
+    .story-stage {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      transform: translate3d(0, -50%, 0);
+      transform-style: preserve-3d;
+      transition: transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .story-stage.is-instant {
+      transition: none;
+    }
+    .story-card {
+      position: relative;
+      flex: 0 0 auto;
+      width: 200px;
+      height: 268px;
+      margin-right: -28px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 2px;
+      background: #141414;
+      font: inherit;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.38);
+      transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease, border-color 220ms ease;
+    }
+    .story-card img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      pointer-events: none;
+      filter: grayscale(0.2) brightness(0.9);
+    }
+    .story-card::before,
+    .story-card::after {
+      content: none;
+    }
+    .story-card.is-active {
+      border-color: rgba(212,175,123,0.72);
+      box-shadow: 0 24px 56px rgba(0,0,0,0.5);
+    }
+    .story-card.is-active img {
+      filter: none;
+    }
+    .story-meta {
+      position: absolute;
+      left: 50%;
+      bottom: 48px;
+      z-index: 8;
+      width: min(420px, calc(100% - 48px));
+      transform: translateX(-50%);
+      text-align: center;
+      color: #fff8ef;
+      pointer-events: none;
+    }
+    .story-meta-kicker {
+      color: rgba(212,175,123,0.78);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+    }
+    #storyPreviewQuestion {
+      margin: 18px auto 0;
+      max-width: 34ch;
+      color: rgba(246,240,231,0.58);
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+    .story-ask {
+      pointer-events: auto;
+      margin-top: 22px;
+      border: 1px solid rgba(212,175,123,0.45);
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(246,240,231,0.88);
+      padding: 11px 20px;
+      font: inherit;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      transition: transform 160ms ease, background 180ms ease, color 180ms ease;
+    }
+    .story-ask:active {
+      transform: scale(0.97);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .story-ask:hover {
+        background: var(--accent);
+        color: #17120c;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .story-stage,
+      .story-card { transition: none; }
+    }
+
+    /* About — quiet editorial */
+    #aboutPage.site-page {
+      padding: clamp(48px, 8vh, 96px) clamp(24px, 6vw, 80px) 80px;
+      background: #050505;
+      min-height: calc(100vh - 101px);
+    }
+    .about-shell {
+      position: relative;
+      width: min(920px, 100%);
+      margin: 0 auto;
+    }
+    .about-shell .dots {
+      position: absolute;
+      top: 8px;
+      right: 0;
+      width: min(220px, 28vw);
+      height: 180px;
+      background-image: radial-gradient(circle, rgba(212,175,123,0.92) 1.35px, transparent 1.55px);
+      background-size: 15px 15px;
+      mask-image: linear-gradient(135deg, #000 10%, transparent 88%);
+      pointer-events: none;
+    }
+    .about-kicker {
+      color: rgba(212,175,123,0.72);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+    }
+    .about-title {
+      margin-top: 28px;
+      max-width: 14ch;
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4.2vw, 3.4rem);
+      font-weight: 500;
+      line-height: 1.25;
+      color: #fff8ef;
+    }
+    .about-lead {
+      margin-top: 24px;
+      max-width: 36ch;
+      color: rgba(246,240,231,0.58);
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+    .about-steps-list {
+      display: grid;
+      gap: 22px;
+      margin-top: 64px;
+      padding-top: 36px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .about-steps-list div {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 18px;
+      align-items: baseline;
+    }
+    .about-steps-list strong {
+      color: rgba(212,175,123,0.78);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      font-weight: 500;
+    }
+    .about-steps-list span {
+      color: rgba(246,240,231,0.72);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+    .about-note {
+      margin-top: 56px;
+      max-width: 52ch;
+      color: rgba(246,240,231,0.38);
+      font-size: 0.82rem;
+      line-height: 1.85;
+    }
+
+    /* Login */
+    .login-kicker,
+    .login-copy {
+      display: block;
+    }
+    .login-kicker {
+      color: var(--accent);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .login-copy {
+      color: rgba(246,240,231,0.58);
+      font-size: 0.86rem;
+      line-height: 1.75;
+    }
+    .login-wrap {
+      display: grid;
+      place-items: center;
+      min-height: calc(100vh - 200px);
+    }
+    .login-card {
+      width: min(440px, 100%);
+      padding: 34px 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(196,149,106,0.12), transparent 44%),
+        rgba(255,255,255,0.035);
+      color: #fff8ef;
+    }
+    .login-card h2 {
+      margin: 12px 0 8px;
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1;
+      font-weight: 500;
+    }
+    .login-form {
+      display: grid;
+      gap: 16px;
+      margin-top: 26px;
+    }
+    .login-form label {
+      display: grid;
+      gap: 8px;
+      color: rgba(246,240,231,0.55);
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .login-form input {
+      border: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.16);
+      border-radius: 0;
+      background: transparent;
+      color: #fff8ef;
+      outline: none;
+      padding: 10px 0;
+      font: inherit;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    .login-form input:focus {
+      border-bottom-color: var(--accent);
+    }
+    .login-submit,
+    .login-logout {
+      margin-top: 10px;
+      border: none;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #17120c;
+      padding: 13px 16px;
+      font: inherit;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .login-submit:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+    .login-submit:active,
+    .login-logout:active {
+      transform: scale(0.97);
+    }
+    .login-logout {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(246,240,231,0.82);
+    }
+    .login-error {
+      min-height: 1.2em;
+      color: #e7b2a2;
+      font-size: 0.78rem;
+    }
+    .login-account {
+      margin-top: 22px;
+      display: grid;
+      gap: 6px;
+      color: rgba(246,240,231,0.7);
+      line-height: 1.6;
+    }
+    .login-account strong {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #fff8ef;
+    }
+    @media (max-width: 860px) {
+      .site-head {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .site-head-note {
+        justify-self: start;
+        text-align: left;
+      }
+      .theme-title {
+        font-size: 17vw;
+      }
+      .theme-aside {
+        top: auto;
+        bottom: 18px;
+        width: min(220px, 62vw);
+      }
+      .theme-mark {
+        width: 42px;
+        height: 42px;
+      }
+      #storiesPage .story-card {
+        width: 148px;
+        height: 198px;
+        margin-right: -18px;
+      }
+      .about-bento {
+        grid-template-columns: 1fr 1fr;
+      }
+      .about-card.hero,
+      .about-card.closing { grid-column: 1 / -1; }
     }
     .hero-center {
       position: relative;
@@ -499,7 +1023,7 @@
       font-family: var(--font-serif);
       font-size: clamp(2.7rem, 5.2vw, 4.2rem);
       line-height: 1.22;
-      letter-spacing: 0.1em;
+      letter-spacing: -0.025em;
       color: #f5eee6;
       text-shadow: 0 12px 34px rgba(0,0,0,0.42);
     }
@@ -1120,9 +1644,9 @@
       overflow-y: visible;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      touch-action: pan-x;
+      touch-action: pan-x pinch-zoom;
       cursor: default;
-      scroll-behavior: smooth;
+      scroll-behavior: auto;
       transition: gap 0.72s cubic-bezier(0.22,1,0.36,1), padding 0.72s cubic-bezier(0.22,1,0.36,1), justify-content 0.72s ease;
     }
     body.result-mode .cards-track {
@@ -1145,14 +1669,28 @@
       justify-content: flex-start;
       gap: 22px;
       overflow-x: auto;
-      padding-left: clamp(18px, 4vw, 42px);
-      padding-right: clamp(18px, 6vw, 60px);
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: auto;
+      scroll-padding-inline: 24px;
+      padding-left: max(24px, calc((100vw - 1210px) / 2));
+      padding-right: max(24px, calc((100vw - 1210px) / 2));
     }
     .cards-stage.spread.few-cards .cards-track {
+      cursor: grab;
+    }
+    .cards-stage.spread.cards-fit .cards-track {
       justify-content: center;
-      overflow-x: hidden;
-      padding-left: clamp(18px, 3vw, 34px);
-      padding-right: clamp(18px, 3vw, 34px);
+    }
+    @media (min-width: 900px) and (max-width: 1200px) {
+      body.result-mode .cards-stage.spread .card {
+        flex-basis: clamp(210px, 21vw, 238px);
+        width: clamp(210px, 21vw, 238px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .site-page.show { animation: none; }
     }
 
     .card {
@@ -2319,6 +2857,7 @@
       display: flex;
       justify-content: center;
       align-items: flex-end;
+      flex-wrap: wrap;
       gap: clamp(10px, 2.4vw, 24px);
       min-height: 118px;
       position: relative;
@@ -2338,18 +2877,35 @@
       opacity: 1;
       transform: translateY(-8px);
     }
-    .roundtable-avatar {
-      width: clamp(58px, 8vw, 88px);
-      height: clamp(58px, 8vw, 88px);
+    .roundtable-avatar,
+    .roundtable-message-avatar {
+      --avatar-ref: 320px;
+      position: relative;
+      overflow: hidden;
       border-radius: 50%;
+    }
+    .roundtable-avatar {
+      --avatar-slot: clamp(58px, 8vw, 88px);
+      width: var(--avatar-slot);
+      height: var(--avatar-slot);
       border: 1px solid rgba(196,149,106,0.28);
       background:
         radial-gradient(circle at 50% 20%, rgba(255,255,255,0.18), transparent 44%),
         rgba(255,255,255,0.05);
-      overflow: hidden;
       box-shadow: 0 18px 38px rgba(0,0,0,0.28);
     }
-    .roundtable-avatar img {
+    .roundtable-avatar-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: var(--avatar-ref);
+      height: var(--avatar-ref);
+      transform: scale(calc(var(--avatar-slot) / var(--avatar-ref)));
+      transform-origin: 0 0;
+      pointer-events: none;
+    }
+    .roundtable-avatar-canvas img {
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -2405,22 +2961,11 @@
       max-width: min(720px, 94%);
     }
     .roundtable-message-avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
+      --avatar-slot: 42px;
+      width: var(--avatar-slot);
+      height: var(--avatar-slot);
       border: 1px solid rgba(196,149,106,0.22);
       background: rgba(255,255,255,0.06);
-      overflow: hidden;
-    }
-    .roundtable-message-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      transform:
-        translate(var(--avatar-x, 0px), var(--avatar-y, 0px))
-        scale(var(--avatar-scale, 1));
-      transform-origin: center center;
     }
     .roundtable-bubble {
       padding: 11px 13px;
@@ -3013,7 +3558,7 @@
         flex-wrap: wrap;
       }
       .nav-actions {
-        display: none;
+        display: flex;
       }
       .people-topbar {
         flex-direction: column;
@@ -3118,10 +3663,8 @@
         padding-right: 18px;
       }
       .cards-stage.spread.few-cards .cards-track {
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-left: max(18px, calc((100vw - 258px) / 2));
-        padding-right: max(18px, calc((100vw - 258px) / 2));
+        padding-left: 18px;
+        padding-right: 18px;
       }
       .cards-stage.stack-mode .card {
         margin-left: calc(-1 * clamp(144px, 20vw, 186px));
@@ -3231,8 +3774,7 @@
         flex: 0 0 62px;
       }
       .roundtable-avatar {
-        width: 52px;
-        height: 52px;
+        --avatar-slot: 52px;
       }
       .roundtable-speaker-name {
         font-size: 0.58rem;
@@ -3241,8 +3783,7 @@
         grid-template-columns: 34px minmax(0, 1fr);
       }
       .roundtable-message-avatar {
-        width: 34px;
-        height: 34px;
+        --avatar-slot: 34px;
       }
       .roundtable-message-text {
         font-size: 0.92rem;
@@ -3259,10 +3800,25 @@
         padding-bottom: 170px;
       }
     }
-    @media (max-width: 560px) {
-      .nav-links {
-        display: none;
+    @media (max-width: 1100px) {
+      .topbar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        row-gap: 8px;
       }
+      .nav-links {
+        order: 3;
+        flex: 1 0 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+      }
+      .nav-actions {
+        margin-left: auto;
+      }
+    }
+    @media (max-width: 560px) {
       .people-grid {
         grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
         gap: 14px;
@@ -3474,7 +4030,201 @@
     }
     .card-deco-corner.top-right { top: 12px; right: 12px; }
     .card-deco-corner.bottom-left { bottom: 12px; left: 12px; transform: rotate(180deg); }
+
+    /* English layouts: give text its own space instead of layering it. */
+    .hero-panel { width: min(480px, 42vw); }
+    .hero-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(36px, 4vw, 58px);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      text-shadow: none;
+    }
+    .hero-title em { display: inline-block; white-space: nowrap; font-weight: 500; }
+    .hero-subtitle { width: 100%; font-size: 13px; line-height: 1.65; letter-spacing: 0.015em; }
+    .hero-panel .input-section { width: min(620px, 64vw); margin-left: 50%; transform: translateX(-50%); }
+
+    .poster-meta {
+      position: relative; top: auto; left: auto; right: auto;
+      margin: 14px 18px 0; min-height: 24px; gap: 10px;
+      align-items: flex-start;
+    }
+    .poster-kicker {
+      min-width: 0; max-width: none; text-align: left;
+      font-size: 6.5px; line-height: 1.45; letter-spacing: 0.09em;
+      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .poster-serial { flex: none; font-size: 7px; line-height: 1.45; }
+    .poster-title-block {
+      position: relative; top: auto; left: auto;
+      margin: 9px 18px 0; max-width: none; width: calc(100% - 36px);
+    }
+    .poster-wordmark { font-size: 22px; line-height: 1.04; letter-spacing: -0.025em; gap: 2px; }
+    .poster-wordmark span { white-space: nowrap; word-break: normal; }
+    .poster-name { display: none; }
+
+    .theme-index { padding-right: clamp(36px, 6vw, 86px); padding-left: 30%; }
+    .theme-row { max-width: 100%; }
+    .theme-title {
+      font-size: clamp(42px, min(9vw, 11.2vh), 144px);
+      transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1), color 180ms ease;
+    }
+    .theme-mark {
+      right: 0; width: 54px; height: 54px;
+      display: grid; opacity: 0; transform: translate(8px, -50%);
+      transition: opacity 160ms ease, transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .theme-row.is-active .theme-title { transform: translateX(-76px); }
+    .theme-row.is-active .theme-mark { opacity: 1; transform: translate(0, -50%); transition-delay: 80ms, 0ms; }
+    .theme-row:active .theme-title { transform: translateX(-76px) scale(0.985); }
+    .theme-num { right: -30px; }
+
+    #storiesPage.site-page { height: calc(100svh - var(--site-header-height, 101px)); }
+    .story-library {
+      display: grid; grid-template-rows: minmax(220px, 1fr) auto;
+      height: 100%; overflow-x: hidden; overflow-y: auto;
+      perspective: none; touch-action: pan-y pinch-zoom;
+    }
+    .story-ribbon {
+      position: relative; min-height: 220px; overflow: hidden;
+      perspective: 1600px; perspective-origin: 50% 42%;
+    }
+    .story-tilt { top: 50%; }
+    .story-meta {
+      position: relative; left: auto; bottom: auto; transform: none;
+      width: min(620px, calc(100% - 48px)); margin: 0 auto;
+      padding: 24px 0 32px; align-self: start;
+      background: #050505;
+    }
+    #storyPreviewQuestion { max-width: 60ch; margin-top: 14px; font-size: 14px; line-height: 1.7; text-wrap: pretty; }
+    .story-ask { margin-top: 18px; }
+
+    @media (max-width: 860px) {
+      .hero-panel { width: min(440px, 56vw); }
+      .hero-title { font-size: clamp(32px, 5vw, 46px); }
+      .theme-index { padding: 20px 42px 180px 24px; }
+      .theme-title { font-size: clamp(32px, 9vw, 76px); }
+      .theme-mark { width: 36px; height: 36px; }
+      .theme-mark span { font-size: 18px; }
+      .theme-row.is-active .theme-title { transform: translateX(-50px); }
+      .theme-row:active .theme-title { transform: translateX(-50px) scale(0.985); }
+      .theme-aside { bottom: 22px; width: min(420px, calc(100% - 48px)); }
+      .theme-aside-title { margin-top: 12px; }
+      .theme-aside-copy, .theme-aside-meta { font-size: 12px; margin-top: 6px; }
+    }
+    @media (max-width: 560px) {
+      .hero-center { padding-top: 54px; align-items: flex-start; }
+      .hero-panel { width: min(340px, calc(100vw - 48px)); }
+      .hero-title { font-size: clamp(30px, 8.4vw, 42px); }
+      .hero-subtitle { max-width: 30ch; margin-top: 18px; }
+      .hero-panel .input-section { width: calc(100vw - 36px); margin-top: 30px; }
+      .home-figures { top: 360px; }
+      .home-figure { opacity: 0.72; }
+      .story-meta { width: calc(100% - 40px); padding: 20px 0 28px; }
+      #storyPreviewQuestion { font-size: 13px; line-height: 1.65; }
+      .poster-meta { margin-left: 12px; margin-right: 12px; }
+      .poster-title-block { margin-left: 12px; margin-right: 12px; width: calc(100% - 24px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .theme-title, .theme-mark { transition: none; }
+    }
+
+
+    /* Editorial display type and a single, uninterrupted story canvas. */
+    .hero-title {
+      font-family: 'Bodoni Moda', 'Didot', serif;
+      font-weight: 600; font-size: clamp(40px, 4.5vw, 64px);
+      line-height: 1.04; letter-spacing: -0.045em;
+    }
+    .hero-title em { font-weight: 600; }
+    .hero-panel { width: min(480px, 42vw); }
+    .hero-subtitle { margin-top: 22px; }
+    .theme-title {
+      font-family: Arial, Helvetica, sans-serif; font-weight: 600;
+      font-size: clamp(64px, min(13.2vw, calc((100svh - var(--site-header-height, 101px) - 24px) / 5.55)), 180px);
+      line-height: 0.79; letter-spacing: -0.065em;
+    }
+    .theme-index { padding-left: 27%; padding-right: clamp(48px, 6vw, 86px); }
+    .theme-mark { width: 60px; height: 60px; }
+    .theme-row.is-active .theme-title { transform: translateX(-88px); }
+    .theme-row:active .theme-title { transform: translateX(-88px) scale(0.985); }
+
+    #storiesPage.site-page { height: auto; overflow: hidden; }
+    .story-library {
+      display: block; height: max(760px, calc(100svh - var(--site-header-height, 101px)));
+      overflow: hidden; perspective: 1600px; perspective-origin: 50% 48%;
+      isolation: isolate;
+    }
+    .story-ribbon { position: absolute; inset: 0; min-height: 0; overflow: visible; perspective: none; z-index: 1; }
+    .story-tilt { top: 48%; transform: translate(-50%, -36%) rotateX(42deg) rotateZ(-32deg); }
+    .story-canvas-label { display: none; }
+    .story-intro {
+      position: absolute; top: clamp(30px, 4.7vh, 56px); left: 5.4%; z-index: 3;
+      width: 39%; color: #f6f0e7;
+    }
+    .story-editorial-kicker { color: #cbb07c; font-size: 10px; letter-spacing: 0.23em; line-height: 1.5; }
+    .story-intro h1 {
+      font-family: 'Barlow Condensed', Impact, sans-serif; font-weight: 700;
+      font-size: clamp(48px, 5.7vw, 88px); line-height: 0.98;
+      letter-spacing: -0.025em; margin-top: 14px;
+    }
+    .story-intro p { font-family: Georgia, serif; font-size: 14px; line-height: 1.6; color: rgba(246,240,231,0.7); margin-top: 18px; }
+    .story-topics { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    .story-topics button { border: 1px solid rgba(203,176,124,0.5); border-radius: 99px; padding: 7px 13px; background: transparent; color: #ded4c3; font: inherit; font-size: 10px; cursor: pointer; }
+    .story-topics button:hover, .story-topics button:focus-visible { border-color: #cbb07c; color: #fff; }
+    .story-meta {
+      position: absolute; left: auto; right: 5.4%; bottom: 38px; top: auto;
+      width: 30%; max-width: 440px; padding: 0; margin: 0; transform: none;
+      text-align: left; background: transparent; pointer-events: auto;
+    }
+    .story-meta::before { content: ''; display: block; width: 48px; height: 1px; background: #cbb07c; margin-bottom: 18px; }
+    .story-meta-kicker { font-size: 10px; line-height: 1.5; letter-spacing: 0.18em; color: #cbb07c; text-transform: uppercase; }
+    #storyPreviewHeadline { font-family: 'Barlow Condensed', Impact, sans-serif; font-weight: 700; font-size: clamp(34px, 3.7vw, 58px); line-height: 1.02; letter-spacing: -0.02em; margin-top: 14px; text-wrap: balance; }
+    .story-author { font-size: 9px; line-height: 1.6; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(246,240,231,0.7); margin-top: 16px; }
+    #storyPreviewQuestion { font-family: Georgia, serif; margin: 14px 0 0; max-width: none; color: rgba(246,240,231,0.78); font-size: 13px; line-height: 1.7; text-wrap: pretty; }
+    .story-ask { font-size: 10px; letter-spacing: 0.025em; margin-top: 20px; padding: 10px 18px; }
+    .story-ask span { color: #cbb07c; padding-left: 14px; }
+    .story-pagination { display: flex; align-items: center; gap: 16px; margin-top: 20px; }
+    .story-direction { flex: none; width: 30px; height: 30px; border: 1px solid rgba(203,176,124,0.55); border-radius: 50%; background: transparent; color: #e8dfce; font-size: 15px; cursor: pointer; }
+    .story-progress { display: flex; gap: 4px; flex: 1; }
+    .story-progress button { flex: 1; height: 22px; border: none; background: transparent; cursor: pointer; position: relative; }
+    .story-progress button::after { content: ''; position: absolute; left: 0; right: 0; top: 10px; height: 2px; background: #55534d; transition: background 160ms ease; }
+    .story-progress button[aria-current="true"]::after { background: #d4af7b; }
+    .story-topics button:active, .story-direction:active { transform: scale(0.96); }
+    @media (max-width: 1100px) and (min-width: 701px) {
+      .story-intro { left: 4%; width: 42%; }
+      .story-intro h1 { font-size: 60px; }
+      .story-meta { right: 4%; width: 34%; }
+      .story-library { height: max(780px, calc(100svh - var(--site-header-height, 101px))); }
+    }
+    @media (max-width: 860px) {
+      .hero-title { font-size: clamp(32px, 4.7vw, 46px); }
+      .theme-title { font-size: 14vw; line-height: 0.86; }
+      .theme-index { padding: 12px 42px 184px 24px; }
+      .theme-mark { width: 36px; height: 36px; }
+      .theme-row.is-active .theme-title { transform: translateX(-50px); }
+      .theme-row:active .theme-title { transform: translateX(-50px) scale(0.985); }
+    }
+    @media (max-width: 700px) {
+      .hero-panel { width: min(340px, calc(100vw - 48px)); }
+      .hero-title { font-size: clamp(36px, 9.6vw, 50px); }
+      .story-library { height: 1100px; perspective-origin: 50% 46%; }
+      .story-intro { left: 24px; top: 32px; width: calc(100% - 48px); }
+      .story-editorial-kicker { font-size: 8px; letter-spacing: 0.18em; }
+      .story-intro h1 { font-size: clamp(46px, 12.6vw, 70px); }
+      .story-intro p { font-size: 12px; margin-top: 14px; }
+      .story-topics { margin-top: 16px; }
+      .story-tilt { top: 45%; }
+      .story-meta { right: 24px; bottom: 32px; width: min(320px, calc(100% - 48px)); }
+      #storyPreviewHeadline { font-size: 40px; }
+      .story-author { margin-top: 12px; }
+      #storyPreviewQuestion { font-size: 13px; }
+    }
+
   </style>
+  <link rel="stylesheet" href="assets/story-community.css">
 </head>
 <body>
 
@@ -3521,40 +4271,40 @@
     <header>
       <div class="topbar">
         <a class="brand" href="#">
-          <span class="brand-mark">智</span>
+          <span class="brand-mark">S</span>
           <span class="brand-copy">
-            <span class="logo">智囊团</span>
-            <span class="tagline">AI THINK TANK</span>
+            <span class="logo">Ask Socrates</span>
+            <span class="tagline">SOCRATES</span>
           </span>
         </a>
         <nav class="nav-links" aria-label="Primary">
-          <a href="#" class="is-active" data-view="home" id="homeNavLink">首页</a>
-          <a href="#" data-view="people" id="peopleNavLink">名人智囊</a>
-          <a href="#">智慧主题</a>
-          <a href="#">用户故事</a>
-          <a href="#">关于我们</a>
+          <a href="#" class="is-active" data-view="home" id="homeNavLink">Home</a>
+          <a href="#" data-view="people" id="peopleNavLink">Advisors</a>
+          <a href="#" data-view="themes" id="themesNavLink">Themes</a>
+          <a href="#" data-view="stories" id="storiesNavLink">Stories</a>
+          <a href="#" data-view="about" id="aboutNavLink">About</a>
         </nav>
         <div class="nav-actions">
-          <a class="nav-btn" href="#">登录</a>
+          <a class="nav-btn" href="#" data-view="login" id="loginNavLink">Log In</a>
         </div>
       </div>
     </header>
 
     <div class="hero-center">
       <div class="hero-panel">
-        <h1 class="hero-title">你的困惑<br><em>智者有答案</em></h1>
-        <p class="hero-subtitle">连接跨越时空的智慧，找到属于你的指引。</p>
+        <h1 class="hero-title">Big questions.<br><em>Timeless<br>perspectives.</em></h1>
+        <p class="hero-subtitle">Explore timeless wisdom. Find a perspective of your own.</p>
 
         <section class="input-section" id="inputSection">
-          <label class="input-label">写下你的问题</label>
+          <label class="input-label">Write down your question</label>
           <div class="input-panel">
             <textarea
               class="input-box"
               id="questionInput"
-              placeholder="比如：我要不要离开现在的生活？"
+              placeholder="For example: Should I leave my current life?"
               maxlength="200"
             ></textarea>
-            <button class="submit-btn" id="submitBtn" disabled>开始提问</button>
+            <button class="submit-btn" id="submitBtn" disabled>Ask the advisors</button>
           </div>
           <div class="char-count"><span id="charCount">0</span> / 200</div>
           <div class="api-status" id="apiStatus" aria-live="polite"></div>
@@ -3567,17 +4317,118 @@
     <div class="people-topbar">
       <div class="people-heading">
         <div class="people-kicker">Advisors</div>
-        <h2 class="people-title">名人智囊</h2>
-        <p class="people-subtitle">浏览全部人物卡牌，选择一位进入单独对话。</p>
+        <h2 class="people-title">Advisors</h2>
+        <p class="people-subtitle">Browse all character cards and choose one to start a private chat.</p>
       </div>
-      <input class="people-search" id="peopleSearch" type="search" placeholder="搜索人物、领域、关键词...">
+      <input class="people-search" id="peopleSearch" type="search" placeholder="Search for people, fields, or keywords...">
     </div>
     <div class="people-grid" id="peopleGrid"></div>
   </section>
 
+  <section class="site-page" id="themesPage">
+    <div class="theme-menu">
+      <aside class="theme-aside">
+        <div class="theme-aside-kicker">Themes<br>Pick a direction</div>
+        <div class="theme-aside-title" id="themeAsideTitle">Philosophy</div>
+        <p class="theme-aside-copy" id="themeAsideCopy">Choice, meaning, and how to turn a vague worry into a clear question.</p>
+        <p class="theme-aside-meta" id="themeAsideMeta"></p>
+      </aside>
+      <div class="theme-index" id="themeGrid"></div>
+    </div>
+  </section>
+
+  <section class="site-page" id="storiesPage">
+    <div class="story-library" id="storyLibrary">
+      <div class="story-user-field" role="group" aria-label="Explore sample user stories"></div>
+      <div class="story-user-hint" role="tooltip" hidden></div>
+      <div class="story-intro">
+        <div class="story-intro-top">
+          <div class="story-intro-copy">
+            <h1>Stories</h1>
+            <p>Different lives.<br>Familiar questions.</p>
+          </div>
+          <dl class="story-stats" aria-label="Current advisor’s sample community">
+            <div class="story-stat"><dt>People</dt><dd><span class="story-rolling-number" id="storyPeopleNumber" aria-label="0"></span></dd></div>
+            <div class="story-stat"><dt>Topics explored</dt><dd><span class="story-rolling-number" id="storyTopicsNumber" aria-label="0"></span></dd></div>
+            <div class="story-stats-note">Community preview</div>
+          </dl>
+        </div>
+        <h2 id="storyPreviewHeadline">What if I chose for myself?</h2>
+      </div>
+      <div class="story-ribbon" aria-label="Swipe to explore the stories">
+      <div class="story-canvas-label" aria-hidden="true">STORIES / THE HUMAN SIDE</div>
+      <div class="story-tilt">
+        <div class="story-stage" id="storyStage">
+          <button class="story-card" type="button" data-category="Leave" data-name="Lin Xia" data-question="Should I leave my current life and move to a completely unfamiliar city?" data-note="Lin Xia has worked in this city for three years. Every weekend, she revises her resume, then deletes it. She does not hate the city. She is simply afraid of waking up at the same desk in five years."><img src="assets/home_figures/coco-chanel.png" alt=""></button>
+          <button class="story-card" type="button" data-category="Create" data-name="Zhou Yu" data-question="I want to create something I genuinely love, but I’m worried no one will need it." data-note="Zhou Yu spent four months editing a short film. All his friends praised it, but almost no one watched it after it was released. He began to wonder whether liking something was simply being selfish."><img src="assets/home_figures/steve-jobs.png" alt=""></button>
+          <button class="story-card" type="button" data-category="Relationships" data-name="Chen An" data-question="Someone important to me disagrees with me completely. Should I keep trying to persuade them?" data-note="Chen An landed the job he wanted, but his mother insisted he take the civil service exam. After dinner that night, neither of them spoke."><img src="assets/home_figures/plato.png" alt=""></button>
+          <button class="story-card" type="button" data-category="Perseverance" data-name="Su Wan" data-question="If a pursuit shows no results in the short term, how can I tell whether it is still worth continuing?" data-note="Su Wan’s independent project had been running for six months, but the earnings still did not cover her rent. Her family began asking when she would find a proper job."><img src="assets/home_figures/ada-lovelace.png" alt=""></button>
+          <button class="story-card" type="button" data-category="Self" data-name="He Chuan" data-question="I always think about how others see me first. How can I make a decision that is truly my own?" data-note="When He Chuan chooses a major, a city, or even dinner, he first imagines how others will judge him. The audience is already seated before he makes the decision."><img src="assets/home_figures/salvador-dali.png" alt=""></button>
+          <button class="story-card" type="button" data-category="Work" data-name="Zhao Ning" data-question="This job is making me feel increasingly hollow. Should I stay and finish the work, or leave now?" data-note="After Zhao Ning was promoted, meetings increased. He had more money but felt more hollow, and he began to dread the first email on Monday mornings."><img src="assets/home_figures/michael-jackson.png" alt=""></button>
+          <button class="story-card" type="button" data-category="Money" data-name="Xu Zhi" data-question="I want to earn less in exchange for freedom. Is that trade-off worth it?" data-note="Xu Zhi can keep taking on high-paying but draining projects, or earn a little less and truly build her own studio. She has done the math on both options."><img src="assets/home_figures/walter-white.png" alt=""></button>
+          <button class="story-card" type="button" data-category="Direction" data-name="Jiang He" data-question="I have too many interests. How can I choose one thing to pursue seriously?" data-note="Jiang He loves writing, design, and products. Each pursuit has a beginning, but none has been finished. Six unfinished documents lie in a drawer."><img src="assets/home_figures/ada-lovelace.png" alt=""></button>
+        </div>
+      </div>
+      </div>
+      <div class="story-meta" id="storyPreview">
+        <div class="story-meta-kicker" id="storyPreviewIndex"></div>
+        <div class="story-author-row">
+          <img class="story-selected-avatar" id="storySelectedAvatar" src="assets/story-users/men-00.jpg" alt="">
+          <div class="story-author"><span id="storyPreviewName"></span><span class="story-demo-label">Sample story</span></div>
+        </div>
+        <p id="storyPreviewQuestion"></p>
+        <button class="story-ask" id="storyAsk" type="button">Explore this question <span aria-hidden="true">↗</span></button>
+        <div class="story-pagination" aria-label="Story navigation">
+          <button id="storyPrev" class="story-direction" type="button" aria-label="Previous advisor">←</button>
+          <div class="story-progress" id="storyDots"></div>
+          <button id="storyNext" class="story-direction" type="button" aria-label="Next advisor">→</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="site-page" id="aboutPage">
+    <div class="about-shell">
+      <div class="dots" aria-hidden="true"></div>
+      <div class="about-kicker">ABOUT</div>
+      <h2 class="about-title">Most confusion is not caused by a lack of answers, but by a lack of perspective.</h2>
+      <p class="about-lead">Ask Socrates turns figures from history, literature, business, art, and science into conversational advisors.</p>
+      <div class="about-steps-list">
+        <div><strong>01</strong><span>Write down a specific question</span></div>
+        <div><strong>02</strong><span>Expand all four cards, with each one offering a brief comment</span></div>
+        <div><strong>03</strong><span>For an in-depth conversation, choose one of them.</span></div>
+      </div>
+      <p class="about-note">All responses are generated from character settings and AI models. They do not represent real people’s opinions or replace professional advice. For entertainment only; do not take them seriously.</p>
+    </div>
+  </section>
+
+  <section class="site-page" id="loginPage">
+    <div class="login-wrap">
+      <div class="login-card">
+        <span class="login-kicker">Account</span>
+        <h2>Log In</h2>
+        <span class="login-copy">After logging in, this device will remember your preferred name. Your account is stored only in this browser.</span>
+        <form class="login-form" id="loginForm">
+          <label>Title
+            <input id="loginName" type="text" maxlength="24" placeholder="What should I call you?" autocomplete="nickname">
+          </label>
+          <label>Email
+            <input id="loginEmail" type="email" maxlength="80" placeholder="name@example.com" autocomplete="username">
+          </label>
+          <label>Password
+            <input id="loginPassword" type="password" maxlength="64" placeholder="At least 6 people" autocomplete="current-password">
+          </label>
+          <div class="login-error" id="loginError"></div>
+          <button class="login-submit" id="loginSubmit" type="submit">Enter</button>
+        </form>
+        <div class="login-account" id="loginAccount" hidden></div>
+      </div>
+    </div>
+  </section>
+
   <section class="person-chat" id="personChat" aria-hidden="true">
     <aside class="person-chat-side" id="personChatSide">
-      <button class="person-chat-back" id="personChatBack" type="button">返回人物列表</button>
+      <button class="person-chat-back" id="personChatBack" type="button">Back to Character List</button>
       <div class="person-chat-info">
         <div class="person-chat-name" id="personChatName"></div>
         <div class="person-chat-meta" id="personChatMeta"></div>
@@ -3587,14 +4438,14 @@
     <main class="person-chat-main">
       <header class="person-chat-header">
         <div>
-          <div class="person-chat-title" id="personChatTitle">单人对话</div>
-          <div class="person-chat-hint" id="personChatHint">向这位智囊提一个具体问题。</div>
+          <div class="person-chat-title" id="personChatTitle">One-on-One Conversation</div>
+          <div class="person-chat-hint" id="personChatHint">Ask this advisor a specific question.</div>
         </div>
       </header>
       <div class="person-chat-messages" id="personChatMessages"></div>
       <form class="person-chat-form" id="personChatForm">
-        <textarea class="person-chat-input" id="personChatInput" maxlength="1000" placeholder="输入你想问 TA 的问题..."></textarea>
-        <button class="person-chat-send" id="personChatSend" type="submit">发送</button>
+        <textarea class="person-chat-input" id="personChatInput" maxlength="1000" placeholder="What would you like to ask?"></textarea>
+        <button class="person-chat-send" id="personChatSend" type="submit">Send</button>
       </form>
     </main>
   </section>
@@ -3610,15 +4461,15 @@
         <div class="shuffle-card shuffle-card-4"></div>
       </div>
     </div>
-    <div class="loading-text" id="loadingText">智囊团正在洗牌</div>
-    <div class="loading-sub" id="loadingSub">正在同步生成 4 位智囊的简短回答...</div>
+    <div class="loading-text" id="loadingText">Shuffling the deck</div>
+    <div class="loading-sub" id="loadingSub">Generating in sync 4 Brief responses from experts...</div>
   </div>
 
   <!-- CARDS -->
   <div class="cards" id="cards"></div>
 
   <!-- RESET -->
-  <button class="reset-btn" id="resetBtn" onclick="resetAll()">重新提问 ↺</button>
+  <button class="reset-btn" id="resetBtn" onclick="resetAll()">Ask again ↺</button>
 
   <div class="divider-wrap">
     <div class="divider-line"></div>
@@ -3628,15 +4479,17 @@
 
   <!-- FOOTER -->
   <div class="footer">
-    智囊团 · 纯属娱乐 · 切勿当真
+    Ask Socrates · For entertainment purposes only · Do not take this seriously
   </div>
 </div>
 
+<script src="assets/story-community.js"></script>
+<script src="assets/story-community-ui.js"></script>
 <script>
 // ─── LINE AVATAR SVGs ───
 // Each person has a unique minimalist line-art face silhouette
 const AVATARS = {
-  苏格拉底: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  "Socrates": `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="20" cy="16" r="9" stroke="#c4956a" stroke-width="1.2"/>
     <path d="M12 24 Q20 32 28 24" stroke="#c4956a" stroke-width="1.2" fill="none"/>
     <path d="M11 14 Q14 11 17 14" stroke="#c4956a" stroke-width="0.9" fill="none"/>
@@ -3644,7 +4497,7 @@ const AVATARS = {
     <path d="M17 19 Q20 21 23 19" stroke="#c4956a" stroke-width="0.9" fill="none"/>
   </svg>`,
 
-  苏轼: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  "Su Shi": `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="20" cy="17" rx="8" ry="9" stroke="#c4956a" stroke-width="1.2"/>
     <path d="M12 15 Q15 12 18 15" stroke="#c4956a" stroke-width="0.9" fill="none"/>
     <path d="M22 15 Q25 12 28 15" stroke="#c4956a" stroke-width="0.9" fill="none"/>
@@ -3653,7 +4506,7 @@ const AVATARS = {
     <path d="M14 26 Q20 29 26 26" stroke="#c4956a" stroke-width="1.2" fill="none"/>
   </svg>`,
 
-  马斯克: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  "Elon Musk": `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="20" cy="17" rx="7" ry="8.5" stroke="#c4956a" stroke-width="1.2"/>
     <path d="M13 15 L17 15" stroke="#c4956a" stroke-width="1.2"/>
     <path d="M23 15 L27 15" stroke="#c4956a" stroke-width="1.2"/>
@@ -3663,7 +4516,7 @@ const AVATARS = {
     <path d="M33 6 L35 3" stroke="#c4956a" stroke-width="0.8"/>
   </svg>`,
 
-  曾国藩: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  "Zeng Guofan": `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="11" y="10" width="18" height="22" rx="4" stroke="#c4956a" stroke-width="1.2"/>
     <path d="M15 15 L16 14.5 M18 15 L17 14.5 M22 15 L23 14.5 M25 15 L24 14.5" stroke="#c4956a" stroke-width="0.8"/>
     <path d="M16 21 Q20 23 24 21" stroke="#c4956a" stroke-width="0.9" fill="none"/>
@@ -3671,7 +4524,7 @@ const AVATARS = {
     <line x1="11" y1="7" x2="29" y2="7" stroke="#c4956a" stroke-width="1.2"/>
   </svg>`,
 
-  乔布斯: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  "Jobs": `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="20" cy="17" rx="7.5" ry="8" stroke="#c4956a" stroke-width="1.2"/>
     <path d="M13 15 L17 15" stroke="#c4956a" stroke-width="1.2"/>
     <path d="M23 15 L27 15" stroke="#c4956a" stroke-width="1.2"/>
@@ -3681,14 +4534,14 @@ const AVATARS = {
     <path d="M33 14 L33 20 M30 17 L36 17" stroke="#c4956a" stroke-width="0.5" opacity="0.5"/>
   </svg>`,
 
-  王阳明: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  "Wang Yangming": `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 28 Q20 34 28 28 Q28 16 20 10 Q12 16 12 28Z" stroke="#c4956a" stroke-width="1.2" fill="none"/>
     <path d="M15 17 L17 16.5 M23 16.5 L25 17" stroke="#c4956a" stroke-width="0.9"/>
     <path d="M17 21 Q20 23 23 21" stroke="#c4956a" stroke-width="0.9" fill="none"/>
     <path d="M16 6 L20 2 L24 6" stroke="#c4956a" stroke-width="1.2" fill="none"/>
   </svg>`,
 
-  芒格: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  "Charlie Munger": `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="9" y="10" width="22" height="24" rx="3" stroke="#c4956a" stroke-width="1.2"/>
     <path d="M13 16 Q16 13 20 16 Q24 13 27 16" stroke="#c4956a" stroke-width="0.9" fill="none"/>
     <path d="M16 22 Q20 25 24 22" stroke="#c4956a" stroke-width="0.9" fill="none"/>
@@ -3701,148 +4554,137 @@ const AVATARS = {
 
 // ─── CELEBRITY DATABASE ───
 const CELEBRITIES = {
-  苏格拉底: {
+  "Socrates": {
     image: 'assets/portraits-v3-cut/01_哲学/SOCRATES.png',
     era: 'ATHENS',
     posterTitle: ['SEEK', 'THE', 'TRUTH'],
     posterNote: 'Question every easy answer before you accept it.',
     posterColor: '#1247ff',
     posterColorSoft: '#4067ff',
-    title: '古希腊哲学家，擅长把复杂问题追问到本质。',
-    tags: ['哲学', '理性', '追问'],
-    exp: '「未经审视的人生不值得过」',
+    title: 'Ancient Greek philosopher known for questioning complex issues down to their essence.',
+    tags: ['Philosophy', 'Reason', 'Keep questioning'],
+    exp: '「An unexamined life is not worth living.',
     advice: {
-      default: '先别急着决定。真正重要的不是答案本身，而是你现在为何会被这个问题卡住。把动机、恐惧和期待分开，你会看得更清楚。',
-      职场: '判断一份工作，不只看眼前得失，更看它是否让你成为更好的自己。别只问赚多少，先问它是否值得你投入生命。',
-      财务: '钱不是终点，而是你安排人生选择的工具。任何让你失去平静的收益，都可能并不值得。',
-      情感: '爱不是占有，也不是依赖。真正好的关系，会让你更完整，而不是更慌张。',
-      方向: '迷茫并不可耻，未经追问的冲动才危险。把问题想透，你走的每一步都会更坚定。'
+      default: 'Don’t rush to decide. What matters isn’t just the answer, but why this question has you stuck. Separate your motives, fears, and expectations for a clearer view.',
+      "Career": 'When evaluating a job, consider not just the immediate gains and losses, but whether it helps you become a better version of yourself. Don’t just ask how much you will earn; ask whether it deserves a meaningful part of your life.',
+      "Finance": 'Money is not the destination but the tool you use to arrange life’s choices. Any gain that costs you your peace may not be worth it.',
+      "Relationships": 'Love is not possession or dependency. A truly healthy relationship makes you more complete, not more anxious.',
+      "Direction": 'Being confused is not shameful; acting on impulse without questioning is. Think a question through, and every step you take becomes more certain.'
     }
   },
-  王阳明: {
+  "Wang Yangming": {
     image: 'assets/portraits-v3-cut/01_哲学/WANG_YANGMING.png',
     era: 'MING',
     posterTitle: ['ACT', 'ON', 'LIGHT'],
     posterNote: 'Clarity starts when thought and action move together.',
     posterColor: '#a24f1f',
     posterColorSoft: '#d17736',
-    title: '明代思想家，主张知行合一，重视向内求答案。',
-    tags: ['心学', '行动', '觉察'],
-    exp: '「此心光明，亦复何言」',
+    title: 'Ming dynasty thinker who advocated the unity of knowledge and action and emphasized seeking answers within.',
+    tags: ['Neo-Confucianism', 'Action', 'Awareness'],
+    exp: '「”My heart is bright; what more need I say?”',
     advice: {
-      default: '你不是不知道答案，而是迟迟不肯行动。很多局面，只有做了第一步，后面的清晰才会慢慢出现。',
-      职场: '工作不是单纯谋生，也是修炼自己。别急着换环境，先问问你是否已经把手上的事做到极致。',
-      财务: '被钱推着走的人，很难真正安定。先守住节奏，再谈增长，心定了，判断才不偏。',
-      情感: '感情最怕执念太重。少一些计较，多一点真诚，你才看得见关系真正的问题。',
-      方向: '方向未必要一次想明白。知道什么是此刻最该做的，然后去做，这就是最可靠的路。'
+      default: 'You don’t lack the answer; you are simply unwilling to act. In many situations, clarity only emerges after you take the first step.',
+      "Career": 'Work is not merely a means of making a living; it is also a way to train yourself. Do not rush to change environments. First ask whether you have done your current work to the fullest.',
+      "Finance": 'People driven by money rarely find true stability. Keep your rhythm before pursuing growth; once your mind is settled, your judgment stays clear.',
+      "Relationships": 'Relationships suffer most when attachment becomes too strong. Let go of petty calculations and be more sincere to see the real issues in a relationship.',
+      "Direction": 'You do not need to figure out the entire direction at once. Know what matters most right now, then do it. That is the most reliable path.'
     }
   },
-  孔子: {
+  "Confucius": {
     image: 'assets/portraits-v3-cut/01_哲学/CONFUCIUS.png',
     era: 'LU',
     posterTitle: ['HOLD', 'YOUR', 'FORM'],
     posterNote: 'Discipline gives chaos a frame and meaning.',
     posterColor: '#5d2f8a',
     posterColorSoft: '#8a4bd1',
-    title: '先秦思想家，重秩序、分寸与长期修养。',
-    tags: ['秩序', '修身', '分寸'],
-    exp: '「君子求诸己，小人求诸人」',
+    title: 'A pre-Qin philosopher focused on order, proportion, and long-term self-cultivation.',
+    tags: ['Order', 'Self-cultivation', 'Proportion'],
+    exp: '「A nobleman seeks within himself; a petty person seeks in others.',
     advice: {
-      default: '局面越乱，越要先稳住自己。先把能做的、该做的和不该做的分清，再谈取舍。',
-      职场: '在团队中，可信比聪明更重要。一个人若能守分寸、讲信用，自然更容易走得长远。',
-      财务: '用钱要有节，有度，有序。不是不能追求更好，而是不能让欲望把自己拖乱。',
-      情感: '关系里最难得的，是尊重与体谅。先学会好好待人，很多问题自然不会走到失控。',
-      方向: '人生的路不必处处标新立异，先把根基立住。能长期自洽的人，方向通常不会偏。'
+      default: 'The more chaotic things get, the more you need to steady yourself first. Distinguish what you can do, should do, and should not do before considering trade-offs.',
+      "Career": 'In a team, trust matters more than intelligence. A person who knows their limits and keeps their word will naturally go further.',
+      "Finance": 'Use money with discipline, moderation, and order. Pursuing a better life is fine, but don’t let desire throw your life into chaos.',
+      "Relationships": 'The most precious quality in a relationship is respect and understanding. Treat others well, and many problems will never spiral out of control.',
+      "Direction": 'Life does not need novelty at every turn; first build a solid foundation. Those who remain consistent over time rarely stray far from their direction.'
     }
   },
-  柏拉图: {
+  "Plato": {
     image: 'assets/portraits-v3-cut/01_哲学/PLATO.png',
     era: 'ACADEMY',
     posterTitle: ['SEE', 'ABOVE', 'FORM'],
     posterNote: 'Lift your eyes higher than the surface of things.',
     posterColor: '#173b82',
     posterColorSoft: '#2f63c1',
-    title: '理念世界的讲述者，擅长从表象中看结构。',
-    tags: ['理念', '结构', '远见'],
-    exp: '「真正重要的，常常不是眼前所见」',
+    title: 'A storyteller of ideas who sees the structures behind appearances.',
+    tags: ['Ideas', 'Structure', 'Vision'],
+    exp: '「What truly matters is often not what you can see right before you.',
     advice: {
-      default: '你眼前看到的是一时的局部，真正影响选择的，是背后的结构。站远一点，再判断。',
-      职场: '别只为眼前机会兴奋，要看这份工作是否贴近你理想中的长期身份。短期热闹，不一定值得长期投入。',
-      财务: '财富决策不能只看表面回报，更要看它是否符合你的整体生活秩序。失去结构的增长不会长久。',
-      情感: '一段关系如果只剩即时满足，往往撑不久。真正稳固的连接，来自价值观和节奏的契合。',
-      方向: '你需要的不是更多选项，而是更高一层的视角。站高一点，很多岔路其实会自动消失。'
+      default: 'What you see now is only a temporary part of the picture; the structures behind it truly shape your choices. Step back before you judge.',
+      "Career": 'Don’t get swept up by an immediate opportunity. Consider whether the job aligns with the long-term identity you envision. Short-term excitement does not always deserve a long-term commitment.',
+      "Finance": 'Wealth decisions should not be based on surface returns alone, but also on whether they fit your overall life. Growth without structure cannot last.',
+      "Relationships": 'A relationship based only on immediate gratification rarely lasts. Lasting connections come from shared values and compatible rhythms.',
+      "Direction": 'You don’t need more options; you need a higher perspective. From a broader vantage point, many forks in the road disappear on their own.'
     }
   },
-  亚里士多德: {
+  "Aristotle": {
     image: 'assets/portraits-v3-cut/01_哲学/ARISTOTLE.png',
     era: 'LYCEUM',
     posterTitle: ['KEEP', 'THE', 'BALANCE'],
     posterNote: 'Good judgment lives between excess and lack.',
     posterColor: '#0e7b66',
     posterColorSoft: '#24a88f',
-    title: '重实践与均衡的哲学家，强调判断中的尺度感。',
-    tags: ['实践', '平衡', '判断'],
-    exp: '「美德常常存在于过与不及之间」',
+    title: 'A philosopher focused on practice and balance, emphasizing a sense of proportion in judgment.',
+    tags: ['Practice', 'Balance', 'Judgment'],
+    exp: '「Virtue often lies between excess and deficiency.',
     advice: {
-      default: '很多问题不是非黑即白，而是尺度拿捏。找到最适合你的中间地带，通常比走极端更成熟。',
-      职场: '理想和现实都要考虑。别只为了热爱忽略能力，也别只为了稳定放弃成长。',
-      财务: '财务上最危险的，往往不是贫乏，而是失衡。风险、收益和生活承受力要一起看。',
-      情感: '关系需要热情，也需要节制。太冷或太满都不舒服，恰到好处才最难得。',
-      方向: '选择路径时，既要看天赋，也要看习惯。你能长期重复且越做越好的事，才更像真正方向。'
+      default: 'Many questions are not black and white, but require careful calibration. Finding the middle ground that suits you is often more mature than taking an extreme position.',
+      "Career": 'Consider both ideals and reality. Don’t let passion blind you to your abilities, or stability stop you from growing.',
+      "Finance": 'The greatest financial danger is often not lack, but imbalance. Risk, return, and your capacity to sustain your life must be considered together.',
+      "Relationships": 'Relationships need both passion and restraint. Too cold or too intense feels uncomfortable; finding the balance is rarest.',
+      "Direction": 'When choosing a path, consider both talent and habit. What you can repeat over time and keep getting better at is more likely your true direction.'
     }
   },
-  尼采: {
+  "Friedrich Nietzsche": {
     image: 'assets/portraits-v3-cut/01_哲学/NIETZSCHE.png',
     era: 'MODERN',
     posterTitle: ['BECOME', 'YOURSELF'],
     posterNote: "Do not live inside someone else's safer script.",
     posterColor: '#c1362f',
     posterColorSoft: '#f05c41',
-    title: '现代思想家，强调主体性、勇气与自我塑形。',
-    tags: ['勇气', '主体性', '意志'],
-    exp: '「成为你自己」',
+    title: 'A modern thinker focused on agency, courage, and self-formation.',
+    tags: ['Courage', 'Agency', 'Willpower'],
+    exp: '「Become yourself',
     advice: {
-      default: '别让世界替你定义答案。真正难的不是做选择，而是承担选择之后的自己。',
-      职场: '如果一份工作不断削弱你的生命感，就该警惕。成长不等于忍耐一切，强大也不是麻木。',
-      财务: '钱可以放大自由，也会放大恐惧。别让安全感完全外包给数字，否则你永远不会真正轻松。',
-      情感: '爱不是互相消耗，也不是彼此驯服。真正有力量的关系，是两个人都保有完整自我。',
-      方向: '你不需要迎合所有期待。宁可走一条更难但更像自己的路，也不要活成别人觉得安全的样子。'
+      default: 'Don’t let the world define your answer. The real challenge is not making the choice, but becoming the person who lives with it.',
+      "Career": 'If a job keeps draining your sense of vitality, be wary. Growth does not mean enduring everything, and strength is not numbness.',
+      "Finance": 'Money can amplify both freedom and fear. Don’t outsource your sense of security entirely to a number, or you will never truly feel at ease.',
+      "Relationships": 'Love is not mutual depletion or an attempt to tame each other. A truly strong relationship allows both people to remain fully themselves.',
+      "Direction": 'You don’t need to meet everyone’s expectations. Choose the harder path that feels more authentic rather than living in a way others consider safe.'
     }
   }
 };
 
 const API_BASE = 'http://127.0.0.1:8000/api';
 const APP_MODE_STORAGE_KEY = 'zhinang-app-mode-v1';
-const DEFAULT_APP_MODE = 'preview';
+const DEFAULT_APP_MODE = 'api';
 const urlMode = new URLSearchParams(window.location.search).get('mode');
-const storedMode = (() => {
-  try {
-    return window.localStorage.getItem(APP_MODE_STORAGE_KEY);
-  } catch (error) {
-    return null;
-  }
-})();
-const APP_MODE = (urlMode === 'api' || urlMode === 'preview')
-  ? urlMode
-  : ((storedMode === 'api' || storedMode === 'preview') ? storedMode : DEFAULT_APP_MODE);
+const APP_MODE = 'api';
 try {
   window.localStorage.setItem(APP_MODE_STORAGE_KEY, APP_MODE);
 } catch (error) {
   // Ignore storage failures in private/incognito contexts.
 }
 window.__setAppMode = (nextMode) => {
-  const mode = nextMode === 'api' ? 'api' : 'preview';
-  try {
-    window.localStorage.setItem(APP_MODE_STORAGE_KEY, mode);
-  } catch (error) {
-    // Ignore storage failures.
-  }
   const nextUrl = new URL(window.location.href);
-  nextUrl.searchParams.set('mode', mode);
+  if (nextMode === 'adjust') {
+    nextUrl.searchParams.set('mode', 'adjust');
+  } else {
+    nextUrl.searchParams.delete('mode');
+  }
   window.location.href = nextUrl.toString();
 };
-const PREVIEW_CARD_MODE = APP_MODE !== 'api';
-const MIN_QUESTION_LENGTH = PREVIEW_CARD_MODE ? 1 : 2;
+const PREVIEW_CARD_MODE = false;
+const MIN_QUESTION_LENGTH = 2;
 const PREVIEW_EDIT_MODE = false;
 const HOME_PREVIEW_EDIT_MODE = new URLSearchParams(window.location.search).get('homeedit') === '1';
 const HOME_FIGURE_STORAGE_KEY = 'zhinang-home-figure-adjustments-v1';
@@ -3850,6 +4692,7 @@ const HOME_SIGNATURE_STORAGE_KEY = 'zhinang-home-signature-adjustments-v1';
 const ADJUST_MODE = urlMode === 'adjust';
 const ADJUSTMENT_STORAGE_KEY = 'zhinang-portrait-adjustments-v2';
 const AVATAR_ADJUSTMENT_STORAGE_KEY = 'zhinang-avatar-adjustments-v1';
+const AVATAR_ADJUST_FRAME_PX = 320;
 const BATCH_ADJUST_START_SLUG = 'bjork';
 const PEOPLE_DEMOTED_SLUGS = new Set(['l']);
 const PEOPLE_EMPTY_IMAGE_SLUGS = new Set([
@@ -6622,6 +7465,39 @@ const loadingSub = document.getElementById('loadingSub');
 const peoplePage = document.getElementById('peoplePage');
 const peopleGrid = document.getElementById('peopleGrid');
 const peopleSearch = document.getElementById('peopleSearch');
+const themesPage = document.getElementById('themesPage');
+const themeGrid = document.getElementById('themeGrid');
+const storiesPage = document.getElementById('storiesPage');
+const storyLibrary = document.getElementById('storyLibrary');
+const storyDots = document.getElementById('storyDots');
+const storyPrev = document.getElementById('storyPrev');
+const storyNext = document.getElementById('storyNext');
+const aboutPage = document.getElementById('aboutPage');
+const loginPage = document.getElementById('loginPage');
+const loginNavLink = document.getElementById('loginNavLink');
+const loginForm = document.getElementById('loginForm');
+const loginNameInput = document.getElementById('loginName');
+const loginEmailInput = document.getElementById('loginEmail');
+const loginPasswordInput = document.getElementById('loginPassword');
+const loginError = document.getElementById('loginError');
+const loginAccount = document.getElementById('loginAccount');
+const SESSION_KEY = 'zhinang-local-session';
+const SITE_PAGES = {
+  people: peoplePage,
+  themes: themesPage,
+  stories: storiesPage,
+  about: aboutPage,
+  login: loginPage
+};
+const THEMES = [
+  { id: 'philosophy', title: 'Philosophy', query: 'Philosophy', copy: 'Choice, meaning, and how to turn a vague worry into a clear question.' },
+  { id: 'science', title: 'Science', query: 'Science', copy: 'Evidence, experiments, and how to keep going when something has not yet produced a result.' },
+  { id: 'business', title: 'Business', query: 'Business', copy: 'When product, trade-offs, taste, and market collide.' },
+  { id: 'literature', title: 'Literature', query: 'Literature', copy: 'Turn experiences into sentences and ground emotions in specific events.' },
+  { id: 'art', title: 'Art', query: 'Art', copy: 'Style, craft, and what deserves to be seen.' },
+  { id: 'history', title: 'Politics', query: 'Politics', copy: 'Power, timing, and what a person can do when the larger picture is at stake.' },
+  { id: 'fiction', title: 'Narrative', query: 'Film', copy: 'How fictional characters make decisions and what their choices cost.' }
+];
 const personChat = document.getElementById('personChat');
 const personChatBack = document.getElementById('personChatBack');
 const personChatName = document.getElementById('personChatName');
@@ -6646,13 +7522,13 @@ const STACK_PRESETS = [
 ];
 
 const DOMAIN_COLORS = {
-  哲学: ['#1247ff', '#4067ff'],
-  历史: ['#6c4d1f', '#a57436'],
-  文学: ['#7d2657', '#b5417f'],
-  艺术: ['#5b2d8e', '#8e56d1'],
-  商业: ['#7c4e14', '#c8892f'],
-  科学: ['#0d7a72', '#1fb0a5'],
-  政治: ['#87311e', '#d0673d'],
+  "Philosophy": ['#1247ff', '#4067ff'],
+  "History": ['#6c4d1f', '#a57436'],
+  "Literature": ['#7d2657', '#b5417f'],
+  "Art": ['#5b2d8e', '#8e56d1'],
+  "Business": ['#7c4e14', '#c8892f'],
+  "Science": ['#0d7a72', '#1fb0a5'],
+  "Politics": ['#87311e', '#d0673d'],
   default: ['#2a335f', '#5a69b8']
 };
 
@@ -6672,8 +7548,9 @@ const POSTER_PALETTES = [
 ];
 
 const MIN_SHUFFLE_DURATION = 3000;
-const SHORT_ANSWER_INSTRUCTION = '请直接回答用户此刻的问题，只用 1 到 2 句中文，尽量控制在 50 字内，简洁、具体、像这位人物本人在说话，不要分点，不要铺陈。';
-const ROUNDTABLE_INSTRUCTION = '圆桌讨论模式。每位人物可以选择回答，也可以选择沉默。若回答，只说一句完整中文，最多 20 个字，不能省略，不能说半句，不能用省略号，不要解释，不要分点，不要说自己的名字。若不回答，只输出“沉默”。主持人不要每轮总结。';
+const SHORT_ANSWER_INSTRUCTION = 'Answer in English in one or two complete sentences, up to 40 words. Be specific, concise, and true to this advisor’s voice. Do not use bullet points.';
+const ROUNDTABLE_SPEECH_LIMIT = 220;
+const ROUNDTABLE_INSTRUCTION = 'Roundtable mode. Answer in English in one complete sentence of up to 25 words, ending with punctuation. No ellipses, bullet points, or speaker labels. To stay silent, output only pass.';
 
 function createInitialRoundtableState() {
   return {
@@ -6705,16 +7582,16 @@ function showStatus(message, type = '') {
 function normalizeApiErrorMessage(message) {
   const text = String(message || '').trim();
   if (!text) {
-    return '请求失败，请稍后重试。';
+    return 'The request failed. Please try again later.';
   }
-  if (/Insufficient Balance/i.test(text)) {
-    return 'DeepSeek 账户余额不足，推荐卡牌可正常使用，但实时回答暂时无法生成。';
+  if (/Insufficient Balance|\u4f59\u989d\u4e0d\u8db3|account balance/i.test(text)) {
+    return 'The MiniMax account has insufficient credit to generate recommendations or answers.';
   }
-  if (/DEEPSEEK_API_KEY is not configured/i.test(text)) {
-    return '后端未配置 DeepSeek API Key，暂时无法生成实时回答。';
+  if (/MINIMAX_API_KEY is not configured|invalid api key/i.test(text)) {
+    return 'A valid MiniMax API key is required to generate recommendations and answers.';
   }
   if (/Failed to fetch/i.test(text)) {
-    return '无法连接本地后端，请确认 8000 端口服务已启动。';
+    return 'Unable to connect. Please check that the local service on port 8000 is running.';
   }
   return text;
 }
@@ -6731,6 +7608,7 @@ function wait(ms) {
 
 // #region debug-point A:card-runtime
 function reportCardDebug(hypothesisId, msg, data = {}, runId = 'pre-fix') {
+  if (new URLSearchParams(location.search).get('debugcards') !== '1' || window.ASK_SOCRATES_PREVIEW) return;
   fetch('http://127.0.0.1:7777/event', {
     method: 'POST',
     headers: {
@@ -6769,7 +7647,7 @@ function getCardStyle(index, total) {
 
 function buildPromptQuestion() {
   const content = state.question.trim();
-  return state.category ? `${content}\n\n问题类型：${state.category}` : content;
+  return state.category ? `${content}\n\nQuestion Type:${state.category}` : content;
 }
 
 function getDomainColors(domain) {
@@ -7049,7 +7927,7 @@ state.homeSignatureAdjustments = loadHomeSignatureAdjustments();
 function toPosterTitle(englishName, chineseName) {
   const cleanEnglish = String(englishName || '')
     .toUpperCase()
-    .replace(/[^A-Z\s-]/g, ' ')
+    .replace(/[^\p{L}\s-]/gu, ' ')
     .split(/[\s-]+/)
     .filter(Boolean);
 
@@ -7075,7 +7953,7 @@ function toPosterTitle(englishName, chineseName) {
 }
 
 function buildPortraitFallback(name, domain) {
-  const initials = (name || '智囊').slice(0, 2);
+  const initials = (name || 'Think Tank').slice(0, 2);
   const [primary, secondary] = getDomainColors(domain);
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 420">
@@ -7101,6 +7979,7 @@ function resolveCharacterCutout(englishName, name) {
 }
 
 function normalizePortrait(path, englishName, name, domain) {
+  if (PEOPLE_EMPTY_IMAGE_SLUGS.has(slugifyName(englishName || name))) return buildPortraitFallback(name, domain);
   const cutout = resolveCharacterCutout(englishName, name);
   if (cutout) {
     return cutout;
@@ -7137,59 +8016,59 @@ function normalizeItems(items, limit = 4) {
 
 function buildBackFooter(card) {
   if (card.loadingAnswer) {
-    return '正在结合人物资料生成这位智囊的回答。';
+    return 'Generating this persona’s response using their profile.';
   }
 
   if (card.answer && card.citations.length) {
-    return `这段回答参考了 ${card.citations.length} 条资料线索。`;
+    return `This answer draws on ${card.citations.length} pieces of source material.`;
   }
 
   if (card.answer) {
-    return '这张牌的回答已经准备好了。';
+    return 'Your advisor’s answer is ready.';
   }
 
   if (card.error) {
-    return '回答暂时没有成功生成，可以稍后再试。';
+    return 'The answer could not be generated just yet. Please try again later.';
   }
 
-  return '翻开卡牌后，这里会显示这位智囊的回答。';
+  return 'Flip the card to reveal this mentor’s response.';
 }
 
 function buildAnswerTitle(card) {
   if (card.loadingAnswer) {
-    return '他的回答正在生成';
+    return 'Preparing their answer';
   }
 
   if (card.answer) {
-    return '他的回答';
+    return 'Their answer';
   }
 
   if (card.error) {
-    return '回答暂未生成';
+    return 'The answer has not been generated yet.';
   }
 
-  return '回答准备中';
+  return 'Preparing the answer';
 }
 
 function buildAnswerStatus(card) {
   if (card.loadingAnswer) {
-    return '生成中';
+    return 'Generating';
   }
 
   if (card.answer) {
-    return '已生成';
+    return 'Generated';
   }
 
   if (card.error) {
-    return '失败';
+    return 'Failure';
   }
 
-  return '待生成';
+  return 'Pending generation';
 }
 
 function buildQuote(card) {
   if (card.loadingAnswer) {
-    return `正在请 ${card.name} 围绕你的问题组织观点，请稍等片刻。`;
+    return `Asking ${card.name} to reflect on your question. Please wait a moment.`;
   }
 
   if (card.answer) {
@@ -7200,7 +8079,7 @@ function buildQuote(card) {
     return card.error;
   }
 
-  return '这张牌会在洗牌阶段先生成一段简短回答，翻开后直接查看。';
+  return 'This card generates a brief answer during the shuffle; flip it over to read it directly.';
 }
 
 function buildCitationMarkup(card) {
@@ -7212,7 +8091,7 @@ function buildCitationMarkup(card) {
     .slice(0, 3)
     .map((item) => `
       <div class="back-citation">
-        <strong>${escapeHTML(item.title || item.source_name || '参考资料')}</strong><br>
+        <strong>${escapeHTML(item.title || item.source_name || 'Reference Materials')}</strong><br>
         ${escapeHTML(item.excerpt || item.source_name || '')}
       </div>
     `)
@@ -7228,22 +8107,22 @@ function buildBackKeywords(card) {
 }
 
 function buildBackMeta(card) {
-  const domain = card.domain || '智囊顾问';
-  const archetype = card.archetype || '多维思考者';
-  return `<strong>领域</strong> ${escapeHTML(domain)}  ·  <strong>视角</strong> ${escapeHTML(archetype)}`;
+  const domain = card.domain || 'Think Tank Advisor';
+  const archetype = card.archetype || 'Multidimensional Thinker';
+  return `<strong>Domain</strong> ${escapeHTML(domain)}  ·  <strong>Perspective</strong> ${escapeHTML(archetype)}`;
 }
 
 function buildBackKeywordText(card) {
   const keywords = buildBackKeywords(card);
   if (!keywords.length) {
-    return '理性判断、经验洞察、行动建议';
+    return 'Rational judgment, experiential insight, and actionable advice';
   }
   return escapeHTML(keywords.join(' · '));
 }
 
 function getAvatarStyle(slug) {
   const adjustment = getAvatarAdjustments(slug);
-  return `--avatar-scale:${adjustment.scale};--avatar-x:${adjustment.x}px;--avatar-y:${adjustment.y}px;`;
+  return `--avatar-ref:${AVATAR_ADJUST_FRAME_PX}px;--avatar-scale:${adjustment.scale};--avatar-x:${adjustment.x}px;--avatar-y:${adjustment.y}px;`;
 }
 
 function buildCardViewModel(rec, detail) {
@@ -7258,7 +8137,7 @@ function buildCardViewModel(rec, detail) {
 
   return {
     slug: rec.person_slug,
-    name: detail.chinese_name || rec.person_name,
+    name: detail.english_name || detail.chinese_name || rec.person_name,
     englishName: detail.english_name || '',
     era: (detail.era_context || detail.domain_category || 'THINK TANK').toUpperCase(),
     posterTitle: toPosterTitle(detail.english_name, detail.chinese_name).filter(Boolean),
@@ -7285,6 +8164,7 @@ function buildCardViewModel(rec, detail) {
 }
 
 async function apiFetch(path, options = {}) {
+  if (window.ASK_SOCRATES_PREVIEW) return window.ASK_SOCRATES_PREVIEW.request(path, options);
   const requestOptions = {
     method: options.method || 'GET',
     headers: {
@@ -7312,7 +8192,7 @@ async function apiFetch(path, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(normalizeApiErrorMessage(payload.detail || `请求失败（${response.status}）`));
+    throw new Error(normalizeApiErrorMessage(payload.detail || `Request failed (${response.status})`));
   }
 
   return payload;
@@ -7329,7 +8209,7 @@ async function fetchRecommendedCards() {
 
   const recommendations = (recommendData.recommendations || []).slice(0, 4);
   if (!recommendations.length) {
-    throw new Error('后端没有返回可展示的智囊卡牌。');
+    throw new Error('The backend returned no advisor cards to display.');
   }
 
   const detailResults = await Promise.allSettled(
@@ -7360,102 +8240,102 @@ async function fetchRecommendedCards() {
 }
 
 function buildPreviewCards(questionText = '') {
-  const previewQuestion = String(questionText || state.question || '我要不要换一个新的方向').trim() || '我要不要换一个新的方向';
+  const previewQuestion = String(questionText || state.question || 'Should I change direction?').trim() || 'Should I change direction?';
   state.question = previewQuestion;
   state.promptQuestion = previewQuestion;
 
   const previewSeeds = [
     {
       person_slug: 'george-orwell',
-      person_name: '乔治·奥威尔',
-      reason: '适合帮你看清表象之下的真实动机。',
+      person_name: 'George Orwell',
+      reason: 'Good for seeing the real motives beneath the surface.',
       detail: {
         slug: 'george-orwell',
         english_name: 'George Orwell',
-        chinese_name: '乔治·奥威尔',
-        domain_category: '文学',
-        ai_archetype: '冷静观察者',
-        brief_intro: '以冷静、锋利和洞察现实著称。',
+        chinese_name: 'George Orwell',
+        domain_category: 'Literature',
+        ai_archetype: 'Calm Observer',
+        brief_intro: 'Known for his calm, incisive, and perceptive understanding of reality.',
         portrait_asset: null,
         era_context: 'English Author and Journalist (1903-1950)',
-        preferred_topics: ['结构判断', '现实洞察', '个人选择'],
-        persona_traits: ['清醒', '克制', '直截了当'],
+        preferred_topics: ['Structural Assessment', 'Real-World Insight', 'Personal choice'],
+        persona_traits: ['Lucid', 'Restraint', 'Straightforward'],
         persona_profile: {
-          one_line_identity: '擅长拨开表象，看清局势真实结构。',
-          domain_category: '文学',
-          archetype: '观察者'
+          one_line_identity: 'Skilled at looking beyond appearances to understand the true structure of a situation.',
+          domain_category: 'Literature',
+          archetype: 'Observer'
         }
       },
-      answer: '如果你只是想逃离当下，那先别急着换。先分清你讨厌的是这条路，还是你现在的疲惫。'
+      answer: 'If you simply want to escape the present, do not rush to make a change. First, determine whether you dislike the path or are simply exhausted by where you are now.'
     },
     {
       person_slug: 'diogenes',
-      person_name: '第欧根尼',
-      reason: '适合在犹豫里帮你砍掉多余顾虑。',
+      person_name: 'Diogenes',
+      reason: 'Good for trimming away needless worries while you hesitate.',
       detail: {
         slug: 'diogenes',
         english_name: 'Diogenes',
-        chinese_name: '第欧根尼',
-        domain_category: '哲学',
-        ai_archetype: '反常识提问者',
-        brief_intro: '常用最尖锐的方式逼近本质。',
+        chinese_name: 'Diogenes',
+        domain_category: 'Philosophy',
+        ai_archetype: 'Contrarian Questioner',
+        brief_intro: 'Usually approaches the essence in the sharpest way.',
         portrait_asset: null,
         era_context: 'Greek Philosopher',
-        preferred_topics: ['自我真实', '欲望剥离', '选择本质'],
-        persona_traits: ['尖锐', '直接', '反套路'],
+        preferred_topics: ['Authenticity', 'Detachment from desire', 'The essence of choice'],
+        persona_traits: ['Sharp', 'Direct', 'Anti-Trope'],
         persona_profile: {
-          one_line_identity: '他会先拆掉伪问题，再逼你面对真正的选择。',
-          domain_category: '哲学',
-          archetype: '犬儒者'
+          one_line_identity: 'He first dismantles false questions, then forces you to face the real choice.',
+          domain_category: 'Philosophy',
+          archetype: 'Cynic'
         }
       },
-      answer: '别把体面的犹豫当成深思。真正的问题只有一个: 你到底想要什么，还是只是不敢承担后果。'
+      answer: 'Don’t mistake polished indecision for deep thought. There is only one real question: What do you really want, or are you simply afraid of the consequences?'
     },
     {
       person_slug: 'socrates',
-      person_name: '苏格拉底',
-      reason: '适合把复杂焦虑拆成可以判断的几个问题。',
+      person_name: 'Socrates',
+      reason: 'Good for breaking complex anxiety down into a few decidable questions.',
       detail: {
         slug: 'socrates',
         english_name: 'Socrates',
-        chinese_name: '苏格拉底',
-        domain_category: '哲学',
-        ai_archetype: '追问者',
-        brief_intro: '擅长通过追问找到问题的本质。',
+        chinese_name: 'Socrates',
+        domain_category: 'Philosophy',
+        ai_archetype: 'Questioner',
+        brief_intro: 'Skilled at uncovering the essence of a problem through probing questions.',
         portrait_asset: null,
         era_context: 'Athenian Philosopher',
-        preferred_topics: ['自我追问', '长期选择', '价值判断'],
-        persona_traits: ['理性', '追问', '清晰'],
+        preferred_topics: ['Self-Reflection', 'Long-Term Choice', 'Value Judgment'],
+        persona_traits: ['Reason', 'Keep questioning', 'Clear'],
         persona_profile: {
-          one_line_identity: '他会不停追问，直到你看清真正卡住你的点。',
-          domain_category: '哲学',
-          archetype: '提问者'
+          one_line_identity: 'He keeps asking questions until you identify what is truly holding you back.',
+          domain_category: 'Philosophy',
+          archetype: 'Questioner'
         }
       },
-      answer: '先不要问该不该换，先问你为什么想换。把恐惧、期待和现实分别列清楚，答案会自己浮出来。'
+      answer: 'Don’t ask whether you should switch yet; ask why you want to. Separate your fears, expectations, and reality, and the answer will emerge.'
     },
     {
       person_slug: 'coco-chanel',
-      person_name: '可可·香奈儿',
-      reason: '适合在选择里判断什么才真正属于你。',
+      person_name: 'Coco Chanel',
+      reason: 'Good for judging what truly belongs to you when choosing.',
       detail: {
         slug: 'coco-chanel',
         english_name: 'Coco Chanel',
-        chinese_name: '可可·香奈儿',
-        domain_category: '商业',
-        ai_archetype: '风格塑造者',
-        brief_intro: '强调取舍、识别和建立自我风格。',
+        chinese_name: 'Coco Chanel',
+        domain_category: 'Business',
+        ai_archetype: 'Style Shaper',
+        brief_intro: 'Emphasizes trade-offs, discernment, and developing a distinct personal style.',
         portrait_asset: null,
         era_context: 'French Fashion Designer',
-        preferred_topics: ['个人风格', '决断', '自我塑造'],
-        persona_traits: ['果断', '锋利', '独立'],
+        preferred_topics: ['Personal style', 'Resolve', 'Self-Definition'],
+        persona_traits: ['Decisive', 'Sharp', 'Independent'],
         persona_profile: {
-          one_line_identity: '她更在意这条路能否塑造真正属于你的样子。',
-          domain_category: '商业',
-          archetype: '塑造者'
+          one_line_identity: 'She cares more about whether this path can shape a version of you that is truly your own.',
+          domain_category: 'Business',
+          archetype: 'The Shaper'
         }
       },
-      answer: '别因为别人觉得安全就留下。真正适合你的方向，会让你越来越像你自己，而不是越来越像一个模板。'
+      answer: 'Don’t stay just because others consider it safe. The right path will make you increasingly yourself, not increasingly a carbon copy of everyone else.'
     }
   ];
 
@@ -7484,8 +8364,8 @@ async function openPreviewCardsPage(questionText = '') {
   removeHomeFigureEditor();
   document.body.classList.add('result-mode');
   inputSection.style.display = 'none';
-  loadingText.textContent = '智囊团正在洗牌';
-  loadingSub.textContent = '正在整理 4 位智囊的预览卡牌...';
+  loadingText.textContent = 'Shuffling the deck';
+  loadingSub.textContent = 'Organizing 4 Expert preview cards...';
   loading.classList.add('show');
   cardsEl.classList.remove('show');
   resetBtn.classList.remove('show');
@@ -7496,7 +8376,7 @@ async function openPreviewCardsPage(questionText = '') {
   renderCards(previewCards);
   cardsEl.classList.add('show');
   resetBtn.classList.add('show');
-  showStatus('当前为本地预览模式：页面不请求 API，适合直接调试布局与交互。切回接口模式可用 `?mode=api`。', 'success');
+  showStatus('Interactive preview · Responses are examples. Live AI replies require a connected backend.', 'success');
 }
 
 async function fetchAllPeopleForAdjuster() {
@@ -7516,7 +8396,7 @@ function buildAdjustPersonViewModel(person) {
   const [posterColor, posterColorSoft] = getPosterPalette(person.english_name, person.chinese_name);
   return {
     slug: person.slug,
-    name: person.chinese_name || person.english_name || person.slug,
+    name: person.english_name || person.chinese_name || person.slug,
     englishName: person.english_name || '',
     domain: person.domain_category || '',
     posterColor,
@@ -7529,13 +8409,13 @@ function buildPeoplePageViewModel(person, index = 0) {
   const staticConfig = CELEBRITIES[person.chinese_name] || {};
   const [posterColor, posterColorSoft] = getPosterPalette(person.english_name, person.chinese_name);
   const portraitAdjust = getPortraitAdjustments(person.slug);
-  const name = person.chinese_name || person.english_name || person.slug;
-  const reason = person.brief_intro || '点击进入单独对话。';
+  const name = person.english_name || person.chinese_name || person.slug;
+  const reason = person.brief_intro || 'Click to start a private chat.';
   return {
     slug: person.slug,
     name,
     englishName: person.english_name || '',
-    domain: person.domain_category || '智囊',
+    domain: person.domain_category || 'Think Tank',
     archetype: person.ai_archetype || '',
     intro: person.brief_intro || '',
     era: (person.era_context || person.domain_category || 'THINK TANK').toUpperCase(),
@@ -7568,14 +8448,18 @@ function sortPeopleForDisplay(people) {
 }
 
 function setNavActive(target) {
-  document.querySelectorAll('.nav-links a[data-view]').forEach((link) => {
+  document.querySelectorAll('.nav-links a[data-view], #loginNavLink').forEach((link) => {
     link.classList.toggle('is-active', link.dataset.view === target);
   });
 }
 
+function hideSitePages() {
+  Object.values(SITE_PAGES).forEach((page) => page?.classList.remove('show'));
+}
+
 function showHomePage() {
-  document.body.classList.remove('people-mode');
-  peoplePage?.classList.remove('show');
+  document.body.classList.remove('people-mode', 'subpage-mode');
+  hideSitePages();
   closePersonChat();
   setNavActive('home');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -7583,7 +8467,7 @@ function showHomePage() {
 
 async function loadPeoplePage() {
   if (state.people.length) return;
-  peopleGrid.innerHTML = '<div class="people-empty">正在加载人物卡牌...</div>';
+  peopleGrid.innerHTML = '<div class="people-empty">Loading persona cards...</div>';
   const people = await fetchAllPeopleForAdjuster();
   state.people = sortPeopleForDisplay(people.map(buildPeoplePageViewModel));
   state.filteredPeople = state.people;
@@ -7592,7 +8476,7 @@ async function loadPeoplePage() {
 function renderPeopleGrid() {
   if (!peopleGrid) return;
   if (!state.filteredPeople.length) {
-    peopleGrid.innerHTML = '<div class="people-empty">没有找到匹配的人物。</div>';
+    peopleGrid.innerHTML = '<div class="people-empty">No matching personas found.</div>';
     return;
   }
   peopleGrid.innerHTML = state.filteredPeople.map((person, index) => {
@@ -7613,7 +8497,7 @@ function renderPeopleGrid() {
           <div class="card-shell">
             <div class="card-face card-front">
               <div class="poster-meta">
-                <div class="poster-kicker">${escapeHTML(person.era)}</div>
+                <div class="poster-kicker" title="${escapeHTML(person.era)}">${escapeHTML(person.era)}</div>
                 <div class="poster-serial">${serial}</div>
               </div>
               <div class="poster-title-block">
@@ -7624,7 +8508,7 @@ function renderPeopleGrid() {
               <img class="poster-cutout echo" src="${person.image}" alt="">
               <img class="poster-cutout main" src="${person.image}" alt="${escapeHTML(person.name)}">
               <div class="poster-footer">
-                <div class="poster-caption">${escapeHTML(person.tags[0] || person.domain || '智囊')}</div>
+                <div class="poster-caption">${escapeHTML(person.tags[0] || person.domain || 'Think Tank')}</div>
                 <div class="poster-flip">Chat</div>
               </div>
             </div>
@@ -7638,15 +8522,256 @@ function renderPeopleGrid() {
 async function showPeoplePage() {
   resetResultOnly();
   document.body.classList.add('people-mode');
+  document.body.classList.remove('subpage-mode');
+  hideSitePages();
   peoplePage?.classList.add('show');
   setNavActive('people');
   try {
     await loadPeoplePage();
     renderPeopleGrid();
   } catch (error) {
-    peopleGrid.innerHTML = `<div class="people-empty">${escapeHTML(normalizeApiErrorMessage(error.message || '人物加载失败。'))}</div>`;
+    peopleGrid.innerHTML = `<div class="people-empty">${escapeHTML(normalizeApiErrorMessage(error.message || 'Failed to load character.'))}</div>`;
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openSitePage(view) {
+  resetResultOnly();
+  document.body.classList.remove('people-mode');
+  document.body.classList.add('subpage-mode');
+  hideSitePages();
+  closePersonChat();
+  SITE_PAGES[view]?.classList.add('show');
+  setNavActive(view);
+  if (view === 'stories') {
+    requestAnimationFrame(() => renderStoryLibrary());
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+let activeThemeIndex = 1;
+
+function renderThemes() {
+  if (!themeGrid) return;
+  themeGrid.innerHTML = THEMES.map((theme, index) => `
+      <button class="theme-row${index === activeThemeIndex ? ' is-active' : ''}" type="button" data-theme="${theme.id}" data-theme-index="${index}">
+        <span class="theme-title">${escapeHTML(theme.title)}</span>
+        <span class="theme-mark" aria-hidden="true"><span>→</span></span>
+        <span class="theme-num">${String(index + 1).padStart(2, '0')}</span>
+      </button>
+    `).join('');
+  syncThemeAside();
+}
+
+function syncThemeAside() {
+  const theme = THEMES[activeThemeIndex];
+  if (!theme) return;
+  const title = document.getElementById('themeAsideTitle');
+  const copy = document.getElementById('themeAsideCopy');
+  const meta = document.getElementById('themeAsideMeta');
+  const count = state.people.filter((person) => String(person.domain || '').includes(theme.query)).length;
+  if (title) title.textContent = theme.title;
+  if (copy) copy.textContent = theme.copy;
+  if (meta) meta.textContent = count ? `${count} people you can ask` : 'Click this row to explore this personality type.';
+}
+
+themeGrid?.addEventListener('pointerover', (event) => {
+  const row = event.target.closest('[data-theme-index]');
+  if (!row || !themeGrid.contains(row)) return;
+  const index = Number(row.dataset.themeIndex);
+  if (index === activeThemeIndex) return;
+  activeThemeIndex = index;
+  themeGrid.querySelectorAll('.theme-row').forEach((item) => {
+    item.classList.toggle('is-active', Number(item.dataset.themeIndex) === index);
+  });
+  syncThemeAside();
+});
+
+async function showThemesPage() {
+  openSitePage('themes');
+  try {
+    await loadPeoplePage();
+  } catch (error) {
+    // Theme cards still work without counts.
+  }
+  renderThemes();
+}
+
+const STORY_HEADLINES = [
+  'Is it time to begin again?',
+  'What if no one needs what I love?',
+  'Can we disagree and stay close?',
+  'When is it too soon to give up?',
+  'What if I chose for myself?',
+  'A better job. An emptier life?',
+  'What is freedom worth to me?',
+  'Which beginning should I follow?'
+];
+const STORY_ADVISOR_GROUPS = [0, 1, 2, 3, 4, 5, 6, 3];
+let storyCommunityScene = null;
+let selectedCommunityStory = null;
+function updateCommunityStory(user, advisor) {
+  selectedCommunityStory = user;
+  document.getElementById('storyPreviewIndex').textContent = advisor.name;
+  document.getElementById('storyPreviewHeadline').textContent = user.headline;
+  document.getElementById('storyPreviewName').textContent = user.name;
+  document.getElementById('storyPreviewQuestion').textContent = user.context;
+  document.getElementById('storySelectedAvatar').src = user.avatar;
+}
+function renderStoryCommunity(logicalIndex) {
+  const advisor = window.STORY_COMMUNITY?.advisors[STORY_ADVISOR_GROUPS[logicalIndex]];
+  if (!advisor || !window.StoryCommunityScene) return;
+  if (!storyCommunityScene) storyCommunityScene = new window.StoryCommunityScene(storyLibrary, updateCommunityStory);
+  storyCommunityScene.setAdvisor(advisor);
+  storyCommunityScene.scheduleLayout();
+}
+const STORY_LOOP_COPIES = 5;
+let storyOriginCount = 0;
+let storyCursor = 4;
+let storyLoopReady = false;
+let storySettleTimer = 0;
+let storyWheelLocked = false;
+let storyPointerStartX = null;
+let storySuppressClick = false;
+
+function getStoryCards() {
+  return Array.from(storyLibrary?.querySelectorAll('.story-card') || []);
+}
+
+function ensureStoryLoop() {
+  const stage = document.getElementById('storyStage');
+  if (!stage || storyLoopReady) return;
+  const originals = Array.from(stage.children).filter((node) => node.classList?.contains('story-card'));
+  storyOriginCount = originals.length;
+  if (!storyOriginCount) return;
+  const logicalStart = ((storyCursor % storyOriginCount) + storyOriginCount) % storyOriginCount;
+  const fragment = document.createDocumentFragment();
+  for (let copy = 0; copy < STORY_LOOP_COPIES; copy += 1) {
+    originals.forEach((card, index) => {
+      const clone = card.cloneNode(true);
+      clone.dataset.storyIndex = String(index);
+      fragment.appendChild(clone);
+    });
+  }
+  stage.replaceChildren(fragment);
+  storyCursor = storyOriginCount * 2 + logicalStart;
+  storyLoopReady = true;
+}
+
+function settleStoryCursor() {
+  const count = storyOriginCount;
+  if (!count) return;
+  const min = count;
+  const max = count * (STORY_LOOP_COPIES - 1) - 1;
+  if (storyCursor >= min && storyCursor <= max) return;
+  const logical = ((storyCursor % count) + count) % count;
+  storyCursor = count * 2 + logical;
+  renderStoryLibrary(true);
+}
+
+function renderStoryLibrary(instant = false) {
+  ensureStoryLoop();
+  const cards = getStoryCards();
+  const stage = document.getElementById('storyStage');
+  if (!storyLibrary || !stage || !cards.length || !storyOriginCount) return;
+  const cardWidth = cards[0].offsetWidth || 200;
+  const cardGap = parseFloat(getComputedStyle(cards[0]).marginRight) || -28;
+  const step = cardWidth + cardGap;
+  stage.classList.toggle('is-instant', instant);
+  stage.style.transform = `translate3d(${-(storyCursor * step + cardWidth / 2)}px, -50%, 0)`;
+  if (instant) stage.getBoundingClientRect();
+  cards.forEach((card, index) => {
+    const isActive = index === storyCursor;
+    card.style.zIndex = isActive ? '80' : String(index + 1);
+    card.style.transform = `translateZ(${isActive ? 48 : 4}px)`;
+    card.classList.toggle('is-active', index === storyCursor);
+    card.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+  });
+
+  const logicalIndex = ((storyCursor % storyOriginCount) + storyOriginCount) % storyOriginCount;
+  renderStoryCommunity(logicalIndex);
+  if (storyDots) storyDots.innerHTML = Array.from({length: storyOriginCount}, (_, index) => `<button type="button" data-story-index="${index}" aria-label="Explore ${window.STORY_COMMUNITY?.advisors[STORY_ADVISOR_GROUPS[index]]?.name || 'advisor'}" aria-current="${index === logicalIndex}"></button>`).join('');
+
+}
+
+function setActiveStory(index) {
+  ensureStoryLoop();
+  const total = getStoryCards().length;
+  if (!total) return;
+  storyCursor = ((index % total) + total) % total;
+  renderStoryLibrary(false);
+  window.clearTimeout(storySettleTimer);
+  storySettleTimer = window.setTimeout(settleStoryCursor, 720);
+}
+
+document.querySelectorAll('[data-story-jump]').forEach(button => button.addEventListener('click', () => {
+  ensureStoryLoop();
+  setActiveStory(Math.floor(storyCursor / storyOriginCount) * storyOriginCount + Number(button.dataset.storyJump));
+}));
+storyPrev?.addEventListener('click', () => setActiveStory(storyCursor - 1));
+storyNext?.addEventListener('click', () => setActiveStory(storyCursor + 1));
+storyDots?.addEventListener('click', (event) => {
+  const dot = event.target.closest('[data-story-index]');
+  if (dot) setActiveStory(Math.floor(storyCursor / storyOriginCount) * storyOriginCount + Number(dot.dataset.storyIndex));
+});
+storyLibrary?.addEventListener('wheel', (event) => {
+  if (Math.abs(event.deltaX) < 18 || Math.abs(event.deltaX) < Math.abs(event.deltaY)) return;
+  event.preventDefault();
+  if (storyWheelLocked) return;
+  storyWheelLocked = true;
+  setActiveStory(storyCursor + (event.deltaX > 0 ? 1 : -1));
+  setTimeout(() => { storyWheelLocked = false; }, 520);
+}, { passive: false });
+storyLibrary?.addEventListener('pointerdown', (event) => {
+  if (event.target.closest('.story-meta, .story-intro, .story-user-tile')) return;
+  storyPointerStartX = event.clientX;
+});
+storyLibrary?.addEventListener('pointerup', (event) => {
+  if (storyPointerStartX === null) return;
+  const distance = event.clientX - storyPointerStartX;
+  storyPointerStartX = null;
+  if (Math.abs(distance) > 42) {
+    storySuppressClick = true;
+    setActiveStory(storyCursor + (distance < 0 ? 1 : -1));
+    setTimeout(() => { storySuppressClick = false; }, 120);
+  }
+});
+storyLibrary?.addEventListener('pointercancel', () => {
+  storyPointerStartX = null;
+});
+window.addEventListener('resize', () => {
+  if (storiesPage?.classList.contains('show')) renderStoryLibrary();
+});
+
+function readSession() {
+  try {
+    return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+  } catch (error) {
+    return null;
+  }
+}
+
+function renderLoginState() {
+  const session = readSession();
+  const loggedIn = Boolean(session?.name && session?.email);
+  if (loginNavLink) loginNavLink.textContent = loggedIn ? session.name : 'Log In';
+  if (!loginForm || !loginAccount) return;
+  loginForm.hidden = loggedIn;
+  loginAccount.hidden = !loggedIn;
+  if (loggedIn) {
+    loginAccount.innerHTML = `
+      <div>Signed in</div>
+      <strong>${escapeHTML(session.name)}</strong>
+      <div>${escapeHTML(session.email)}</div>
+      <button class="login-logout" id="logoutBtn" type="button">Log out</button>
+    `;
+  }
+}
+
+function showLoginPage() {
+  openSitePage('login');
+  if (loginError) loginError.textContent = '';
+  renderLoginState();
 }
 
 function filterPeoplePage() {
@@ -7664,15 +8789,15 @@ function renderPersonChatMessages() {
   if (!state.personChat.messages.length) {
     personChatMessages.innerHTML = `
       <div class="person-message assistant">
-        <div class="person-message-role">${escapeHTML(state.selectedPerson?.name || '智囊')}</div>
-        <div class="person-message-bubble">你可以直接问我一个具体问题。</div>
+        <div class="person-message-role">${escapeHTML(state.selectedPerson?.name || 'Think Tank')}</div>
+        <div class="person-message-bubble">You can ask me a specific question.</div>
       </div>
     `;
     return;
   }
   personChatMessages.innerHTML = state.personChat.messages.map((message) => `
     <div class="person-message ${message.role === 'user' ? 'user' : 'assistant'}">
-      <div class="person-message-role">${message.role === 'user' ? '你' : escapeHTML(state.selectedPerson?.name || '智囊')}</div>
+      <div class="person-message-role">${message.role === 'user' ? 'You' : escapeHTML(state.selectedPerson?.name || 'Think Tank')}</div>
       <div class="person-message-bubble">${escapeHTML(message.content)}</div>
     </div>
   `).join('');
@@ -7684,7 +8809,7 @@ function renderPersonChatMessages() {
 function findPendingAssistantMessage() {
   for (let index = state.personChat.messages.length - 1; index >= 0; index -= 1) {
     const message = state.personChat.messages[index];
-    if (message.role === 'assistant' && message.content === '正在思考...') {
+    if (message.role === 'assistant' && message.content === 'Thinking...') {
       return message;
     }
   }
@@ -7703,8 +8828,8 @@ function openPersonChat(slug) {
   const adjust = person.portraitAdjust || { scale: 1, x: 0, y: 0, flip: false };
   personChatName.textContent = person.name;
   personChatMeta.textContent = [person.domain, person.archetype, person.era].filter(Boolean).join(' · ');
-  personChatTitle.textContent = `和 ${person.name} 对话`;
-  personChatHint.textContent = person.intro || '向这位智囊提一个具体问题。';
+  personChatTitle.textContent = `Talk with ${person.name}`;
+  personChatHint.textContent = person.intro || 'Ask this advisor a specific question.';
   personChatPortrait.src = person.image;
   personChatPortrait.alt = person.name;
   personChatSide.style.setProperty('--portrait-scale', String(adjust.scale));
@@ -7729,11 +8854,11 @@ async function sendPersonChatMessage(question) {
   state.personChat.loading = true;
   personChatSend.disabled = true;
   state.personChat.messages.push({ role: 'user', content: clean });
-  state.personChat.messages.push({ role: 'assistant', content: '正在思考...' });
+  state.personChat.messages.push({ role: 'assistant', content: 'Thinking...' });
   renderPersonChatMessages();
   try {
     const history = state.personChat.messages
-      .filter((message) => message.content !== '正在思考...')
+      .filter((message) => message.content !== 'Thinking...')
       .slice(-8)
       .map((message) => ({ role: message.role, content: message.content }));
     const response = await apiFetch('/chat/respond', {
@@ -7748,13 +8873,13 @@ async function sendPersonChatMessage(question) {
     state.personChat.conversationId = response.conversation_id || null;
     const pending = findPendingAssistantMessage();
     if (pending) {
-      pending.content = response.answer || '我暂时没有想好。';
+      pending.content = response.answer || 'I haven’t decided yet.';
     } else {
-      state.personChat.messages.push({ role: 'assistant', content: response.answer || '我暂时没有想好。' });
+      state.personChat.messages.push({ role: 'assistant', content: response.answer || 'I haven’t decided yet.' });
     }
   } catch (error) {
     const pending = findPendingAssistantMessage();
-    const text = normalizeApiErrorMessage(error.message || '回答生成失败。');
+    const text = normalizeApiErrorMessage(error.message || 'Failed to generate the answer.');
     if (pending) pending.content = text;
     else state.personChat.messages.push({ role: 'assistant', content: text });
   } finally {
@@ -7807,11 +8932,11 @@ function initAdjustmentWorkbench() {
       <aside class="adjust-panel adjust-sidebar">
         <div class="adjust-head">
           <div class="adjust-kicker">Adjust</div>
-          <div class="adjust-title">人物调图工作台</div>
-          <div class="adjust-sub">点选人物后，在中间预览里拖动人物调位置，拖四个角调大小。所有改动会自动保存到本机。</div>
+          <div class="adjust-title">Character image workspace</div>
+          <div class="adjust-sub">After selecting a character, drag them in the central preview to reposition them, or drag a corner to resize. All changes are saved automatically on this device.</div>
         </div>
         <div class="adjust-search-wrap">
-          <input class="adjust-search" id="adjustSearch" type="text" placeholder="搜索人物...">
+          <input class="adjust-search" id="adjustSearch" type="text" placeholder="Search People...">
         </div>
         <div class="adjust-list" id="adjustList"></div>
       </aside>
@@ -7819,11 +8944,11 @@ function initAdjustmentWorkbench() {
       <section class="adjust-panel adjust-stage-panel">
         <div class="adjust-toolbar">
           <div class="adjust-tabs">
-            <button class="adjust-tab is-active" id="adjustCardTab" type="button">卡牌人物</button>
-            <button class="adjust-tab" id="adjustAvatarTab" type="button">圆桌头像</button>
-            <button class="adjust-tab" id="adjustBatchTab" type="button">批量铺开</button>
+            <button class="adjust-tab is-active" id="adjustCardTab" type="button">Character Cards</button>
+            <button class="adjust-tab" id="adjustAvatarTab" type="button">Roundtable Avatar</button>
+            <button class="adjust-tab" id="adjustBatchTab" type="button">Expand at Scale</button>
           </div>
-          <div class="adjust-save-state" id="adjustSaveState">正在加载人物...</div>
+          <div class="adjust-save-state" id="adjustSaveState">Loading personas...</div>
         </div>
         <div class="adjust-stage" id="adjustStage"></div>
       </section>
@@ -7835,28 +8960,28 @@ function initAdjustmentWorkbench() {
         </div>
         <div class="adjust-controls">
           <div class="adjust-row">
-            <div class="adjust-label"><span>大小</span><span id="adjustScaleValue">1.00</span></div>
+            <div class="adjust-label"><span>Size</span><span id="adjustScaleValue">1.00</span></div>
             <input id="adjustScale" type="range" min="0.35" max="3" step="0.01">
           </div>
           <div class="adjust-row">
-            <div class="adjust-label"><span>左右</span><span id="adjustXValue">0px</span></div>
+            <div class="adjust-label"><span>Left and Right</span><span id="adjustXValue">0px</span></div>
             <input id="adjustX" type="range" min="-220" max="220" step="1">
           </div>
           <div class="adjust-row">
-            <div class="adjust-label"><span>上下</span><span id="adjustYValue">0px</span></div>
+            <div class="adjust-label"><span>Up/down</span><span id="adjustYValue">0px</span></div>
             <input id="adjustY" type="range" min="-220" max="220" step="1">
           </div>
           <label class="adjust-row" id="adjustFlipRow">
-            <div class="adjust-label"><span>左右翻转</span><span id="adjustFlipValue">否</span></div>
+            <div class="adjust-label"><span>Flip horizontally</span><span id="adjustFlipValue">No</span></div>
             <input id="adjustFlip" type="checkbox">
           </label>
         </div>
         <div class="adjust-actions">
-          <button class="adjust-btn" id="adjustResetBtn" type="button">重置当前</button>
-          <button class="adjust-btn" id="adjustExportBtn" type="button">复制配置</button>
-          <button class="adjust-btn primary" id="adjustBackBtn" type="button">回到原页面</button>
-          <button class="adjust-btn" id="adjustClearBtn" type="button">清空本地</button>
-          <textarea class="adjust-output" id="adjustOutput" readonly placeholder="点击“复制配置”会生成完整配置。"></textarea>
+          <button class="adjust-btn" id="adjustResetBtn" type="button">Reset current</button>
+          <button class="adjust-btn" id="adjustExportBtn" type="button">Copy Configuration</button>
+          <button class="adjust-btn primary" id="adjustBackBtn" type="button">Return to the original page</button>
+          <button class="adjust-btn" id="adjustClearBtn" type="button">Clear Local Storage</button>
+          <textarea class="adjust-output" id="adjustOutput" readonly placeholder="Click ”Copy Configuration” to generate the full configuration."></textarea>
         </div>
       </aside>
     </main>
@@ -7939,7 +9064,7 @@ function initAdjustmentWorkbench() {
       };
       saveAvatarAdjustments();
     }
-    ui.saveState.textContent = '已保存到本机';
+    ui.saveState.textContent = 'Saved locally';
     ui.output.value = buildAdjustmentExport();
   }
 
@@ -8021,7 +9146,7 @@ function initAdjustmentWorkbench() {
     ui.scaleValue.textContent = Number(adjustment.scale).toFixed(2);
     ui.xValue.textContent = `${Math.round(adjustment.x)}px`;
     ui.yValue.textContent = `${Math.round(adjustment.y)}px`;
-    ui.flipValue.textContent = adjustment.flip ? '是' : '否';
+    ui.flipValue.textContent = adjustment.flip ? 'Yes' : 'No';
     ui.flipRow.style.display = workbench.mode === 'card' ? 'block' : 'none';
     ui.cardTab.classList.toggle('is-active', workbench.mode === 'card');
     ui.avatarTab.classList.toggle('is-active', workbench.mode === 'avatar');
@@ -8036,7 +9161,7 @@ function initAdjustmentWorkbench() {
     }
     const person = getSelectedPerson();
     if (!person) {
-      ui.stage.innerHTML = '<div class="adjust-sub">没有可调整的人物。</div>';
+      ui.stage.innerHTML = '<div class="adjust-sub">No personas available to adjust.</div>';
       return;
     }
     const adjustment = getCurrentAdjustment();
@@ -8062,7 +9187,7 @@ function initAdjustmentWorkbench() {
             <span class="adjust-handle sw" data-corner="sw"></span>
             <span class="adjust-handle se" data-corner="se"></span>
           </div>
-          <div class="adjust-sub">圆桌头像预览</div>
+          <div class="adjust-sub">Roundtable Avatar Preview</div>
         </div>
       `;
     }
@@ -8072,17 +9197,17 @@ function initAdjustmentWorkbench() {
   function renderBatchStage() {
     const people = workbench.filtered;
     if (!people.length) {
-      ui.stage.innerHTML = '<div class="adjust-sub">没有符合条件的人物。</div>';
+      ui.stage.innerHTML = '<div class="adjust-sub">No personas meet the criteria.</div>';
       return;
     }
-    const modeLabel = workbench.mode === 'card' ? '卡牌人物' : '圆桌头像';
+    const modeLabel = workbench.mode === 'card' ? 'Character Cards' : 'Roundtable Avatar';
     ui.stage.innerHTML = `
       <div class="adjust-batch-head">
         <div>
-          <div class="adjust-batch-title">比约克下面 · ${modeLabel}</div>
-          <div class="adjust-sub">直接拖每张图调整位置，拖四个角调整大小。改动会自动保存到本机。</div>
+          <div class="adjust-batch-title">Under Bjork · ${modeLabel}</div>
+          <div class="adjust-sub">Drag each image to reposition it, or drag a corner to resize it. Changes are saved automatically on this device.</div>
         </div>
-        <div class="adjust-batch-count">${people.length} 位</div>
+        <div class="adjust-batch-count">${people.length} people</div>
       </div>
       <div class="adjust-batch-grid">
         ${people.map((person) => {
@@ -8323,7 +9448,7 @@ function initAdjustmentWorkbench() {
   });
   ui.batchTab.addEventListener('click', () => {
     workbench.view = workbench.view === 'batch' ? 'single' : 'batch';
-    ui.batchTab.textContent = workbench.view === 'batch' ? '批量铺开' : '单个预览';
+    ui.batchTab.textContent = workbench.view === 'batch' ? 'Expand at Scale' : 'Single Preview';
     applyFilter();
   });
   ui.scale.addEventListener('input', () => updateAdjustment({ scale: Number(ui.scale.value) }));
@@ -8364,7 +9489,7 @@ function initAdjustmentWorkbench() {
     renderStage();
     refreshControls();
     ui.output.value = buildAdjustmentExport();
-    ui.saveState.textContent = '已清空本地调整';
+    ui.saveState.textContent = 'Local adjustments cleared';
   });
 
   fetchAllPeopleForAdjuster()
@@ -8372,7 +9497,7 @@ function initAdjustmentWorkbench() {
       workbench.people = people.map(buildAdjustPersonViewModel);
       workbench.filtered = getVisiblePeople();
       workbench.selectedSlug = workbench.filtered[0]?.slug || workbench.people[0]?.slug || '';
-      ui.saveState.textContent = `已加载 ${workbench.people.length} 位人物，批量页 ${workbench.filtered.length} 位`;
+      ui.saveState.textContent = `Loaded ${workbench.people.length} people, batch page ${workbench.filtered.length} people`;
       renderList();
       renderStage();
       refreshControls();
@@ -8380,8 +9505,8 @@ function initAdjustmentWorkbench() {
       window.__zhinangAdjustmentExport = buildAdjustmentExport;
     })
     .catch((error) => {
-      ui.saveState.textContent = normalizeApiErrorMessage(error.message || '人物加载失败');
-      ui.stage.innerHTML = '<div class="adjust-sub">加载人物失败，请确认后端服务正在运行。</div>';
+      ui.saveState.textContent = normalizeApiErrorMessage(error.message || 'Failed to load character');
+      ui.stage.innerHTML = '<div class="adjust-sub">Failed to load characters. Please make sure the backend service is running.</div>';
     });
 }
 
@@ -8390,10 +9515,10 @@ function buildAnswerRequestQuestion(question) {
 }
 
 function buildRoundtableRequestQuestion(question) {
-  return `${question}\n\n${ROUNDTABLE_INSTRUCTION}`;
+  return String(question || '').trim();
 }
 
-function normalizeShortSpeech(value, limit = 20, fallback = '我先不回答。', speakerName = '') {
+function normalizeShortSpeech(value, limit = ROUNDTABLE_SPEECH_LIMIT, fallback = 'I won’t answer yet.', speakerName = '') {
   let text = String(value || '')
     .replace(/\s+/g, ' ')
     .replace(/^["“”']+|["“”']+$/g, '')
@@ -8402,7 +9527,7 @@ function normalizeShortSpeech(value, limit = 20, fallback = '我先不回答。'
   if (name && text.startsWith(name)) {
     text = text.slice(name.length).replace(/^[：:，,、\s-]+/, '').trim();
   }
-  if (!text || /^(沉默|不回答|pass|skip)$/i.test(text)) {
+  if (!text || /^(Silence|No answer|pass|skip)$/i.test(text)) {
     return '';
   }
 
@@ -8410,17 +9535,14 @@ function normalizeShortSpeech(value, limit = 20, fallback = '我先不回答。'
   if (!normalized || (name && normalized === name)) {
     return '';
   }
-  const completeMatches = normalized.match(/[^。！？!?；;]+[。！？!?；;]/g) || [];
-  const complete = completeMatches
-    .map((item) => item.trim())
-    .find((item) => item.length <= limit);
 
-  if (complete) return complete;
-  if (normalized.length <= limit && /[。！？!?；;]$/.test(normalized)) return normalized;
-
-  const clause = normalized.split(/[，,、：:]/).map((item) => item.trim()).find((item) => item && item.length <= limit - 1);
-  if (clause) return `${clause.replace(/[。！？!?；;]$/, '')}。`;
-
+  const completeMatch = normalized.match(/[^.!?]*[.!?]/);
+  if (completeMatch) {
+    return completeMatch[0].trim();
+  }
+  if (normalized.length <= limit + 8) {
+    return /[.!?]$/.test(normalized) ? normalized : `${normalized}.`;
+  }
   return fallback;
 }
 
@@ -8430,7 +9552,7 @@ function getRoundtableCard(slug) {
 
 function buildRoundtableHistory() {
   return (state.roundtable?.messages || [])
-    .filter((message) => message.role === 'user' || message.role === 'assistant')
+    .filter((message) => message.role === 'user' || message.type === 'advisor')
     .slice(-6)
     .map((message) => ({
       role: message.role,
@@ -8442,7 +9564,7 @@ function buildPreviewRoundtableDiscussion(question) {
   const answers = (state.currentCards || []).map((card) => ({
     person_slug: card.slug,
     person_name: card.name,
-    answer: normalizeShortSpeech(card.answer || '先看清真正想要。', 20, '', card.name),
+    answer: normalizeShortSpeech(card.answer || 'First clarify what you truly want.', ROUNDTABLE_SPEECH_LIMIT, '', card.name),
     citations: []
   }));
 
@@ -8450,7 +9572,8 @@ function buildPreviewRoundtableDiscussion(question) {
     conversation_id: 'preview-roundtable',
     selected_people: answers.map((item) => item.person_slug),
     answers,
-    synthesis: normalizeShortSpeech(`先做一小步验证。`, 20, '先做一小步验证。')
+    invited: [],
+    synthesis: normalizeShortSpeech(`Start with a small test.`, ROUNDTABLE_SPEECH_LIMIT, 'Start with a small test.')
   };
 }
 
@@ -8458,7 +9581,9 @@ function renderRoundtableSpeakers() {
   return (state.currentCards || []).map((card) => `
     <div class="roundtable-speaker${state.roundtable?.activeSpeakerSlug === card.slug ? ' is-speaking' : ''}">
       <div class="roundtable-avatar" style="${getAvatarStyle(card.slug)}">
-        <img src="${card.image}" alt="${escapeHTML(card.name)}">
+        <div class="roundtable-avatar-canvas">
+          <img src="${card.image}" alt="${escapeHTML(card.name)}">
+        </div>
       </div>
       <div class="roundtable-speaker-name">${escapeHTML(card.name)}</div>
     </div>
@@ -8468,7 +9593,7 @@ function renderRoundtableSpeakers() {
 function renderRoundtableMessages() {
   const messages = state.roundtable?.messages || [];
   if (!messages.length && !state.roundtable?.loading) {
-    return '<div class="roundtable-message is-system"><div class="roundtable-bubble"><div class="roundtable-message-text">进入圆桌后，他们会逐个短句发言。</div></div></div>';
+    return '<div class="roundtable-message is-system"><div class="roundtable-bubble"><div class="roundtable-message-text">Once you enter the round table, each of them will say one complete short sentence.</div></div></div>';
   }
 
   return messages.map((message) => {
@@ -8486,7 +9611,7 @@ function renderRoundtableMessages() {
       return `
         <div class="roundtable-message is-system">
           <div class="roundtable-bubble">
-            <div class="roundtable-message-name">${message.type === 'error' ? '错误' : '主持总结'}</div>
+            <div class="roundtable-message-name">${message.type === 'error' ? 'Error' : (message.kind === 'invite' ? 'Host' : 'Host summary')}</div>
             <div class="roundtable-message-text">${escapeHTML(message.text)}</div>
           </div>
         </div>
@@ -8497,10 +9622,10 @@ function renderRoundtableMessages() {
     return `
       <div class="roundtable-message">
         <div class="roundtable-message-avatar" style="${getAvatarStyle(message.slug)}">
-          ${card?.image ? `<img src="${card.image}" alt="${escapeHTML(message.name)}">` : ''}
+          ${card?.image ? `<div class="roundtable-avatar-canvas"><img src="${card.image}" alt="${escapeHTML(message.name)}"></div>` : ''}
         </div>
         <div class="roundtable-bubble">
-          <div class="roundtable-message-name">${escapeHTML(message.name || '智囊')}</div>
+          <div class="roundtable-message-name">${escapeHTML(message.name || 'Think Tank')}</div>
           <div class="roundtable-message-text">${escapeHTML(message.text)}</div>
         </div>
       </div>
@@ -8508,7 +9633,7 @@ function renderRoundtableMessages() {
   }).join('') + (state.roundtable?.loading ? `
     <div class="roundtable-message is-system">
       <div class="roundtable-bubble">
-        <div class="roundtable-typing"><span>思考中</span><i></i><i></i><i></i></div>
+        <div class="roundtable-typing"><span>Thinking</span><i></i><i></i><i></i></div>
       </div>
     </div>
   ` : '');
@@ -8529,7 +9654,7 @@ function syncRoundtableView() {
   speakers.innerHTML = renderRoundtableSpeakers();
   messages.innerHTML = renderRoundtableMessages();
   button.disabled = Boolean(roundtable.loading);
-  button.textContent = roundtable.loading ? '圆桌发言中' : '进入圆桌';
+  button.textContent = roundtable.loading ? 'Roundtable discussion in progress' : 'Enter the round table';
   if (inputEl) {
     inputEl.disabled = Boolean(roundtable.loading);
   }
@@ -8545,28 +9670,62 @@ function syncRoundtableView() {
 }
 
 async function fetchRoundtableDiscussion(question) {
-  if (PREVIEW_CARD_MODE) {
-    await wait(700);
-    return buildPreviewRoundtableDiscussion(question);
-  }
-
+  if (window.ASK_SOCRATES_PREVIEW) return buildPreviewRoundtableDiscussion(question);
   return apiFetch('/chat/group', {
     method: 'POST',
     body: {
       question: buildRoundtableRequestQuestion(question),
       person_slugs: (state.currentCards || []).map((card) => card.slug).filter(Boolean),
-      top_k: Math.min(Math.max((state.currentCards || []).length, 1), 5),
+      top_k: Math.min(Math.max((state.currentCards || []).length, 1), 6),
       history: buildRoundtableHistory(),
       conversation_id: state.roundtable?.conversationId || null
     }
   });
 }
 
+async function ensureRoundtableGuest(invite) {
+  const slug = invite?.person_slug;
+  if (!slug || getRoundtableCard(slug)) return getRoundtableCard(slug);
+
+  const detail = await apiFetch(`/people/${encodeURIComponent(slug)}`);
+  const card = buildCardViewModel({
+    person_slug: slug,
+    person_name: invite.person_name || detail.chinese_name,
+    reason: invite.host_line || 'Invited to join the discussion'
+  }, detail);
+  state.currentCards = [...(state.currentCards || []), card];
+  return card;
+}
+
 async function playRoundtableResponse(response, shouldSummarize = false) {
+  const invited = response.invited || [];
+  for (const invite of invited) {
+    try {
+      await ensureRoundtableGuest(invite);
+    } catch (error) {
+      console.warn('Failed to add roundtable guest', invite?.person_slug, error);
+    }
+    const hostLine = normalizeShortSpeech(
+      invite.host_line || `I have invited ${invite.person_name || 'this advisor'} to join.`,
+      ROUNDTABLE_SPEECH_LIMIT,
+      `I have invited ${invite.person_name || 'this advisor'} to join.`
+    );
+    if (hostLine) {
+      state.roundtable.messages.push({
+        type: 'system',
+        kind: 'invite',
+        role: 'assistant',
+        text: hostLine
+      });
+    }
+    syncRoundtableView();
+    await wait(420);
+  }
+
   const answers = response.answers || [];
   for (const item of answers) {
     state.roundtable.activeSpeakerSlug = item.person_slug || '';
-    const speech = normalizeShortSpeech(item.answer, 20, '', item.person_name);
+    const speech = normalizeShortSpeech(item.answer, ROUNDTABLE_SPEECH_LIMIT, '', item.person_name);
     if (speech) {
       state.roundtable.messages.push({
         type: 'advisor',
@@ -8582,7 +9741,7 @@ async function playRoundtableResponse(response, shouldSummarize = false) {
 
   state.roundtable.activeSpeakerSlug = 'moderator';
   const synthesis = shouldSummarize
-    ? normalizeShortSpeech(response.synthesis, 20, '先做一小步验证。')
+    ? normalizeShortSpeech(response.synthesis, ROUNDTABLE_SPEECH_LIMIT, 'Start with a small test.')
     : '';
   if (shouldSummarize && synthesis) {
     state.roundtable.messages.push({
@@ -8630,7 +9789,7 @@ async function submitRoundtableMessage(question) {
       ...state.roundtable,
       loading: false,
       activeSpeakerSlug: '',
-      error: normalizeApiErrorMessage(error.message || '圆桌讨论生成失败，请稍后再试。')
+      error: normalizeApiErrorMessage(error.message || 'Failed to generate the roundtable discussion. Please try again later.')
     };
     state.roundtable.messages.push({
       type: 'error',
@@ -8684,39 +9843,39 @@ function setupHomeFigureEditor() {
   panel.id = 'homeEditor';
   panel.innerHTML = `
     <div class="home-editor-head" id="homeEditorDragHandle">
-      <div class="home-editor-title">首页调图面板</div>
-      <div class="home-editor-subtitle">可分别切换人物和名字，独立调整位置与大小。拖这里可以移动面板。</div>
+      <div class="home-editor-title">Home Image Adjustment Panel</div>
+      <div class="home-editor-subtitle">You can switch the character and name independently, and adjust their position and size separately. Drag here to move the panel.</div>
     </div>
     <div class="home-editor-name" id="homeEditorName"></div>
     <div class="home-editor-switcher">
-      <button class="home-editor-switch-btn" id="homePrevFigure" type="button">上一位</button>
+      <button class="home-editor-switch-btn" id="homePrevFigure" type="button">Previous</button>
       <select class="home-editor-select" id="homeFigureSelect"></select>
-      <button class="home-editor-switch-btn" id="homeNextFigure" type="button">下一位</button>
+      <button class="home-editor-switch-btn" id="homeNextFigure" type="button">Next</button>
     </div>
     <div class="home-editor-row">
-      <div class="home-editor-label"><span>缩放</span><span id="homeScaleValue"></span></div>
+      <div class="home-editor-label"><span>Zoom</span><span id="homeScaleValue"></span></div>
       <input id="homeScale" type="range" min="0.5" max="2.4" step="0.01">
     </div>
     <div class="home-editor-row">
-      <div class="home-editor-label"><span>左右</span><span id="homeXValue"></span></div>
+      <div class="home-editor-label"><span>Left and Right</span><span id="homeXValue"></span></div>
       <input id="homeX" type="range" min="-420" max="420" step="1">
     </div>
     <div class="home-editor-row">
-      <div class="home-editor-label"><span>上下</span><span id="homeYValue"></span></div>
+      <div class="home-editor-label"><span>Up/down</span><span id="homeYValue"></span></div>
       <input id="homeY" type="range" min="-260" max="260" step="1">
     </div>
     <div class="home-editor-row">
       <label class="home-editor-toggle" for="homeFlip">
-        <span>左右翻转</span>
+        <span>Flip horizontally</span>
         <input id="homeFlip" type="checkbox">
       </label>
     </div>
     <div class="home-editor-actions">
-      <button class="home-editor-btn" id="homeResetCurrent" type="button">重置当前对象</button>
-      <button class="home-editor-btn" id="homeCopyCode" type="button">复制代码</button>
+      <button class="home-editor-btn" id="homeResetCurrent" type="button">Reset current object</button>
+      <button class="home-editor-btn" id="homeCopyCode" type="button">Copy Code</button>
     </div>
     <textarea class="home-editor-code" id="homeEditorCode" readonly></textarea>
-    <div class="home-editor-tip">你调好后把这段代码发我，我就能把首页人物和名字的最终布局一起写死到代码里。</div>
+    <div class="home-editor-tip">Once you’ve adjusted it, send me this code, and I can hard-code the final homepage layout for the figures and names.</div>
   `;
   document.body.appendChild(panel);
 
@@ -8744,8 +9903,8 @@ function setupHomeFigureEditor() {
     const figureId = node.dataset.figureId;
     const displayName = node.querySelector('.signature')?.textContent?.trim() || figureId;
     return [
-      { value: `${figureId}:figure`, id: figureId, kind: 'figure', name: `${displayName} / 人物` },
-      { value: `${figureId}:signature`, id: figureId, kind: 'signature', name: `${displayName} / 名字` }
+      { value: `${figureId}:figure`, id: figureId, kind: 'figure', name: `${displayName} / Character` },
+      { value: `${figureId}:signature`, id: figureId, kind: 'signature', name: `${displayName} / Name` }
     ];
   });
 
@@ -8773,7 +9932,7 @@ function setupHomeFigureEditor() {
     const adjustment = selectedTarget.kind === 'figure'
       ? getHomeFigureAdjustments(selectedTarget.id)
       : getHomeSignatureAdjustments(selectedTarget.id);
-    nameEl.textContent = `${displayName} / ${selectedTarget.kind === 'figure' ? '人物' : '名字'} / ${selectedTarget.id}`;
+    nameEl.textContent = `${displayName} / ${selectedTarget.kind === 'figure' ? 'Character' : 'Name'} / ${selectedTarget.id}`;
     figureSelect.value = selectedTarget.value;
     scaleInput.value = String(adjustment.scale);
     xInput.value = String(adjustment.x);
@@ -8859,9 +10018,9 @@ function setupHomeFigureEditor() {
     codeEl.select();
     try {
       await navigator.clipboard.writeText(value);
-      copyBtn.textContent = '已复制';
+      copyBtn.textContent = 'Copied';
       setTimeout(() => {
-        copyBtn.textContent = '复制代码';
+        copyBtn.textContent = 'Copy Code';
       }, 1200);
     } catch (error) {
       document.execCommand('copy');
@@ -8932,33 +10091,33 @@ function setupPreviewEditor({ cards, focusCard, setSpread, onSelect }) {
   panel.className = 'preview-editor';
   panel.id = 'previewEditor';
   panel.innerHTML = `
-    <div class="preview-editor-title">卡牌调图面板</div>
-    <div class="preview-editor-subtitle">点击卡片切换对象，实时调整人物大小、位置和左右翻转。下面的代码会自动更新。</div>
+    <div class="preview-editor-title">Character Card Image Panel</div>
+    <div class="preview-editor-subtitle">Click a card to change the subject, then adjust its size, position, and horizontal flip in real time. The code below updates automatically.</div>
     <div class="preview-editor-name" id="previewEditorName"></div>
     <div class="preview-editor-row">
-      <div class="preview-editor-label"><span>缩放</span><span id="previewScaleValue"></span></div>
+      <div class="preview-editor-label"><span>Zoom</span><span id="previewScaleValue"></span></div>
       <input id="previewScale" type="range" min="0.7" max="2.2" step="0.01">
     </div>
     <div class="preview-editor-row">
-      <div class="preview-editor-label"><span>左右</span><span id="previewXValue"></span></div>
+      <div class="preview-editor-label"><span>Left and Right</span><span id="previewXValue"></span></div>
       <input id="previewX" type="range" min="-140" max="140" step="1">
     </div>
     <div class="preview-editor-row">
-      <div class="preview-editor-label"><span>上下</span><span id="previewYValue"></span></div>
+      <div class="preview-editor-label"><span>Up/down</span><span id="previewYValue"></span></div>
       <input id="previewY" type="range" min="-140" max="140" step="1">
     </div>
     <div class="preview-editor-row">
       <label class="preview-editor-toggle" for="previewFlip">
-        <span>左右翻转</span>
+        <span>Flip horizontally</span>
         <input id="previewFlip" type="checkbox">
       </label>
     </div>
     <div class="preview-editor-actions">
-      <button class="preview-editor-btn" id="previewResetCurrent" type="button">重置当前卡</button>
-      <button class="preview-editor-btn" id="previewCopyCode" type="button">复制代码</button>
+      <button class="preview-editor-btn" id="previewResetCurrent" type="button">Reset current card</button>
+      <button class="preview-editor-btn" id="previewCopyCode" type="button">Copy Code</button>
     </div>
     <textarea class="preview-editor-code" id="previewEditorCode" readonly></textarea>
-    <div class="preview-editor-tip">建议流程：先点一张卡，再调缩放、位置和翻转。你把这段代码发我，我就能按你的最终值写回项目。</div>
+    <div class="preview-editor-tip">Suggested workflow: first select a card, then adjust the scale, position, and flip. Send me this code, and I can write your final values back to the project.</div>
   `;
   document.body.appendChild(panel);
 
@@ -9046,9 +10205,9 @@ function setupPreviewEditor({ cards, focusCard, setSpread, onSelect }) {
     codeEl.select();
     try {
       await navigator.clipboard.writeText(value);
-      copyBtn.textContent = '已复制';
+      copyBtn.textContent = 'Copied';
       setTimeout(() => {
-        copyBtn.textContent = '复制代码';
+        copyBtn.textContent = 'Copy Code';
       }, 1200);
     } catch (error) {
       document.execCommand('copy');
@@ -9124,7 +10283,7 @@ async function preloadCardAnswers(cardItems) {
       await fetchAnswerForCard(cardData);
       settled.push({ status: 'fulfilled', value: cardData });
     } catch (error) {
-      cardData.error = normalizeApiErrorMessage(error.message || '获取回答失败，请稍后重试。');
+      cardData.error = normalizeApiErrorMessage(error.message || 'Failed to retrieve the answer. Please try again later.');
       settled.push({ status: 'rejected', reason: error });
     } finally {
       cardData.loadingAnswer = false;
@@ -9146,9 +10305,9 @@ async function ensureCardAnswer(index) {
 
   try {
     await fetchAnswerForCard(cardData);
-    showStatus(`已接入后端：${cardData.name} 的回答已生成。`, 'success');
+    showStatus(`${cardData.name}’s answer is ready.`, 'success');
   } catch (error) {
-    cardData.error = normalizeApiErrorMessage(error.message || '获取回答失败，请稍后重试。');
+    cardData.error = normalizeApiErrorMessage(error.message || 'Failed to retrieve the answer. Please try again later.');
   } finally {
     cardData.loadingAnswer = false;
     syncCardDOM(index);
@@ -9160,8 +10319,8 @@ function renderCards(cardItems) {
     <div class="cards-stage stack-mode is-dealing${cardItems.length <= 4 ? ' few-cards' : ''}" id="cardsStage">
       <div class="cards-stage-glow"></div>
       <div class="deck-status">
-        <div class="deck-kicker">智囊牌阵</div>
-        <div class="deck-hint" id="deckHint">推荐与简短回答已生成 · 点击这叠卡牌展开，再点单卡翻到背面查看</div>
+        <div class="deck-kicker">Think Tank Deck</div>
+        <div class="deck-hint" id="deckHint">Recommendations and brief answers generated · Click this stack to expand it, then click an individual card to flip it and view the response.</div>
       </div>
       <div class="cards-deck-shell">
         <div class="cards-track" id="cardsTrack">
@@ -9182,7 +10341,7 @@ function renderCards(cardItems) {
               <div class="card-shell">
                 <div class="card-face card-front">
                   <div class="poster-meta">
-                    <div class="poster-kicker">${escapeHTML(card.era)}</div>
+                    <div class="poster-kicker" title="${escapeHTML(card.era)}">${escapeHTML(card.era)}</div>
                     <div class="poster-serial">0${i + 1}</div>
                   </div>
                   <div class="poster-title-block">
@@ -9193,13 +10352,13 @@ function renderCards(cardItems) {
                   <img class="poster-cutout echo" src="${card.image}" alt="">
                   <img class="poster-cutout main" src="${card.image}" alt="${escapeHTML(card.name)}">
                   <div class="poster-footer">
-                    <div class="poster-caption">${escapeHTML(card.tags[0] || '智囊')}</div>
+                    <div class="poster-caption">${escapeHTML(card.tags[0] || 'Think Tank')}</div>
                     <div class="poster-flip">Open Back</div>
                   </div>
                 </div>
                 <div class="card-face card-back">
                   <div class="back-topbar">
-                    <div class="back-index">第 0${i + 1} 张</div>
+                    <div class="back-index">Card 0${i + 1}</div>
                   </div>
                   <div class="back-body">
                     <div class="back-name-row">
@@ -9219,28 +10378,28 @@ function renderCards(cardItems) {
                       </div>
 
                       <div class="back-section">
-                        <div class="back-section-label">人物视角</div>
+                        <div class="back-section-label">Character perspective</div>
                         <div class="back-meta">${buildBackMeta(card)}</div>
                         <div class="back-intro" style="margin-top:10px;">${escapeHTML(card.intro || card.title)}</div>
                       </div>
 
                       <div class="back-section">
-                        <div class="back-section-label">推荐理由</div>
+                        <div class="back-section-label">Reason for Recommendation</div>
                         <div class="back-rationale">${escapeHTML(card.reason)}</div>
                       </div>
 
                       <div class="back-section">
-                        <div class="back-section-label">关键词</div>
+                        <div class="back-section-label">Keywords</div>
                         <div class="back-keywords-text">${buildBackKeywordText(card)}</div>
                       </div>
 
                       <div class="back-section back-citations-section" style="${card.citations.length ? '' : 'display:none;'}">
-                        <div class="back-section-label">参考依据</div>
+                        <div class="back-section-label">Basis for Reference</div>
                         <div class="back-citations">${buildCitationMarkup(card)}</div>
                       </div>
 
                     </div>
-                    <div class="back-scroll-cue">向下滑动</div>
+                    <div class="back-scroll-cue">Scroll down</div>
                   </div>
                 </div>
               </div>
@@ -9251,30 +10410,30 @@ function renderCards(cardItems) {
         </div>
       </div>
       <div class="scroll-hint" id="scrollHint">
-        <span>左右滑动</span>
+        <span>Swipe left or right</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M3 8h10M9 4l4 4-4 4"/>
         </svg>
       </div>
       <div class="roundtable-actions">
-        <button class="roundtable-btn" id="roundtableBtn" type="button">圆桌讨论</button>
+        <button class="roundtable-btn" id="roundtableBtn" type="button">Roundtable Discussion</button>
       </div>
       <section class="roundtable-view" id="roundtableView" aria-hidden="true" aria-live="polite">
         <div class="roundtable-view-head">
           <div>
             <div class="roundtable-room-kicker">Roundtable</div>
-            <div class="roundtable-room-title">圆桌讨论</div>
-            <div class="roundtable-room-subtitle">每位智囊只说一句很短的话。你可以继续追问，让他们轮流回应。</div>
+            <div class="roundtable-room-title">Roundtable Discussion</div>
+            <div class="roundtable-room-subtitle">Each persona gives one brief response. Follow up to hear from them one by one.</div>
           </div>
-          <button class="roundtable-back" id="roundtableCloseBtn" type="button">返回牌阵</button>
+          <button class="roundtable-back" id="roundtableCloseBtn" type="button">Back to Spread</button>
         </div>
         <div class="roundtable-speakers" id="roundtableSpeakers"></div>
         <div class="roundtable-dialogue" id="roundtableDialogue">
           <div class="roundtable-message-list" id="roundtableMessages"></div>
         </div>
         <form class="roundtable-compose" id="roundtableForm">
-          <input class="roundtable-input" id="roundtableInput" type="text" maxlength="120" placeholder="继续追问一句..." autocomplete="off">
-          <button class="roundtable-send" id="roundtableSendBtn" type="submit">发送</button>
+          <input class="roundtable-input" id="roundtableInput" type="text" maxlength="120" placeholder="Ask one follow-up question..." autocomplete="off">
+          <button class="roundtable-send" id="roundtableSendBtn" type="submit">Send</button>
         </form>
       </section>
     </div>
@@ -9339,14 +10498,23 @@ function renderCards(cardItems) {
     // #endregion
   }
 
+  function syncTrackLayout(smooth = false) {
+    if (!isSpread || !track.isConnected) return;
+    stage.classList.remove('cards-fit');
+    const fitsViewport = track.scrollWidth <= track.clientWidth + 1;
+    stage.classList.toggle('cards-fit', fitsViewport);
+    const centeredOffset = Math.max(0, (track.scrollWidth - track.clientWidth) / 2);
+    track.scrollTo({ left: centeredOffset, behavior: smooth ? 'smooth' : 'auto' });
+  }
+
   function setSpread(nextSpread, smooth = true) {
     isSpread = nextSpread;
     stage.classList.toggle('spread', nextSpread);
     stage.classList.toggle('stack-mode', !nextSpread);
     scrollHint.classList.toggle('show', nextSpread);
     deckHint.textContent = nextSpread
-      ? '左右拖动浏览牌阵 · 现在点击任意单张卡牌可翻到背面查看回答'
-      : '牌阵已收拢 · 点击这叠卡牌展开查看';
+      ? 'Swipe left or right with your trackpad to browse · Click any card to flip it and view the response.'
+      : 'The card spread is now complete · Click this stack of cards to expand it.';
     // #region debug-point A:set-spread
     reportCardDebug('A', 'setSpread', {
       nextSpread,
@@ -9360,16 +10528,29 @@ function renderCards(cardItems) {
       setFlipped(-1, false);
       requestAnimationFrame(() => {
         cards.forEach((card) => card.classList.remove('is-active'));
+        requestAnimationFrame(() => {
+          syncTrackLayout(smooth);
+        });
       });
     } else {
+      stage.classList.remove('cards-fit');
       cards.forEach((card) => card.classList.remove('is-active'));
       setFlipped(-1, false);
       track.scrollTo({ left: 0, behavior: smooth ? 'smooth' : 'auto' });
     }
   }
 
+  const trackResizeObserver = new ResizeObserver(() => {
+    if (!track.isConnected) {
+      trackResizeObserver.disconnect();
+      return;
+    }
+    syncTrackLayout(false);
+  });
+  trackResizeObserver.observe(track);
+
   track.addEventListener('pointerdown', (event) => {
-    if (!isSpread) return;
+    if (!isSpread || event.pointerType !== 'mouse' || event.button !== 0) return;
     pendingDrag = true;
     isDragging = false;
     suppressClick = false;
@@ -9396,14 +10577,6 @@ function renderCards(cardItems) {
     }
     track.scrollLeft = startScrollLeft - deltaX;
   });
-
-  track.addEventListener('wheel', (event) => {
-    if (!isSpread) return;
-    const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-    if (!delta) return;
-    event.preventDefault();
-    track.scrollLeft += delta;
-  }, { passive: false });
 
   function stopDragging(event) {
     if (isDragging && event && track.releasePointerCapture) {
@@ -9538,24 +10711,23 @@ function renderCards(cardItems) {
 }
 
 async function generateCards() {
-  if (PREVIEW_CARD_MODE) {
-    state.question = input.value.trim();
-    if (state.question.length < MIN_QUESTION_LENGTH) return;
-    state.promptQuestion = buildPromptQuestion();
-    await openPreviewCardsPage(state.promptQuestion);
-    return;
-  }
-
   state.question = input.value;
   if (state.question.trim().length < MIN_QUESTION_LENGTH || state.requestInFlight) return;
+  if (window.ASK_SOCRATES_PREVIEW) {
+    state.requestInFlight = true;
+    submitBtn.disabled = true;
+    try { await openPreviewCardsPage(state.question); }
+    finally { state.requestInFlight = false; submitBtn.disabled = input.value.trim().length < MIN_QUESTION_LENGTH; }
+    return;
+  }
 
   state.promptQuestion = buildPromptQuestion();
   state.roundtable = createInitialRoundtableState();
   state.requestInFlight = true;
   submitBtn.disabled = true;
-  showStatus('正在连接后端推荐接口...', '');
-  loadingText.textContent = '智囊团正在洗牌';
-  loadingSub.textContent = '正在同步生成 4 位智囊的简短回答...';
+  showStatus('Matching personas to your question...', '');
+  loadingText.textContent = 'Shuffling the deck';
+  loadingSub.textContent = 'Finding the best match for your question 4 experts...';
 
   document.body.classList.add('result-mode');
   inputSection.style.display = 'none';
@@ -9569,7 +10741,7 @@ async function generateCards() {
     await wait(80);
 
     const recommendedCards = await fetchRecommendedCards();
-    loadingSub.textContent = '推荐已完成，正在把每位智囊的短回答收进牌堆...';
+    loadingSub.textContent = 'Character selected; generating their short responses...';
     await Promise.all([
       preloadCardAnswers(recommendedCards),
       wait(MIN_SHUFFLE_DURATION)
@@ -9579,7 +10751,7 @@ async function generateCards() {
     renderCards(state.currentCards);
     cardsEl.classList.add('show');
     resetBtn.classList.add('show');
-    showStatus('后端联调成功：推荐人物与简短回答已在洗牌阶段生成。', 'success');
+    showStatus('Matched your question with the right expert and generated a brief answer.', 'success');
 
     setTimeout(() => {
       cardsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -9589,10 +10761,10 @@ async function generateCards() {
     document.body.classList.remove('result-mode');
     inputSection.style.display = 'block';
     setupHomeFigureEditor();
-    showStatus(normalizeApiErrorMessage(error.message || '联调失败，请检查本地后端服务。'), 'error');
+    showStatus(normalizeApiErrorMessage(error.message || 'Connection failed. Please check the local backend service.'), 'error');
   } finally {
-    loadingText.textContent = '智囊团正在洗牌';
-    loadingSub.textContent = '正在快速生成 4 位智囊的短回答...';
+    loadingText.textContent = 'Shuffling the deck';
+    loadingSub.textContent = 'Quickly generating 4 Short responses from experts...';
     state.requestInFlight = false;
     submitBtn.disabled = input.value.trim().length < MIN_QUESTION_LENGTH;
   }
@@ -9655,6 +10827,82 @@ peopleNavLink?.addEventListener('click', (event) => {
   showPeoplePage();
 });
 
+document.getElementById('themesNavLink')?.addEventListener('click', (event) => {
+  event.preventDefault();
+  showThemesPage();
+});
+
+document.getElementById('storiesNavLink')?.addEventListener('click', (event) => {
+  event.preventDefault();
+  openSitePage('stories');
+});
+
+document.getElementById('aboutNavLink')?.addEventListener('click', (event) => {
+  event.preventDefault();
+  openSitePage('about');
+});
+
+loginNavLink?.addEventListener('click', (event) => {
+  event.preventDefault();
+  showLoginPage();
+});
+
+themeGrid?.addEventListener('click', async (event) => {
+  const card = event.target.closest('[data-theme]');
+  if (!card) return;
+  const theme = THEMES.find((item) => item.id === card.dataset.theme);
+  if (!theme) return;
+  await showPeoplePage();
+  if (peopleSearch) peopleSearch.value = theme.query;
+  filterPeoplePage();
+});
+
+function askWithActiveStory() {
+  const card = getStoryCards()[storyCursor];
+  const question = selectedCommunityStory?.question || card?.dataset.question || '';
+  if (!question) return;
+  showHomePage();
+  input.value = question;
+  state.question = question;
+  charCount.textContent = String(question.length);
+  submitBtn.disabled = question.trim().length < MIN_QUESTION_LENGTH;
+  input.focus();
+}
+
+document.getElementById('storyAsk')?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  askWithActiveStory();
+});
+
+storiesPage?.addEventListener('click', (event) => {
+  if (storySuppressClick) return;
+  const card = event.target.closest('.story-card[data-question]');
+  if (!card) return;
+  const index = getStoryCards().indexOf(card);
+  if (index >= 0 && index !== storyCursor) setActiveStory(index);
+});
+
+loginForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const name = loginNameInput.value.trim();
+  const email = loginEmailInput.value.trim();
+  const password = loginPasswordInput.value;
+  if (!name || !email || password.length < 6) {
+    loginError.textContent = 'Please enter your name and email. The password must be at least 6 people.';
+    return;
+  }
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ name, email }));
+  loginPasswordInput.value = '';
+  loginError.textContent = '';
+  renderLoginState();
+});
+
+loginAccount?.addEventListener('click', (event) => {
+  if (event.target.id !== 'logoutBtn') return;
+  localStorage.removeItem(SESSION_KEY);
+  renderLoginState();
+});
+
 peopleSearch?.addEventListener('input', filterPeoplePage);
 
 peopleGrid?.addEventListener('click', (event) => {
@@ -9688,7 +10936,7 @@ function resetAll() {
   state.roundtable = createInitialRoundtableState();
   state.requestInFlight = false;
   document.body.classList.remove('result-mode');
-  document.body.classList.remove('people-mode');
+  document.body.classList.remove('people-mode', 'subpage-mode');
   input.value = '';
   charCount.textContent = '0';
   chips.forEach((chip) => chip.classList.remove('selected'));
@@ -9697,6 +10945,7 @@ function resetAll() {
   cardsEl.classList.remove('show');
   resetBtn.classList.remove('show');
   peoplePage?.classList.remove('show');
+  hideSitePages();
   closePersonChat();
   inputSection.style.display = 'block';
   applyAllHomeFigureAdjustments();
@@ -9718,15 +10967,47 @@ function resetResultOnly() {
   setupHomeFigureEditor();
 }
 
+
+// Fit the two-line wordmark to the actual card width, including long surnames.
+const posterTextCanvas = document.createElement('canvas');
+const posterTextContext = posterTextCanvas.getContext('2d');
+function fitPosterWordmarks() {
+  document.querySelectorAll('.poster-wordmark').forEach((wordmark) => {
+    const available = wordmark.clientWidth;
+    if (!available || !posterTextContext) return;
+    const style = getComputedStyle(wordmark);
+    posterTextContext.font = `800 22px ${style.fontFamily}`;
+    const longest = Math.max(...Array.from(wordmark.children, (line) => posterTextContext.measureText(line.textContent).width));
+    const size = Math.min(22, 22 * (available - 2) / Math.max(longest, 1));
+    wordmark.style.fontSize = `${size}px`;
+  });
+}
+let posterFitFrame = 0;
+function schedulePosterFit() {
+  cancelAnimationFrame(posterFitFrame);
+  posterFitFrame = requestAnimationFrame(fitPosterWordmarks);
+}
+const posterLayoutObserver = new MutationObserver(schedulePosterFit);
+[peopleGrid, cardsEl].filter(Boolean).forEach((element) => {
+  posterLayoutObserver.observe(element, { childList: true, subtree: true });
+  new ResizeObserver(schedulePosterFit).observe(element);
+});
+const siteHeader = document.querySelector('.home-hero');
+new ResizeObserver(() => {
+  if (document.body.matches('.people-mode, .subpage-mode')) {
+    document.documentElement.style.setProperty('--site-header-height', `${siteHeader.offsetHeight}px`);
+  }
+}).observe(siteHeader);
+document.fonts.ready.then(schedulePosterFit);
+
 applyAllHomeFigureAdjustments();
 setupHomeFigureEditor();
+renderLoginState();
 if (ADJUST_MODE) {
   initAdjustmentWorkbench();
 }
-if (PREVIEW_CARD_MODE) {
-  showStatus('当前为本地预览模式：生成卡牌不会请求 API。切回接口模式可用 `?mode=api` 或执行 `__setAppMode("api")`。', 'success');
-}
 submitBtn.disabled = input.value.trim().length < MIN_QUESTION_LENGTH;
+if (new URLSearchParams(location.search).get('view') === 'stories') openSitePage('stories');
 
 </script>
 </body>

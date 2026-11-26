@@ -1,4 +1,4 @@
-# 智囊团后端
+# 苏格拉底请回答后端
 
 FastAPI 后端，负责人物库读取、推荐、检索、对话生成与数据导入。
 
@@ -24,7 +24,8 @@ backend/
 - 人物列表与人物详情接口
 - 基于人物画像的 Prompt 组装
 - 按人物检索知识片段的轻量 RAG
-- DeepSeek 聊天接口集成
+- MiniMax 聊天接口集成
+- DeepSeek 智能体（给 MR 眼镜悬浮球用的问答）
 - 单人智囊回答与多人群体智囊回答
 - 从 `data/people_dataset_v1.json` 导入数据库
 
@@ -56,6 +57,9 @@ uvicorn app.main:app --reload --port 8000
 - `DEBUG`
 - `CORS_ORIGINS`
 - `DATABASE_URL`
+- `MINIMAX_BASE_URL`
+- `MINIMAX_MODEL`
+- `MINIMAX_API_KEY`
 - `DEEPSEEK_BASE_URL`
 - `DEEPSEEK_MODEL`
 - `DEEPSEEK_API_KEY`
@@ -64,7 +68,8 @@ uvicorn app.main:app --reload --port 8000
 
 说明：
 
-- `DEEPSEEK_API_KEY` 为空时，聊天类接口无法正常调用模型
+- `MINIMAX_API_KEY` 为空时，推荐和聊天接口无法调用模型
+- `DEEPSEEK_API_KEY` 为空时，MR 智能体问答无法调用模型
 - `DATABASE_URL` 默认指向本地 SQLite：`backend/data/app.db`
 
 ## 常用命令
@@ -95,6 +100,17 @@ python -m app.tasks.import_people_data --force-rebuild
 - `POST /api/chat/respond`
 - `POST /api/chat/group`
 
+### MR 智能体（DeepSeek）
+
+- `POST /api/agent/open`
+- `POST /api/agent/ask`
+- `POST /api/agent/ask/stream`
+- `POST /api/agent/close`
+- `GET /api/agent/status/{session_id}`
+- 对照页：`GET /agent`
+
+改人设：`backend/app/core/agent_prompt.py`
+
 ## 关键实现位置
 
 推荐逻辑：
@@ -105,6 +121,12 @@ python -m app.tasks.import_people_data --force-rebuild
 
 - `backend/app/services/chat.py`
 - `backend/app/services/llm.py`
+
+MR 智能体：
+
+- `backend/app/services/agent.py`
+- `backend/app/services/deepseek.py`
+- `backend/app/core/agent_prompt.py`
 
 检索逻辑：
 

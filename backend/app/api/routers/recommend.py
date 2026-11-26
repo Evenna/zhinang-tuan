@@ -12,6 +12,6 @@ router = APIRouter()
 
 
 @router.post('', response_model=RecommendResponse)
-def recommend(request: RecommendRequest, db: Session = Depends(get_db)) -> RecommendResponse:
+async def recommend(request: RecommendRequest, db: Session = Depends(get_db)) -> RecommendResponse:
     service = RecommendService(db)
-    return service.recommend(request)
+    return await service.recommend(request)

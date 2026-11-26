@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
+from app.core.english import english_value
 from app.db.models import KnowledgeChunk, Person
 from app.utils.text import keyword_overlap_score, tokenize, truncate_text
 
@@ -45,10 +46,10 @@ class RetrievalService:
             results.append(
                 RetrievedChunkResult(
                     chunk_type=chunk.chunk_type,
-                    title=chunk.title,
+                    title=english_value(chunk.title),
                     source_name=chunk.source_name,
                     score=round(score, 4),
-                    excerpt=truncate_text(chunk.content, 280),
+                    excerpt=truncate_text(english_value(chunk.content), 280),
                     content=chunk.content,
                 )
             )

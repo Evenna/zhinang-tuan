@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
+from app.core.english import EnglishResponse
+
 from pydantic import BaseModel, ConfigDict
 
 
-class PersonSummaryResponse(BaseModel):
+class PersonSummaryResponse(EnglishResponse):
     model_config = ConfigDict(from_attributes=True)
 
     id: str

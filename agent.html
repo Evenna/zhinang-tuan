@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ask Socrates · MR Agent</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07070b;
+      --panel: rgba(14, 16, 24, 0.88);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f4f1ea;
+      --muted: rgba(244, 241, 234, 0.62);
+      --gold: #d7b56d;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(215, 181, 109, 0.12), transparent 28%),
+        radial-gradient(circle at 82% 88%, rgba(90, 120, 180, 0.16), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      font-family: "PingFang SC", "Hiragino Sans GB", sans-serif;
+    }
+    .hint {
+      position: fixed;
+      left: 28px;
+      bottom: 28px;
+      max-width: 280px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .hint strong { color: var(--text); font-weight: 600; }
+    .panel {
+      position: fixed;
+      right: 28px;
+      bottom: 116px;
+      width: min(380px, calc(100vw - 40px));
+      height: min(520px, calc(100vh - 160px));
+      display: none;
+      flex-direction: column;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+    .panel.open { display: flex; }
+    .panel header {
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bubble {
+      max-width: 86%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+    .bubble.assistant {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: rgba(215, 181, 109, 0.18);
+    }
+    .bubble.system { align-self: center; color: var(--muted); font-size: 12px; }
+    .composer {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid var(--line);
+    }
+    .composer input {
+      flex: 1;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      padding: 0 14px;
+      outline: none;
+    }
+    .composer button, .ball {
+      border: 0;
+      cursor: pointer;
+    }
+    .composer button {
+      height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #1b1408;
+      font-weight: 600;
+    }
+    .ball {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 28%, #fff6df, #d7b56d 42%, #8a6a2e);
+      box-shadow: 0 12px 32px rgba(215, 181, 109, 0.35);
+      color: #1b1408;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .ball.active {
+      box-shadow: 0 0 0 6px rgba(215, 181, 109, 0.18), 0 12px 32px rgba(215, 181, 109, 0.45);
+    }
+  </style>
+</head>
+<body>
+  <p class="hint">
+    This is MR A web-based counterpart to Eyeball Float.<br />
+    <strong>Click the small orb in the bottom-right corner to launch the agent.</strong>，Close again.
+  </p>
+  <section class="panel" id="panel">
+    <header>
+      <strong>Ask Socrates</strong>
+      <p id="statusLine">Not started</p>
+    </header>
+    <div class="messages" id="messages"></div>
+    <form class="composer" id="form">
+      <input id="question" placeholder="Ask Me One Question" autocomplete="off" />
+      <button type="submit">Send</button>
+    </form>
+  </section>
+  <button class="ball" id="ball" type="button">Start</button>
+  <script>
+    const API_BASE = (() => {
+      const fromQuery = new URLSearchParams(location.search).get('api');
+      if (fromQuery) return fromQuery.replace(/\/$/, '');
+      if (location.port === '8000' || location.pathname.startsWith('/agent')) {
+        return `${location.origin}/api`;
+      }
+      return 'http://127.0.0.1:8000/api';
+    })();
+
+    const ball = document.getElementById('ball');
+    const panel = document.getElementById('panel');
+    const form = document.getElementById('form');
+    const questionInput = document.getElementById('question');
+    const messagesEl = document.getElementById('messages');
+    const statusLine = document.getElementById('statusLine');
+
+    let sessionId = null;
+    let busy = false;
+
+    function addBubble(role, text) {
+      const node = document.createElement('div');
+      node.className = `bubble ${role}`;
+      node.textContent = text;
+      messagesEl.appendChild(node);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return node;
+    }
+
+    async function defJson(path, options = {}) {
+      const response = await fetch(`${API_BASE}${path}`, {
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        ...options,
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.detail || `Request failed ${response.status}`);
+      }
+      return data;
+    }
+
+    async function openAgent() {
+      const data = await defJson('/agent/open', { method: 'POST' });
+      sessionId = data.session_id;
+      panel.classList.add('open');
+      ball.classList.add('active');
+      ball.textContent = 'Close';
+      statusLine.textContent = 'Started · DeepSeek';
+      messagesEl.innerHTML = '';
+      addBubble('assistant', data.greeting || 'I’m here. You can ask me directly.');
+      questionInput.focus();
+    }
+
+    async function closeAgent() {
+      if (sessionId) {
+        try {
+          await defJson('/agent/close', {
+            method: 'POST',
+            body: JSON.stringify({ session_id: sessionId }),
+          });
+        } catch (error) {
+          console.warn(error);
+        }
+      }
+      sessionId = null;
+      panel.classList.remove('open');
+      ball.classList.remove('active');
+      ball.textContent = 'Start';
+      statusLine.textContent = 'Not started';
+      messagesEl.innerHTML = '';
+    }
+
+    ball.addEventListener('click', async () => {
+      if (busy) return;
+      busy = true;
+      try {
+        if (sessionId) {
+          await closeAgent();
+        } else {
+          await openAgent();
+        }
+      } catch (error) {
+        addBubble('system', error.message);
+        panel.classList.add('open');
+      } finally {
+        busy = false;
+      }
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const question = questionInput.value.trim();
+      if (!question || !sessionId || busy) return;
+      busy = true;
+      questionInput.value = '';
+      addBubble('user', question);
+      const answerNode = addBubble('assistant', 'Thinking…');
+      try {
+        const response = await fetch(`${API_BASE}/agent/ask/stream`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId, question }),
+        });
+        if (!response.ok || !response.body) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data.detail || `Request failed ${response.status}`);
+        }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let answer = '';
+        answerNode.textContent = '';
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const chunks = buffer.split('\n\n');
+          buffer = chunks.pop() || '';
+          for (const chunk of chunks) {
+            const line = chunk.split('\n').find((item) => item.startsWith('data:'));
+            if (!line) continue;
+            const payload = JSON.parse(line.slice(5).trim());
+            if (payload.delta) {
+              answer += payload.delta;
+              answerNode.textContent = answer;
+              messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+          }
+        }
+        if (!answer) answerNode.textContent = 'No response received.';
+      } catch (error) {
+        answerNode.textContent = error.message;
+      } finally {
+        busy = false;
+        questionInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>

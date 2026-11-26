@@ -27,3 +27,6 @@ node_modules/
 debug-card-flip-bug.md
 assets/_cutout_previews/
 assets/character_cutouts/*-backup.png
+
+# Browser verification artifacts
+.playwright-cli/

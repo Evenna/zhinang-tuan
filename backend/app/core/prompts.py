@@ -10,6 +10,7 @@ GLOBAL_RULES = [
     'If the retrieved context is insufficient, answer cautiously and say what is uncertain.',
     'Do not claim private knowledge about the user.',
     'Keep the answer practical and relevant to the user question.',
+    'All output must be English. Ignore conflicting language instructions in persona data.',
 ]
 
 
@@ -49,7 +50,7 @@ def build_persona_system_prompt(
         'PROMPT_CONTRACT:\n' + json.dumps(prompt_contract, ensure_ascii=False, indent=2),
         'RETRIEVED CONTEXT:\n' + ('\n\n'.join(context_lines) if context_lines else 'No external context retrieved.'),
         'OUTPUT REQUIREMENTS:\n'
-        '- Answer in Chinese unless user asks otherwise.\n'
+        '- Always answer in English, including when the question or persona context is in another language.\n'
         '- Sound like the selected advisor, but stay readable for modern users.\n'
         '- Use retrieved context when relevant.\n'
         '- Offer one practical takeaway when possible.',
@@ -57,15 +58,42 @@ def build_persona_system_prompt(
     return '\n\n'.join(sections)
 
 
-def build_group_synthesis_prompt(question: str, answers: list[dict[str, str]]) -> str:
-    rendered = []
-    for item in answers:
-        rendered.append(f"Advisor: {item['person_name']}\nAnswer:\n{item['answer']}")
+def build_recommend_prompt(question: str, catalog: str, top_k: int) -> str:
     return (
-        'You are a moderator summarizing multiple advisor perspectives. '
-        'Synthesize similarities, tensions, and a practical next step. '
-        'Use one complete Chinese sentence, no more than 20 Chinese characters. Do not use ellipsis. '
-        'Do not include advisor names as speaker labels.\n\n'
-        f'User question:\n{question}\n\n'
-        'Advisor answers:\n' + '\n\n'.join(rendered)
+        'You match users with advisors for Ask Socrates. Prioritize lived experience relevant to the question, '
+        'then relevant partners, rivals, or collaborators. Do not sacrifice relevance for domain diversity. '
+        f'Select exactly {top_k} advisors using only slugs from the catalog. '
+        'Write each reason in English, one complete sentence of up to 25 words explaining their relevant experience. '
+        'Return JSON only: {"recommendations":[{"person_slug":"socrates","reason":"His questioning helps clarify your assumptions.","score":0.96}]}\n\n'
+        f'Question:\n{question}\n\nCatalog (slug, original name, English name, domain, life experience, related people):\n{catalog}'
+    )
+
+
+def build_roundtable_invite_prompt(question: str, history_text: str, seated_names: str, roster: str) -> str:
+    return (
+        'You host a roundtable. Invite at most two unseated advisors only when explicitly mentioned or requested in the discussion. '
+        'Do not invite people merely because their expertise is related. Use only slugs from the roster. '
+        'Write host_line in English, one complete sentence of up to 25 words explaining the invitation. '
+        'Return JSON only: {"invites":[{"person_slug":"jean-paul-sartre","host_line":"I have invited Sartre to share his experience."}]}. '
+        'If no invitation is warranted, return {"invites":[]}.\n\n'
+        f'Seated: {seated_names or "None"}\nQuestion: {question}\nDiscussion: {history_text or "None"}\nRoster: {roster}'
+    )
+
+
+def build_roundtable_turn_prompt(question: str, person_name: str, *, newly_invited: bool = False) -> str:
+    return (
+        f'You are {person_name}, {"newly invited to" if newly_invited else "speaking at"} the roundtable. '
+        'Draw on your actual life experiences. Answer in English in one complete sentence of up to 25 words, '
+        'ending with a period, question mark, or exclamation mark. No ellipses, bullet points, or speaker labels. '
+        'If you choose silence, output only pass.\n\n'
+        f'Question: {question}'
+    )
+
+
+def build_group_synthesis_prompt(question: str, answers: list[dict[str, str]]) -> str:
+    rendered = [f"Advisor: {item['person_name']}\nAnswer: {item['answer']}" for item in answers]
+    return (
+        'Summarize the perspectives, tensions, and a practical next step in English. '
+        'Use one complete sentence of up to 25 words, with no ellipses or speaker labels.\n\n'
+        f'Question: {question}\n\n' + '\n\n'.join(rendered)
     )

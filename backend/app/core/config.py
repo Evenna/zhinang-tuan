@@ -14,7 +14,11 @@ DEFAULT_DATASET_PATH = PROJECT_ROOT / 'data' / 'people_dataset_v1.json'
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', extra='ignore')
+    model_config = SettingsConfigDict(
+        env_file=str(BACKEND_ROOT / '.env'),
+        env_file_encoding='utf-8',
+        extra='ignore',
+    )
 
     app_name: str = 'AI Think Tank Backend'
     debug: bool = False
@@ -24,11 +28,19 @@ class Settings(BaseSettings):
         'http://localhost:8125',
         'http://127.0.0.1:8126',
         'http://localhost:8126',
+        'http://127.0.0.1:8000',
+        'http://localhost:8000',
+        'null',
     ])
     database_url: str = f'sqlite:///{DEFAULT_DB_PATH}'
+    minimax_base_url: str = 'https://api.minimaxi.com/v1'
+    minimax_model: str = 'MiniMax-M3'
+    minimax_api_key: Optional[str] = None
     deepseek_base_url: str = 'https://api.deepseek.com'
     deepseek_model: str = 'deepseek-chat'
     deepseek_api_key: Optional[str] = None
+    agent_max_history: int = 20
+    agent_greeting: str = '我在。你可以直接问我。'
     max_context_chunks: int = 5
     recommendation_top_k: int = 5
     import_dataset_path: Path = DEFAULT_DATASET_PATH

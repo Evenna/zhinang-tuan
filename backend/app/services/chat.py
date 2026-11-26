@@ -8,12 +8,30 @@ from sqlalchemy.orm import Session
 
 from fastapi import HTTPException
 
-from app.core.prompts import build_group_synthesis_prompt, build_persona_system_prompt
+from app.core.prompts import (
+    build_group_synthesis_prompt,
+    build_persona_system_prompt,
+    build_roundtable_invite_prompt,
+    build_roundtable_turn_prompt,
+)
 from app.db.models import ChatMessage, ConversationSession, Person, PersonaProfile
-from app.schemas.chat import ChatRequest, ChatResponse, GroupAdvisorAnswer, GroupChatRequest, GroupChatResponse, RetrievedChunk
-from app.services.llm import DeepSeekService
-from app.services.recommend import RecommendService
+from app.schemas.chat import (
+    ChatRequest,
+    ChatResponse,
+    GroupAdvisorAnswer,
+    GroupChatRequest,
+    GroupChatResponse,
+    GroupInvite,
+    RetrievedChunk,
+)
+from app.schemas.recommend import RecommendRequest
+from app.services.llm import MiniMaxService
+from app.services.recommend import RecommendService, person_name_aliases, text_mentions_alias
 from app.services.retrieval import RetrievalService
+from app.utils.text import finalize_complete_sentence
+
+MAX_ROUNDTABLE_SEATS = 6
+MAX_INVITES_PER_TURN = 2
 
 
 class ChatService:
@@ -21,7 +39,7 @@ class ChatService:
         self.db = db
         self.retrieval_service = RetrievalService(db)
         self.recommend_service = RecommendService(db)
-        self.llm_service = DeepSeekService()
+        self.llm_service = MiniMaxService()
 
     async def respond(self, request: ChatRequest) -> ChatResponse:
         person = self._get_person(request.person_slug)
@@ -32,7 +50,7 @@ class ChatService:
         session = self._get_or_create_session(request.conversation_id, mode='single', selected_people=[person.slug])
         retrieved = self.retrieval_service.retrieve_for_person(person, request.question)
         system_prompt = build_persona_system_prompt(
-            person_name=person.chinese_name,
+            person_name=person.english_name,
             person_slug=person.slug,
             profile=self._serialize_profile(profile),
             retrieved_chunks=[self._retrieved_to_dict(item) for item in retrieved],
@@ -56,18 +74,24 @@ class ChatService:
         return ChatResponse(
             conversation_id=session.id,
             person_slug=person.slug,
-            person_name=person.chinese_name,
+            person_name=person.english_name,
             answer=answer,
             citations=[self._retrieved_to_schema(item) for item in retrieved],
         )
 
     async def group_respond(self, request: GroupChatRequest) -> GroupChatResponse:
-        person_slugs = request.person_slugs
+        person_slugs = list(dict.fromkeys(request.person_slugs))
         if not person_slugs:
-            recommended = self.recommend_service.recommend(
-                type('RecommendReq', (), {'question': request.question, 'top_k': request.top_k})()
+            recommended = await self.recommend_service.recommend(
+                RecommendRequest(question=request.question, top_k=request.top_k)
             )
             person_slugs = [item.person_slug for item in recommended.recommendations]
+
+        invites = await self._resolve_invites(request, person_slugs)
+        invited_slugs = [item.person_slug for item in invites]
+        person_slugs = list(dict.fromkeys(person_slugs + invited_slugs))[:MAX_ROUNDTABLE_SEATS]
+        invited_slugs = [slug for slug in invited_slugs if slug in person_slugs]
+        invites = [item for item in invites if item.person_slug in invited_slugs]
 
         session = self._get_or_create_session(request.conversation_id, mode='group', selected_people=person_slugs)
         answers: list[GroupAdvisorAnswer] = []
@@ -78,7 +102,7 @@ class ChatService:
                 continue
             retrieved = self.retrieval_service.retrieve_for_person(person, request.question)
             system_prompt = build_persona_system_prompt(
-                person_name=person.chinese_name,
+                person_name=person.english_name,
                 person_slug=person.slug,
                 profile=self._serialize_profile(profile),
                 retrieved_chunks=[self._retrieved_to_dict(item) for item in retrieved],
@@ -86,36 +110,49 @@ class ChatService:
             messages = [{'role': 'system', 'content': system_prompt}]
             for turn in request.history[-4:]:
                 messages.append({'role': turn.role, 'content': turn.content})
-            messages.append({'role': 'user', 'content': request.question})
-            answer = await self.llm_service.chat(messages, temperature=0.85)
-            normalized_answer = answer.strip().strip('"“”')
+            messages.append({
+                'role': 'user',
+                'content': build_roundtable_turn_prompt(
+                    request.question,
+                    person.chinese_name,
+                    newly_invited=slug in invited_slugs,
+                ),
+            })
+            raw_answer = await self.llm_service.chat(messages, temperature=0.7, max_tokens=80)
+            normalized_answer = raw_answer.strip().strip('"“”')
             if normalized_answer.startswith(person.chinese_name):
                 normalized_answer = normalized_answer[len(person.chinese_name):].lstrip('：:,，、 -')
             if normalized_answer.lower() in {'沉默', '不回答', 'pass', 'skip'}:
                 continue
+            speech = finalize_complete_sentence(normalized_answer, max_chars=240)
+            if not speech:
+                continue
             answers.append(
                 GroupAdvisorAnswer(
                     person_slug=person.slug,
-                    person_name=person.chinese_name,
-                    answer=answer,
+                    person_name=person.english_name,
+                    answer=speech,
                     citations=[self._retrieved_to_schema(item) for item in retrieved],
                 )
             )
-            self._store_message(session.id, 'assistant', person.slug, answer, [self._retrieved_to_dict(item) for item in retrieved])
+            self._store_message(session.id, 'assistant', person.slug, speech, [self._retrieved_to_dict(item) for item in retrieved])
 
         self._store_message(session.id, 'user', None, request.question, None)
+        for invite in invites:
+            self._store_message(session.id, 'assistant', 'moderator', invite.host_line, None)
 
         synthesis = await self.llm_service.chat(
             [
                 {
                     'role': 'system',
-                    'content': 'You are a synthesis layer for multiple advisors. Reply in one complete Chinese sentence, no more than 20 Chinese characters. No ellipsis.',
+                    'content': 'You are a synthesis layer for multiple advisors. Reply in one complete English sentence, no more than 25 words. No ellipsis, and do not cut the sentence in half.',
                 },
                 {'role': 'user', 'content': build_group_synthesis_prompt(request.question, [item.model_dump() for item in answers])},
             ],
             temperature=0.5,
-            max_tokens=700,
+            max_tokens=80,
         )
+        synthesis = finalize_complete_sentence(synthesis, max_chars=240) or synthesis.strip()
         self._store_message(session.id, 'assistant', 'moderator', synthesis, None)
         self.db.commit()
 
@@ -124,7 +161,99 @@ class ChatService:
             selected_people=person_slugs,
             answers=answers,
             synthesis=synthesis,
+            invited=invites,
         )
+
+    async def _resolve_invites(self, request: GroupChatRequest, seated_slugs: list[str]) -> list[GroupInvite]:
+        remaining_seats = MAX_ROUNDTABLE_SEATS - len(seated_slugs)
+        if remaining_seats <= 0:
+            return []
+
+        people = self.db.scalars(select(Person).order_by(Person.chinese_name)).all()
+        by_slug = {person.slug: person for person in people}
+        seated = set(seated_slugs)
+        mention_text = '\n'.join(
+            [request.question] + [turn.content for turn in request.history[-6:] if turn.content]
+        )
+        invites: list[GroupInvite] = []
+        seen: set[str] = set()
+
+        for person in people:
+            if person.slug in seated or person.slug in seen:
+                continue
+            if not any(text_mentions_alias(mention_text, alias) for alias in person_name_aliases(person)):
+                continue
+            if not self._get_profile(person.id):
+                continue
+            invites.append(
+                GroupInvite(
+                    person_slug=person.slug,
+                    person_name=person.english_name,
+                    host_line=f'The discussion mentioned {person.english_name}, so I invited them to join.',
+                )
+            )
+            seen.add(person.slug)
+            if len(invites) >= min(MAX_INVITES_PER_TURN, remaining_seats):
+                break
+
+        if len(invites) >= min(MAX_INVITES_PER_TURN, remaining_seats):
+            return invites[:remaining_seats]
+
+        roster_people = [person for person in people if person.slug not in seated and person.slug not in seen]
+        if not roster_people:
+            return invites
+
+        seated_names = '、'.join(by_slug[slug].chinese_name for slug in seated_slugs if slug in by_slug)
+        roster = '\n'.join(f'{person.slug}\t{person.chinese_name}\t{person.english_name}' for person in roster_people)
+        history_text = '\n'.join(f'{turn.role}: {turn.content}' for turn in request.history[-6:])
+        try:
+            payload = await self.llm_service.chat_json(
+                [
+                    {'role': 'system', 'content': '你只输出合法 JSON，不输出任何其他文字。'},
+                    {
+                        'role': 'user',
+                        'content': build_roundtable_invite_prompt(
+                            request.question,
+                            history_text,
+                            seated_names,
+                            roster,
+                        ),
+                    },
+                ],
+                temperature=0.1,
+                max_tokens=300,
+            )
+        except Exception:
+            return invites
+
+        raw_invites = payload.get('invites') if isinstance(payload, dict) else None
+        if not isinstance(raw_invites, list):
+            return invites
+
+        for entry in raw_invites:
+            if not isinstance(entry, dict):
+                continue
+            slug = str(entry.get('person_slug') or '').strip()
+            person = by_slug.get(slug)
+            if not person or slug in seated or slug in seen:
+                continue
+            if not self._get_profile(person.id):
+                continue
+            host_line = finalize_complete_sentence(
+                str(entry.get('host_line') or '').strip() or f'I have invited {person.english_name} to join the discussion.',
+                max_chars=240,
+            ) or f'I have invited {person.english_name}.'
+            invites.append(
+                GroupInvite(
+                    person_slug=person.slug,
+                    person_name=person.english_name,
+                    host_line=host_line,
+                )
+            )
+            seen.add(slug)
+            if len(invites) >= min(MAX_INVITES_PER_TURN, remaining_seats):
+                break
+        return invites[:remaining_seats]
 
     def _get_person(self, slug: str) -> Person:
         person = self.db.scalar(select(Person).where(Person.slug == slug))
@@ -143,6 +272,11 @@ class ChatService:
         if conversation_id:
             session = self.db.scalar(select(ConversationSession).where(ConversationSession.id == conversation_id))
             if session:
+                existing = list(session.selected_people or [])
+                for slug in selected_people:
+                    if slug not in existing:
+                        existing.append(slug)
+                session.selected_people = existing
                 return session
         session = ConversationSession(
             id=str(uuid4()),
@@ -192,8 +326,8 @@ class ChatService:
     def _build_concise_user_prompt(self, question: str) -> str:
         return (
             f'{question}\n\n'
-            '请直接回答这个问题，使用中文，只写 1 到 2 句，尽量控制在 50 字内。'
-            '语气要像这位人物本人，内容具体，不要分点，不要长篇分析，不要客套开场。'
+            'Answer in English in one or two complete sentences, up to 40 words. '
+            'Stay true to the advisor’s voice. Be specific, with no bullet points, lengthy analysis, or polite preamble.'
         )
 
     def _retrieved_to_dict(self, item) -> dict:

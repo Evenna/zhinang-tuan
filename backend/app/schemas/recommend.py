@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.core.english import EnglishResponse
+
 from pydantic import BaseModel, Field
 
 
@@ -8,7 +10,7 @@ class RecommendRequest(BaseModel):
     top_k: int = Field(default=5, ge=1, le=10)
 
 
-class RecommendationItem(BaseModel):
+class RecommendationItem(EnglishResponse):
     person_slug: str
     person_name: str
     reason: str

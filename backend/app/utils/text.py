@@ -33,6 +33,20 @@ def keyword_overlap_score(question_tokens: list[str], candidate_tokens: list[str
     return overlap / max(len(qset), 1)
 
 
+def finalize_complete_sentence(text: str, *, max_chars: int = 240) -> str:
+    text = str(text or '').replace('\n', ' ').strip().strip('"“”\'')
+    text = re.sub(r'\s+', ' ', text)
+    text = re.sub(r'\.{3,}|…+', '', text).strip()
+    if not text:
+        return ''
+    match = re.search(r'[^.!?]*[.!?]', text)
+    if match:
+        return match.group(0).strip()
+    if 2 <= len(text) <= max_chars + 8:
+        return f'{text}.'
+    return ''
+
+
 def truncate_text(text: str, limit: int) -> str:
     text = (text or '').strip()
     if len(text) <= limit:
@@ -45,11 +59,11 @@ def split_text_semantic(text: str, *, chunk_size: int = 700, overlap: int = 80) 
     if not text:
         return []
 
-    paragraphs = [part.strip() for part in re.split(r'\\n+', text) if part.strip()]
+    paragraphs = [part.strip() for part in re.split(r'\n+', text) if part.strip()]
     chunks: list[str] = []
     current = ''
     for paragraph in paragraphs:
-        candidate = f'{current}\\n\\n{paragraph}'.strip() if current else paragraph
+        candidate = f'{current}\n\n{paragraph}'.strip() if current else paragraph
         if len(candidate) <= chunk_size:
             current = candidate
             continue

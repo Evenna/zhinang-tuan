@@ -1,11 +1,8 @@
-# 智囊团 `zhinang-tuan`
+# 苏格拉底请回答 `zhinang-tuan`
 
 一个以“历史/文学/商业/艺术/科学人物作为顾问”的对话式网页项目。
 
-当前仓库已经整理为两条清晰的使用路径：
-
-- 前端预览版：默认进入本地预览模式，适合快速调 UI、交互、人物排版
-- 完整版：前端接 FastAPI 后端，调用 DeepSeek 生成推荐和人物回答
+当前仓库默认走完整链路：前端接 FastAPI，由 MiniMax 根据问题推荐人物并生成回答。`?mode=adjust` 仍可用于人物调图工作台。
 
 ## 项目结构
 
@@ -36,32 +33,11 @@ zhinang-tuan/
 
 ## 当前工作模式
 
-### 1. 前端预览版
+### 1. 调图工作台
 
-适合这些场景：
+人物卡牌和圆桌头像的可视化调图仍可用：
 
-- 调首页视觉、人物位置、卡牌排版
-- 调洗牌动画、翻牌、背面阅读体验
-- 不想等待 API 返回，只想快速看页面
-
-默认模式就是预览版，页面会从 `localStorage` 或 URL 参数读取模式。
-
-启动方式：
-
-```bash
-cd /Users/bytedance/Downloads/ui1/zhinang-tuan
-python3 -m http.server 8126
-```
-
-打开：
-
-- `http://127.0.0.1:8126/?mode=preview`
-
-说明：
-
-- 预览版不会请求后端接口
-- 仍然会展示完整的首页 -> 洗牌 -> 卡牌结果页流程
-- 适合做前端联调前的视觉确认
+- `http://127.0.0.1:8126/?mode=adjust`
 
 ### 2. 完整版（前后端联动）
 
@@ -69,7 +45,7 @@ python3 -m http.server 8126
 
 - 测真实推荐结果
 - 测人物回答生成
-- 验证 DeepSeek 接口与后端逻辑
+- 验证 MiniMax 接口与后端逻辑
 
 前端：
 
@@ -91,7 +67,7 @@ uvicorn app.main:app --reload --port 8000
 
 打开：
 
-- `http://127.0.0.1:8126/?mode=api`
+- `http://127.0.0.1:8126/`
 
 说明：
 
@@ -145,6 +121,28 @@ uvicorn app.main:app --reload --port 8000
 - `POST /api/recommend`
 - `POST /api/chat/respond`
 - `POST /api/chat/group`
+- `POST /api/agent/open` / `POST /api/agent/ask` / `POST /api/agent/close`
+
+## MR 眼镜智能体（DeepSeek）
+
+悬浮球由 MR 端自己做。后端只负责：点一下开机、问答、再点一下关机。
+
+本地对照页（网页悬浮球，逻辑和眼镜侧一样）：
+
+- `http://127.0.0.1:8000/agent`
+
+MR 端按这个顺序接：
+
+1. 点击悬浮球启动：`POST /api/agent/open`
+2. 用户说话/打字后提问：`POST /api/agent/ask`，body 为 `{ "session_id", "question" }`
+3. 需要边生成边播报时改用：`POST /api/agent/ask/stream`
+4. 再点悬浮球关闭：`POST /api/agent/close`，body 为 `{ "session_id" }`
+
+改人设只动这一处：
+
+- `backend/app/core/agent_prompt.py`
+
+DeepSeek 的 key 写在本地 `backend/.env` 的 `DEEPSEEK_API_KEY`，不要提交到 git。
 
 ## 数据与素材说明
 
@@ -210,7 +208,7 @@ python3 -m http.server 8126
 
 打开：
 
-- `http://127.0.0.1:8126/?mode=preview`
+- `http://127.0.0.1:8126/`
 
 ### 看完整链路
 
@@ -229,4 +227,24 @@ python3 -m http.server 8126
 
 打开：
 
-- `http://127.0.0.1:8126/?mode=api`
+- `http://127.0.0.1:8126/`
+
+## Published English UI preview
+
+- Website: https://evenna.github.io/zhinang-tuan/app/
+- User stories: https://evenna.github.io/zhinang-tuan/app/?view=stories
+
+The GitHub Pages preview includes the English advisor catalog, sample card deck,
+interactive story community, animated statistics, and the one-screen desktop layout.
+It uses public profile snapshots and illustrative stories. Live AI replies still
+require the FastAPI backend and server-side API credentials; secrets are never exported.
+Existing project materials at `/docs/index.html` are preserved.
+
+Rebuild the preview from the local catalog after editing the app:
+
+```bash
+backend/.venv/bin/python -m pip install -r scripts/preview-requirements.txt
+backend/.venv/bin/python scripts/build_public_preview.py
+```
+
+The export writes `docs/app/` and creates optimized WebP copies of illustrations.

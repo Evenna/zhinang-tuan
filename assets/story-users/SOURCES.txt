@@ -1,0 +1,4 @@
+Demo avatar photographs: Random User Generator, originally curated from UI Faces.
+Source gallery: https://randomuser.me/photos
+Documentation and photo notice: https://randomuser.me/documentation
+These images are UI demonstration assets, not evidence of actual users or conversations.
