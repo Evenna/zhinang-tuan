@@ -27,6 +27,7 @@ from app.schemas.chat import (
 )
 from app.schemas.recommend import RecommendRequest
 from app.services.llm import MiniMaxService
+from app.services.longform import pick_long, long_clause, finish_sentences
 from app.services.recommend import RecommendService, person_name_aliases, text_mentions_alias
 from app.services.retrieval import RetrievalService
 from app.utils.text import finalize_complete_sentence
@@ -217,17 +218,19 @@ class ChatService:
             ' You do NOT have to speak. Only speak if you have something genuinely new, a real disagreement, or it touches your own life; otherwise output only: pass'
             if request.allow_pass else ''
         )
+        go_long = pick_long(person.slug, [line.text for line in request.transcript] + [request.question])
         user_msg = (
             f'You are {person.english_name}, {"just invited to join" if request.newly_invited else "seated at"} a small roundtable with {others}. '
             'A guest has brought a personal question. Speak as yourself, warmly but with conviction, in English, '
             'one or two complete sentences, at most 45 words, no ellipses, no lists, no speaker label. Only address or name people who have already spoken in the conversation below.'
+            + (' ' + long_clause() if go_long else '') +
             f'{passing}\n\nCONVERSATION SO FAR:\n' + ('\n'.join(lines) or '(nothing yet)')
             + f'\n\nThe guest\'s latest words: "{request.question}"\n{guidance}'
         )
         try:
             raw = await self.llm_service.chat(
                 [{'role': 'system', 'content': system_prompt}, {'role': 'user', 'content': user_msg}],
-                temperature=0.8, max_tokens=160,
+                temperature=0.8, max_tokens=420 if go_long else 160,
             )
         except HTTPException as exc:
             raise HTTPException(status_code=502, detail='The table fell quiet. Try again in a moment.') from exc
@@ -239,7 +242,10 @@ class ChatService:
             if request.allow_pass:
                 return {'answer': None, 'speaker': person.slug}
             text = ''
-        speech = finalize_complete_sentence(text, max_chars=320) if text else ''
+        if text and go_long and len(text.split()) > 50:
+            speech = finish_sentences(text, max_chars=1200)
+        else:
+            speech = finish_sentences(text, max_chars=360) if text else ''
         if not speech:
             if request.allow_pass:
                 return {'answer': None, 'speaker': person.slug}

@@ -893,6 +893,16 @@
       font-size: 0.86rem;
       line-height: 1.75;
     }
+    .login-card { position: relative; }
+    .login-close {
+      position: absolute; top: 24px; right: 22px; width: 32px; height: 32px;
+      display: grid; place-items: center; padding: 0 0 2px;
+      border: 1px solid rgba(212,175,123,0.28); border-radius: 50%;
+      background: transparent; color: rgba(246,240,231,0.72);
+      font-size: 20px; line-height: 1; cursor: pointer;
+      transition: border-color .3s ease, color .3s ease, background .3s ease;
+    }
+    .login-close:hover { border-color: rgba(212,175,123,0.7); color: #f6f0e7; background: rgba(212,175,123,0.1); }
     .login-wrap {
       display: grid;
       place-items: center;
@@ -4454,6 +4464,7 @@
   <section class="site-page" id="loginPage">
     <div class="login-wrap">
       <div class="login-card">
+        <button type="button" class="login-close" id="loginClose" aria-label="Close">×</button>
         <span class="login-kicker">Dear Socrates</span>
         <h2 id="loginTitle">Welcome back.</h2>
         <span class="login-copy" id="loginCopy">Your conversations, debates and saved verdicts follow you to any device.</span>
@@ -8911,7 +8922,27 @@ async function verifySession() {
   renderLoginState();
 }
 
+let loginReturn = null;
+function closeLoginPage() {
+  const back = loginReturn;
+  loginReturn = null;
+  if (back && typeof back === 'function') { back(); return; }
+  if (new URLSearchParams(location.search).get('view') === 'login') {
+    const u = new URL(location.href); u.searchParams.delete('view'); history.replaceState(null, '', u);
+  }
+  showHomePage();
+}
+document.getElementById('loginClose')?.addEventListener('click', closeLoginPage);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && loginPage?.classList.contains('show')) closeLoginPage();
+});
+
 function showLoginPage() {
+  const prev = Object.entries(SITE_PAGES).find(([k, el]) => k !== 'login' && el?.classList.contains('show'))?.[0];
+  const people = document.body.classList.contains('people-mode');
+  if (!loginPage?.classList.contains('show')) {
+    loginReturn = prev ? () => openSitePage(prev) : (people && typeof showPeoplePage === 'function' ? () => showPeoplePage() : null);
+  }
   openSitePage('login');
   if (loginError) loginError.textContent = '';
   renderLoginState();

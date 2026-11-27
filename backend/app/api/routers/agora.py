@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
 from app.core.prompts import build_persona_system_prompt
+from app.services.longform import pick_long, long_clause
 from app.db.models import Person
 from app.services.chat import ChatService
 
@@ -255,6 +256,9 @@ async def debate_turn(req: TurnRequest, db: Session = Depends(get_db)) -> dict:
         ask = '\nReact to what was just said — the last speaker especially — rather than restating your opening.'
     passing = ('\nYou do NOT have to speak. Only speak if you have something genuinely new, a sharp disagreement, '
                'or the remark touches your own life. Otherwise reply exactly {"pass": true}.') if req.allow_pass else ''
+    go_long = pick_long(req.speaker, [t.text for t in req.transcript] + ([req.question] if req.question else []))
+    if go_long:
+        passing += '\n' + long_clause().replace('4 to 7 sentences', '4 to 7 sentences in "text"')
     user_msg = (
         f'{TURN_INSTRUCTIONS}{passing}\n\nMOTION: "{req.motion}"\nRound {req.round}. Also on the floor: {others}.\n'
         f'Your previous stance: {req.stances.get(req.speaker, "none yet")}.\n\nDEBATE SO FAR:\n'
@@ -262,7 +266,7 @@ async def debate_turn(req: TurnRequest, db: Session = Depends(get_db)) -> dict:
     )
     try:
         raw = await svc.llm_service.chat([{'role': 'system', 'content': system}, {'role': 'user', 'content': user_msg}],
-                                         temperature=0.85, max_tokens=260)
+                                         temperature=0.85, max_tokens=520 if go_long else 260)
     except HTTPException as exc:
         raise HTTPException(status_code=502, detail='The floor fell silent. Try again in a moment.') from exc
     if req.allow_pass and re.search(r'"pass"\s*:\s*true', raw):
@@ -295,7 +299,7 @@ def _parse_turn(raw: str) -> Optional[dict]:
     speech = re.sub(r'\s+', ' ', str(data.get('text', ''))).strip().strip('"“”')
     if len(speech) < 8 or speech.lower().strip('.') in {'pass', 'skip'}:
         return None
-    return {'stance': stance, 'move': move, 'text': speech[:600]}
+    return {'stance': stance, 'move': move, 'text': speech[:1400]}
 
 
 def _tally(stances: dict[str, str], seats: list[str]) -> dict:
