@@ -2909,11 +2909,11 @@
       justify-items: center;
       gap: 8px;
       opacity: 0.8;
-      transition: opacity 0.25s ease, transform 0.25s ease;
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.22,.61,.36,1);
     }
     .roundtable-speaker.is-speaking {
       opacity: 1;
-      transform: translateY(-8px);
+      transform: translateY(-4px);
     }
     .roundtable-avatar,
     .roundtable-message-avatar {
@@ -3034,8 +3034,9 @@
     .roundtable-message.is-user .roundtable-message-text {
       color: #f8efe2;
     }
-    .roundtable-message.is-pending { opacity: 0.95; animation: rtSoftIn 0.6s ease both; }
-    .roundtable-message.is-live { animation: rtSoftIn 0.5s ease both; }
+    .roundtable-message.is-new { animation: rtSoftIn 0.5s ease both; }
+    .roundtable-message.is-settled { animation: none; }
+    #roundtableDialogue { overflow-anchor: none; }
     @keyframes rtSoftIn { from { opacity: 0; } }
     .roundtable-message-text.is-typing::after { content: ''; display: inline-block; width: 6px; height: 1em; margin-left: 3px; vertical-align: -2px; background: rgba(212,175,123,0.6); animation: rtBlink 0.9s steps(2) infinite; }
     @keyframes rtBlink { 50% { opacity: 0; } }
@@ -4269,8 +4270,8 @@
 
   </style>
   <link rel="stylesheet" href="assets/story-community.css">
-  <link rel="stylesheet" href="assets/agora.css?v=20261128i">
-  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128j">
+  <link rel="stylesheet" href="assets/agora.css?v=20261128k">
+  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128k">
 </head>
 <body>
 
@@ -4543,8 +4544,8 @@
 <script src="assets/story-community-ui.js"></script>
 <script src="assets/person-timelines.js" defer></script>
 <script src="assets/advisor-life.js" defer></script>
-<script src="assets/agora.js?v=20261128i" defer></script>
-<script src="assets/agora-floor.js?v=20261128i" defer></script>
+<script src="assets/agora.js?v=20261128k" defer></script>
+<script src="assets/agora-floor.js?v=20261128k" defer></script>
 <script>
 // ─── LINE AVATAR SVGs ───
 // Each person has a unique minimalist line-art face silhouette
@@ -9848,7 +9849,20 @@ function renderRoundtableMessages() {
     return '<div class="roundtable-message is-system"><div class="roundtable-bubble"><div class="roundtable-message-text">Ask anything. They will answer one at a time, and may answer each other.</div></div></div>';
   }
 
-  return messages.map((message) => {
+  return messages.map((message) => renderRoundtableMessage(message)).join('') + renderRoundtableLoadingTail();
+}
+
+function renderRoundtableLoadingTail() {
+  return state.roundtable?.loading && !state.roundtable?.sequential ? `
+    <div class="roundtable-message is-system">
+      <div class="roundtable-bubble">
+        <div class="roundtable-typing"><span>Thinking</span><i></i><i></i><i></i></div>
+      </div>
+    </div>` : '';
+}
+
+function renderRoundtableMessage(message) {
+  {
     if (message.type === 'user') {
       return `
         <div class="roundtable-message is-user">
@@ -9894,13 +9908,79 @@ function renderRoundtableMessages() {
         </div>
       </div>
     `;
-  }).join('') + (state.roundtable?.loading && !state.roundtable?.sequential ? `
-    <div class="roundtable-message is-system">
-      <div class="roundtable-bubble">
-        <div class="roundtable-typing"><span>Thinking</span><i></i><i></i><i></i></div>
-      </div>
-    </div>
-  ` : '');
+  }
+}
+
+// Only touch the DOM when something actually changed — avoids image reloads / replayed animations (flash & jitter).
+function patchHTML(root, html) {
+  if (root._lastHTML === html) return;
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html.trim();
+  const next = [...tpl.content.children];
+  const prev = [...root.children];
+  if (root._lastHTML !== undefined && next.length === prev.length && next.every((n, i) => n.tagName === prev[i].tagName && n.dataset.slug === prev[i].dataset.slug)) {
+    next.forEach((n, i) => {
+      const old = prev[i];
+      if (old.outerHTML === n.outerHTML) return;
+      if (old.className !== n.className) old.className = n.className;
+      [...n.attributes].forEach((a) => { if (a.name !== 'class' && old.getAttribute(a.name) !== a.value) old.setAttribute(a.name, a.value); });
+      if (old.innerHTML !== n.innerHTML) old.innerHTML = n.innerHTML;
+    });
+  } else {
+    root.innerHTML = html;
+  }
+  root._lastHTML = html;
+}
+
+let rtMsgSeq = 0;
+function patchRoundtableMessages(root) {
+  const list = state.roundtable?.messages || [];
+  if (!list.length) { root.innerHTML = renderRoundtableMessages(); root._rtKeys = []; return; }
+  if (!root._rtKeys) { root.innerHTML = ''; root._rtKeys = []; }
+  const hadTail = root.querySelector(':scope > [data-rt-tail]');
+  [...root.children].forEach((el) => { if (!el.dataset.rtKey) el.remove(); });
+  [...root.childNodes].forEach((n) => { if (n.nodeType !== 1) n.remove(); });
+  const wanted = list.map((m) => { if (!m._key) m._key = `m${++rtMsgSeq}`; return m; });
+  const keep = new Set(wanted.map((m) => m._key));
+  [...root.children].forEach((el) => { if (!keep.has(el.dataset.rtKey)) el.remove(); });
+  let cursor = null;
+  wanted.forEach((m) => {
+    const html = renderRoundtableMessage(m).trim();
+    let el = root.querySelector(`:scope > [data-rt-key="${m._key}"]`);
+    if (el && el._html !== html) {
+      // update in place — same outer node, avatar untouched, so nothing re-mounts, reloads or re-animates
+      const tpl = document.createElement('template'); tpl.innerHTML = html;
+      const n = tpl.content.firstElementChild;
+      const sameShape = Boolean(el.querySelector('.roundtable-message-avatar')) === Boolean(n.querySelector('.roundtable-message-avatar'));
+      if (sameShape) {
+        const keepNew = el.classList.contains('is-new');
+        el.className = n.className;
+        if (keepNew) el.classList.add('is-new');
+        const ob = el.querySelector('.roundtable-bubble'), nb = n.querySelector('.roundtable-bubble');
+        const txt = ob?.querySelector('.roundtable-message-text'), ntxt = nb?.querySelector('.roundtable-message-text');
+        if (txt && ntxt && ob.querySelector('.roundtable-message-name')?.textContent === nb.querySelector('.roundtable-message-name')?.textContent) {
+          txt.className = ntxt.className;
+          if (txt.textContent !== ntxt.textContent) txt.textContent = ntxt.textContent;
+        } else if (ob && nb) {
+          ob.innerHTML = nb.innerHTML;
+        }
+      } else {
+        el.replaceWith(n); el = n;
+      }
+      el._html = html; el._kind = m.type; el.dataset.rtKey = m._key;
+    }
+    if (!el) {
+      const tpl = document.createElement('template'); tpl.innerHTML = html;
+      el = tpl.content.firstElementChild;
+      el.dataset.rtKey = m._key; el._html = html; el._kind = m.type;
+      el.classList.add('is-new');
+    }
+    const ref = cursor ? cursor.nextElementSibling : root.firstElementChild;
+    if (ref !== el) root.insertBefore(el, ref);
+    cursor = el;
+  });
+  const tail = renderRoundtableLoadingTail().trim();
+  if (tail) { const t = document.createElement('template'); t.innerHTML = tail; const tn = t.content.firstElementChild; tn.dataset.rtTail = '1'; root.appendChild(tn); }
 }
 
 function syncRoundtableView() {
@@ -9915,10 +9995,10 @@ function syncRoundtableView() {
   const roundtable = state.roundtable || createInitialRoundtableState();
   view.classList.toggle('show', Boolean(roundtable.active));
   view.setAttribute('aria-hidden', roundtable.active ? 'false' : 'true');
-  speakers.innerHTML = renderRoundtableSpeakers();
-  messages.innerHTML = renderRoundtableMessages();
+  patchHTML(speakers, renderRoundtableSpeakers());
+  patchRoundtableMessages(messages);
   const lifeTabs = document.getElementById('roundtableLifeTabs');
-  if (lifeTabs) lifeTabs.innerHTML = renderRoundtableLifeTabs();
+  if (lifeTabs) patchHTML(lifeTabs, renderRoundtableLifeTabs());
   if (roundtable.active && window.AdvisorLife && !roundtable.lifeSlug && getSeatedCards()[0]) {
     showRoundtableLife(getSeatedCards()[0].slug);
   }
@@ -9932,8 +10012,8 @@ function syncRoundtableView() {
   }
   requestAnimationFrame(() => {
     const dialogue = document.getElementById('roundtableDialogue');
-    if (dialogue) {
-      dialogue.scrollTop = dialogue.scrollHeight;
+    if (dialogue && dialogue.scrollHeight - dialogue.scrollTop - dialogue.clientHeight > 2) {
+      dialogue.scrollTo({ top: dialogue.scrollHeight, behavior: 'smooth' });
     }
   });
 }
@@ -10057,8 +10137,7 @@ async function typeRoundtableLine(message, token) {
   message.shown = '';
   message.typing = true;
   syncRoundtableView();
-  const nodes = document.querySelectorAll('#roundtableMessages .roundtable-message-text');
-  const box = nodes[nodes.length - 1];
+  const box = document.querySelector(`#roundtableMessages [data-rt-key="${message._key}"] .roundtable-message-text`);
   const dialogue = document.getElementById('roundtableDialogue');
   for (let i = 0; i < words.length; i += 1) {
     if (state.roundtable?.runToken !== token) break;
@@ -10141,7 +10220,7 @@ async function runSequentialRoundtable(question, shouldSummarize) {
       syncRoundtableView();
       continue;
     }
-    const msg = { type: 'advisor', role: 'assistant', slug, name: answer.person_name || card?.name, text: speech };
+    const msg = { type: 'advisor', role: 'assistant', slug, name: answer.person_name || card?.name, text: speech, _key: pending._key };
     rt.messages.splice(idx, 1, msg);
     await typeRoundtableLine(msg, token);
     if (window.AdvisorLife && (await window.AdvisorLife.mentions(slug, speech) || rt.lifeSlug === slug)) {
@@ -10181,6 +10260,7 @@ async function submitRoundtableMessage(question) {
     ...(state.roundtable || createInitialRoundtableState()),
     active: true,
     loading: true,
+    sequential: !window.ASK_SOCRATES_PREVIEW,
     error: '',
     activeSpeakerSlug: ''
   };

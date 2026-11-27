@@ -73,7 +73,19 @@
     if (!st) return;
     const order = d.seats.map((s) => d.stances[s] || 'undecided').join();
     if (st.dataset.order !== order || st.dataset.n !== String(d.seats.length) || st.dataset.t !== String(AG.target)) {
+      // rebuild layout but keep each face's existing node, so portraits never reload or flash
+      const keep = {};
+      st.querySelectorAll('.ag-seat-n[data-slug]').forEach((n) => { keep[n.dataset.slug] = n; });
+      const wasBuilt = Boolean(st.dataset.order);
       st.innerHTML = stageHTML();
+      if (wasBuilt) st.classList.add('is-settled');
+      st.querySelectorAll('.ag-seat-n[data-slug]').forEach((n) => {
+        const old = keep[n.dataset.slug];
+        if (!old) return;
+        old.className = n.className;
+        [...n.attributes].forEach((a) => { if (a.name !== 'class') old.setAttribute(a.name, a.value); });
+        n.replaceWith(old);
+      });
       st.dataset.order = order; st.dataset.n = d.seats.length; st.dataset.t = AG.target;
       return;
     }
@@ -217,7 +229,13 @@
       const tmp = document.createElement('div');
       tmp.innerHTML = turnHTML(full);
       const el = tmp.firstElementChild;
-      if (pending) pending.replaceWith(el); else appendHTML(el.outerHTML);
+      if (pending) {
+        // swap thinking → speaking in place: no replayed fade, keep the avatar node
+        el.classList.add('is-settled');
+        const oldAv = pending.firstElementChild, newAv = el.firstElementChild;
+        if (oldAv && newAv && oldAv.tagName === newAv.tagName && !oldAv.classList.contains('ag-turn-body')) newAv.replaceWith(oldAv);
+        pending.replaceWith(el);
+      } else appendHTML(el.outerHTML);
       await speak(el, full.text, d);
       spoken += 1;
       await sleep(650);
