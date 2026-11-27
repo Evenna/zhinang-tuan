@@ -17,7 +17,7 @@ def _community() -> dict:
 
 
 def _summary(user: dict) -> dict:
-    return {k: user.get(k) for k in ('id', 'name', 'avatar', 'age', 'role', 'city', 'headline', 'question', 'context', 'topics', 'date', 'resonance', 'saves')}
+    return {k: user.get(k) for k in ('id', 'name', 'avatar', 'age', 'role', 'city', 'headline', 'question', 'context', 'topics', 'date', 'resonance', 'saves', 'mode', 'participants', 'likes')}
 
 
 @router.get('')

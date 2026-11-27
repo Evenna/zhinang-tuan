@@ -45,7 +45,7 @@ def main() -> None:
         source = source.replace(before, after)
     source = source.replace('assets/character_cutouts/${slug}.png', 'assets/character_cutouts/${slug}.webp')
 
-    for name in ['story-community.js', 'story-community-ui.js', 'story-community.css']:
+    for name in ['story-community.js', 'story-community-ui.js', 'story-community.css', 'advisor-life.js', 'advisor-life.css', 'person-timelines.js']:
         shutil.copy2(ROOT / 'assets' / name, DEST / 'assets' / name)
     shutil.copytree(ROOT / 'assets' / 'story-users', DEST / 'assets' / 'story-users', dirs_exist_ok=True)
     catalog = []

@@ -48,3 +48,24 @@ def get_person(slug: str, db: Session = Depends(get_db)) -> PersonDetailResponse
         persona_traits=profile.core_traits if profile else None,
         preferred_topics=profile.preferred_topics if profile else None,
     )
+
+
+_TIMELINES = None
+
+
+def _load_timelines() -> dict:
+    global _TIMELINES
+    if _TIMELINES is None:
+        import json
+        from pathlib import Path
+        path = Path(__file__).resolve().parents[3] / 'data' / 'person_timelines.json'
+        _TIMELINES = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    return _TIMELINES
+
+
+@router.get('/{slug}/timeline')
+def get_person_timeline(slug: str) -> dict:
+    data = _load_timelines().get(slug)
+    if not data:
+        raise HTTPException(status_code=404, detail='Timeline not found')
+    return data

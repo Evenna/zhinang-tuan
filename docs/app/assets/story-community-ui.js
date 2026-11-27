@@ -311,42 +311,136 @@ window.StoryCommunityScene = StoryCommunityScene;
     return {...user, advisor_slug: advisor.slug, advisor_name: advisor.name};
   }
 
+  const LIKE_KEY = 'askSocrates.likedStories';
+  const COMMENT_KEY = 'askSocrates.storyComments';
+  function readStore(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch (error) { return fallback; } }
+  function writeStore(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (error) {} }
+  function turnsOf(story) {
+    if (Array.isArray(story.transcript) && story.transcript.length) {
+      return story.transcript.map(t => ({speaker: t.speaker === 'host' ? 'system' : t.speaker, text: t.text}));
+    }
+    const solo = (story.conversation || []).map(t => ({speaker: t.role === 'user' ? 'user' : story.advisor_slug, text: t.text}));
+    const table = (story.roundtable || []).map(t => ({speaker: t.speaker, text: t.text}));
+    return table.length ? [...solo, {speaker: 'system', text: 'Moved to roundtable'}, ...table] : solo;
+  }
+  function speakerName(story, slug) {
+    if (slug === 'user') return (story.name || 'User').split(' ')[0];
+    if (slug === story.advisor_slug && story.advisor_name) return story.advisor_name;
+    return window.STORY_COMMUNITY?.names?.[slug] || advisorName(slug);
+  }
+  function renderSocial(root, story) {
+    const liked = !!readStore(LIKE_KEY, {})[story.id];
+    const likeBtn = root.querySelector('[data-st-like]');
+    likeBtn.classList.toggle('is-on', liked);
+    likeBtn.querySelector('b').textContent = (story.likes ?? story.resonance ?? 0) + (liked ? 1 : 0);
+    const mine = readStore(COMMENT_KEY, {})[story.id] || [];
+    const all = [...mine, ...(story.comments || [])];
+    root.querySelector('[data-st-comment-count]').textContent = all.length;
+    root.querySelector('.st-comments-list').innerHTML = all.map(c => `<div class="st-comment${c.is_author ? ' is-author' : ''}${c.mine ? ' is-mine' : ''}">
+      <div class="st-comment-head"><b>${esc(c.name)}</b>${c.is_author ? '<span class="st-badge">Author</span>' : ''}${c.mine ? '<span class="st-badge">You</span>' : ''}<span class="st-comment-likes">♥ ${esc(c.likes ?? 0)}</span></div>
+      <p>${esc(c.text)}</p></div>`).join('') || '<p class="st-meta">No comments yet.</p>';
+  }
+
   async function open(user, advisor) {
     if (!user || !advisor) return;
     const root = ensureOverlay();
     root.innerHTML = '<div class="st-panel"><button class="st-close" type="button" aria-label="Close">×</button><div class="st-meta">Loading…</div></div>';
     root.hidden = false;
     document.body.style.overflow = 'hidden';
-    const story = await loadFull(user, advisor);
+    const story = {advisor_slug: advisor.slug, advisor_name: advisor.name, ...(await loadFull(user, advisor))};
     const date = story.date ? new Date(story.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : '';
-    const chat = (story.conversation || []).map(turn => {
-      const mine = turn.role === 'user';
-      return `<div class="st-msg ${mine ? 'is-user' : ''}">${mine ? imgTag(story.avatar, story.name) : imgTag(portrait(story.advisor_slug), story.advisor_name)}
-        <div class="st-bubble"><span class="st-who">${esc(mine ? story.name.split(' ')[0] : story.advisor_name)}</span>${esc(turn.text)}</div></div>`;
+    const turns = turnsOf(story);
+    const participants = story.participants?.length ? story.participants : [...new Set(turns.map(t => t.speaker).filter(s => s !== 'user'))];
+    const isTable = story.mode === 'roundtable' || participants.length > 1;
+    const sum = story.summary || {};
+    const positions = (sum.positions || []).map(p => `<div class="st-position">${imgTag(portrait(p.speaker), speakerName(story, p.speaker))}
+        <div><b>${esc(speakerName(story, p.speaker))}</b><p>${esc(p.stance)}</p></div></div>`).join('');
+    const chat = turns.map(turn => {
+      const mine = turn.speaker === 'user';
+      if (turn.speaker === 'system') return `<div class="st-sys">${esc(turn.text)}</div>`;
+      return `<div class="st-msg ${mine ? 'is-user' : ''}">${mine ? imgTag(story.avatar, story.name) : imgTag(portrait(turn.speaker), speakerName(story, turn.speaker))}
+        <div class="st-bubble"><span class="st-who">${esc(speakerName(story, turn.speaker))}</span>${esc(turn.text)}</div></div>`;
     }).join('');
-    const table = (story.roundtable || []).map(turn => `<div class="st-msg">${imgTag(portrait(turn.speaker), turn.speaker)}
-        <div class="st-bubble"><span class="st-who">${esc(turn.speaker === story.advisor_slug ? story.advisor_name : advisorName(turn.speaker))}</span>${esc(turn.text)}</div></div>`).join('');
-    const guests = [...new Set((story.roundtable || []).map(turn => turn.speaker).filter(slug => slug !== story.advisor_slug))].map(advisorName);
+    const cast = participants.map(slug => `<span class="st-cast-chip">${imgTag(portrait(slug), speakerName(story, slug))}${esc(speakerName(story, slug))}</span>`).join('');
     root.innerHTML = `<div class="st-panel">
       <button class="st-close" type="button" aria-label="Close">×</button>
       <div class="st-head">${imgTag(story.avatar, story.name)}<div>
         <div class="st-name">${esc(story.name)}</div>
         <div class="st-meta">${[story.age && `${story.age}`, story.role, story.city].filter(Boolean).map(esc).join(' · ')}</div>
-        <div class="st-meta">${esc(date)}</div></div></div>
-      <div class="st-kicker">Asked ${esc(story.advisor_name)}</div>
+        <div class="st-meta">${esc(date)} · ${turns.length} messages</div></div></div>
+      <div class="st-kicker">${isTable ? 'Roundtable' : 'One-on-one'} · ${esc(participants.map(s => speakerName(story, s)).join(', '))}</div>
       <div class="st-headline">${esc(story.headline)}</div>
       <div class="st-question">“${esc(story.question)}”</div>
-      <div class="st-context">${esc(story.context)}</div>
-      <div class="st-tags">${(story.topics || []).map(tag => `<span>${esc(tag)}</span>`).join('')}</div>
-      <div class="st-section">One-on-one with ${esc(story.advisor_name)}</div>${chat}
-      ${table ? `<div class="st-section">Roundtable${guests.length ? ` · with ${esc(guests.join(' & '))}` : ''}</div>${table}` : ''}
-      ${story.outcome ? `<div class="st-section">What happened next</div><div class="st-outcome">${esc(story.outcome)}</div>` : ''}
-      <div class="st-foot"><span>♥ ${esc(story.resonance ?? 0)} found this useful · ${esc(story.saves ?? 0)} saved</span>
+      <div class="st-cast">${cast}</div>
+      <section class="st-summary">
+        <div class="st-summary-label">Summary</div>
+        <p class="st-tldr">${esc(sum.tldr || story.context)}</p>
+        ${positions ? `<div class="st-summary-label">${isTable ? 'Where each voice landed' : 'The advisor’s position'}</div><div class="st-positions">${positions}</div>` : ''}
+        ${sum.tension ? `<div class="st-summary-label">The sticking point</div><p class="st-tension">${esc(sum.tension)}</p>` : ''}
+        ${sum.conclusion ? `<div class="st-summary-label">Where it ended</div><p class="st-conclusion">${esc(sum.conclusion)}</p>` : ''}
+        ${story.outcome ? `<div class="st-summary-label">What happened next</div><p class="st-outcome">${esc(story.outcome)}</p>` : ''}
+        <div class="st-tags">${(story.topics || []).map(tag => `<span>${esc(tag)}</span>`).join('')}</div>
+      </section>
+      <div class="st-actions">
+        <button type="button" class="st-act" data-st-like>♥ <b></b></button>
+        <button type="button" class="st-act" data-st-jump-comments>💬 <b data-st-comment-count></b></button>
+        <button type="button" class="st-act" data-st-share>↗ Share</button>
+        <span class="st-share-tip" hidden>Link copied</span>
+      </div>
+      <section class="st-comments">
+        <div class="st-summary-label">Comments</div>
+        <form class="st-comment-form"><input name="c" maxlength="400" placeholder="Add a thought…" autocomplete="off"><button type="submit">Post</button></form>
+        <div class="st-comments-list"></div>
+      </section>
+      <details class="st-transcript-wrap">
+        <summary>Full conversation · ${turns.length} messages</summary>
+        <div class="st-transcript">${chat}</div>
+      </details>
+      <div class="st-foot"><span>${esc(story.saves ?? 0)} saved · ${esc(story.shares ?? 0)} shared</span>
         <button class="story-read" type="button" data-st-ask>Ask my own version ↗</button></div>
       <div class="st-note">Illustrative story — the user is fictional; advisor replies are AI personas.</div>
     </div>`;
+    renderSocial(root, story);
     root.querySelector('.st-panel').scrollTop = 0;
+    root.querySelector('[data-st-like]').onclick = () => {
+      const liked = readStore(LIKE_KEY, {});
+      if (liked[story.id]) delete liked[story.id]; else liked[story.id] = 1;
+      writeStore(LIKE_KEY, liked);
+      renderSocial(root, story);
+    };
+    root.querySelector('[data-st-jump-comments]').onclick = () => root.querySelector('.st-comments').scrollIntoView({behavior: 'smooth', block: 'start'});
+    root.querySelector('[data-st-share]').onclick = async () => {
+      const url = new URL(location.href);
+      url.searchParams.set('view', 'stories');
+      url.searchParams.set('story', story.id);
+      const tip = root.querySelector('.st-share-tip');
+      try {
+        if (navigator.share) await navigator.share({title: story.headline, text: story.question, url: url.href});
+        else { await navigator.clipboard.writeText(url.href); tip.hidden = false; setTimeout(() => { tip.hidden = true; }, 1600); }
+      } catch (error) { tip.textContent = url.href; tip.hidden = false; }
+    };
+    root.querySelector('.st-comment-form').onsubmit = event => {
+      event.preventDefault();
+      const input = event.target.elements.c;
+      const text = input.value.trim();
+      if (!text) return;
+      const all = readStore(COMMENT_KEY, {});
+      all[story.id] = [{name: 'You', text, likes: 0, mine: true}, ...(all[story.id] || [])];
+      writeStore(COMMENT_KEY, all);
+      input.value = '';
+      renderSocial(root, story);
+    };
   }
+
+  function openFromUrl() {
+    const id = new URLSearchParams(location.search).get('story');
+    if (!id) return;
+    for (const a of window.STORY_COMMUNITY?.advisors || []) {
+      const u = a.users.find(item => item.id === id);
+      if (u) { open(u, a); return; }
+    }
+  }
+  if (document.readyState === 'complete') setTimeout(openFromUrl, 400); else addEventListener('load', () => setTimeout(openFromUrl, 400));
 
   window.openStoryTranscript = open;
   document.addEventListener('click', event => {

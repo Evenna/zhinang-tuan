@@ -189,3 +189,44 @@
 .st-foot .story-read { font-size: 11px; }
 .st-note { font-size: 10px; color: rgba(242,235,223,0.32); margin-top: 26px; }
 @media (max-width: 700px) { .st-panel { padding: 24px 20px 48px; } .st-headline { font-size: 32px; } }
+
+/* v3 reader: summary first, social, collapsible transcript */
+.st-cast { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 6px; }
+.st-cast-chip { display: inline-flex; align-items: center; gap: 7px; padding: 4px 12px 4px 4px; border: 1px solid rgba(212,175,123,0.28); border-radius: 999px; font-size: 12px; color: #e9dcc2; background: rgba(212,175,123,0.06); }
+.st-cast-chip img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background: #2a2620; }
+.st-summary { margin: 22px 0 0; padding: 22px 22px 18px; border: 1px solid rgba(212,175,123,0.26); border-radius: 14px; background: linear-gradient(180deg, rgba(212,175,123,0.09), rgba(212,175,123,0.02)); }
+.st-summary-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #cbb07c; margin: 18px 0 8px; }
+.st-summary-label:first-child { margin-top: 0; }
+.st-tldr { font-family: Georgia, serif; font-size: 16px; line-height: 1.65; color: #fff7e8; margin: 0; }
+.st-positions { display: grid; gap: 10px; }
+.st-position { display: flex; gap: 12px; align-items: flex-start; }
+.st-position img { flex: none; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #2a2620; border: 1px solid rgba(212,175,123,0.3); }
+.st-position b { font-size: 13px; color: #ffcf7a; font-weight: 600; }
+.st-position p { margin: 2px 0 0; font-size: 13.5px; line-height: 1.55; color: #e7dcc8; }
+.st-tension, .st-conclusion { margin: 0; font-size: 14px; line-height: 1.65; color: #efe5d2; }
+.st-tension { border-left: 2px solid rgba(255,140,110,0.7); padding-left: 14px; }
+.st-summary .st-outcome { margin: 0; }
+.st-summary .st-tags { margin-top: 16px; }
+.st-actions { display: flex; align-items: center; gap: 10px; margin: 18px 0 4px; flex-wrap: wrap; }
+.st-act { appearance: none; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(212,175,123,0.3); background: transparent; color: #f2ebdf; font: inherit; font-size: 13px; transition: background .2s, border-color .2s, color .2s; }
+.st-act:hover { background: rgba(212,175,123,0.1); border-color: rgba(212,175,123,0.6); }
+.st-act b { font-weight: 600; }
+.st-act.is-on { color: #ff7a8a; border-color: rgba(255,122,138,0.6); background: rgba(255,122,138,0.08); }
+.st-share-tip { font-size: 12px; color: #ffcf7a; word-break: break-all; }
+.st-comments { margin-top: 18px; }
+.st-comment-form { display: flex; gap: 8px; margin-bottom: 12px; }
+.st-comment-form input { flex: 1; min-width: 0; background: #1b1914; border: 1px solid rgba(212,175,123,0.25); border-radius: 10px; color: #f2ebdf; padding: 10px 12px; font: inherit; font-size: 13px; }
+.st-comment-form input:focus { outline: none; border-color: rgba(212,175,123,0.7); }
+.st-comment-form button { cursor: pointer; border: 0; border-radius: 10px; padding: 0 16px; background: #d4af7b; color: #15130f; font-weight: 600; font: inherit; font-size: 13px; }
+.st-comment { padding: 12px 0; border-top: 1px solid rgba(212,175,123,0.12); }
+.st-comment-head { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #e9dcc2; }
+.st-comment-likes { margin-left: auto; color: #9c917e; font-size: 12px; }
+.st-badge { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; background: rgba(212,175,123,0.16); color: #ffcf7a; }
+.st-comment p { margin: 5px 0 0; font-size: 13.5px; line-height: 1.55; color: #d9cfbd; }
+.st-comment.is-author { background: rgba(212,175,123,0.05); padding-left: 10px; padding-right: 10px; border-radius: 8px; }
+.st-transcript-wrap { margin-top: 26px; border-top: 1px solid rgba(212,175,123,0.2); }
+.st-transcript-wrap > summary { cursor: pointer; list-style: none; padding: 16px 0; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #cbb07c; }
+.st-transcript-wrap > summary::-webkit-details-marker { display: none; }
+.st-transcript-wrap > summary::before { content: '▸ '; }
+.st-transcript-wrap[open] > summary::before { content: '▾ '; }
+.st-sys { text-align: center; font-size: 11px; letter-spacing: .1em; color: #9c917e; margin: 18px 0; font-style: italic; }

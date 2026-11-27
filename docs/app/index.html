@@ -4225,6 +4225,7 @@
 
   </style>
   <link rel="stylesheet" href="assets/story-community.css">
+  <link rel="stylesheet" href="assets/advisor-life.css">
 </head>
 <body>
 
@@ -4451,6 +4452,7 @@
         <button class="person-chat-send" id="personChatSend" type="submit">Send</button>
       </form>
     </main>
+    <aside class="advisor-life" id="personChatLife" aria-label="Life and works"></aside>
   </section>
 
   <!-- LOADING -->
@@ -4490,6 +4492,8 @@
 <script src="public-preview.js"></script>
 <script src="assets/story-community.js"></script>
 <script src="assets/story-community-ui.js"></script>
+<script src="assets/person-timelines.js" defer></script>
+<script src="assets/advisor-life.js" defer></script>
 <script>
 // ─── LINE AVATAR SVGs ───
 // Each person has a unique minimalist line-art face silhouette
@@ -7560,7 +7564,9 @@ function createInitialRoundtableState() {
     conversationId: null,
     messages: [],
     roundCount: 0,
-    activeSpeakerSlug: ''
+    activeSpeakerSlug: '',
+    kicked: [],
+    lifeSlug: ''
   };
 }
 
@@ -8817,8 +8823,8 @@ function findPendingAssistantMessage() {
   return null;
 }
 
-function openPersonChat(slug) {
-  const person = state.people.find((item) => item.slug === slug);
+function openPersonChat(slug, fallbackPerson = null) {
+  const person = state.people.find((item) => item.slug === slug) || fallbackPerson;
   if (!person) return;
   state.selectedPerson = person;
   state.personChat = {
@@ -8839,6 +8845,14 @@ function openPersonChat(slug) {
   personChatSide.style.setProperty('--portrait-flip', adjust.flip ? '-1' : '1');
   personChat.classList.add('show');
   personChat.setAttribute('aria-hidden', 'false');
+  const lifeRoot = document.getElementById('personChatLife');
+  if (lifeRoot && window.AdvisorLife) {
+    personChat.classList.add('has-life');
+    window.AdvisorLife.render(lifeRoot, person.slug, {
+      name: person.name,
+      meta: [person.domain, person.era].filter(Boolean).join(' · ')
+    });
+  }
   renderPersonChatMessages();
   setTimeout(() => personChatInput?.focus(), 120);
 }
@@ -8847,6 +8861,13 @@ function closePersonChat() {
   if (!personChat) return;
   personChat.classList.remove('show');
   personChat.setAttribute('aria-hidden', 'true');
+}
+
+function openCardChat(slug) {
+  const card = getRoundtableCard(slug);
+  if (!card) return;
+  if (personChatBack) personChatBack.textContent = 'Back to the cards';
+  openPersonChat(slug, card);
 }
 
 async function sendPersonChatMessage(question) {
@@ -8887,6 +8908,10 @@ async function sendPersonChatMessage(question) {
     state.personChat.loading = false;
     personChatSend.disabled = false;
     renderPersonChatMessages();
+    const lastAnswer = [...state.personChat.messages].reverse().find((message) => message.role === 'assistant');
+    if (lastAnswer && window.AdvisorLife) {
+      window.AdvisorLife.highlight(document.getElementById('personChatLife'), `${clean} ${lastAnswer.content}`);
+    }
   }
 }
 
@@ -9551,6 +9576,91 @@ function getRoundtableCard(slug) {
   return (state.currentCards || []).find((card) => card.slug === slug) || null;
 }
 
+const ROUNDTABLE_MAX_SEATS = 6;
+
+function getSeatedCards() {
+  const kicked = new Set(state.roundtable?.kicked || []);
+  return (state.currentCards || []).filter((card) => !kicked.has(card.slug));
+}
+
+function kickRoundtableSeat(slug) {
+  const seated = getSeatedCards();
+  if (seated.length <= 1 || state.roundtable?.loading) return;
+  const card = getRoundtableCard(slug);
+  state.roundtable.kicked = [...new Set([...(state.roundtable.kicked || []), slug])];
+  state.roundtable.messages.push({ type: 'system', kind: 'invite', role: 'assistant', text: `${card?.name || 'This advisor'} has left the table.` });
+  if (state.roundtable.lifeSlug === slug) state.roundtable.lifeSlug = getSeatedCards()[0]?.slug || '';
+  syncRoundtableView();
+  showRoundtableLife(state.roundtable.lifeSlug);
+}
+
+async function inviteRoundtableSeat(slug) {
+  if (!slug || getSeatedCards().length >= ROUNDTABLE_MAX_SEATS) return;
+  state.roundtable.kicked = (state.roundtable.kicked || []).filter((item) => item !== slug);
+  let card = getRoundtableCard(slug);
+  if (!card) card = await ensureRoundtableGuest({ person_slug: slug, host_line: 'Invited by you' });
+  state.roundtable.messages.push({ type: 'system', kind: 'invite', role: 'assistant', text: `You invited ${card?.name || 'a new advisor'} to the table.` });
+  syncRoundtableView();
+  showRoundtableLife(slug);
+}
+
+function showRoundtableLife(slug, text = '') {
+  const root = document.getElementById('roundtableLifeBody');
+  if (!root || !window.AdvisorLife || !slug) return;
+  state.roundtable.lifeSlug = slug;
+  const card = getRoundtableCard(slug);
+  document.querySelectorAll('.roundtable-life-tab').forEach((tab) => tab.classList.toggle('is-active', tab.dataset.lifeSlug === slug));
+  document.querySelectorAll('.roundtable-speaker').forEach((el) => el.classList.toggle('is-life', el.dataset.slug === slug));
+  window.AdvisorLife.render(root, slug, { name: card?.name, meta: card?.era || '' }).then(() => {
+    if (text) window.AdvisorLife.highlight(root, text);
+  });
+}
+
+function renderRoundtableLifeTabs() {
+  return getSeatedCards().map((card) => `<button class="roundtable-life-tab${state.roundtable?.lifeSlug === card.slug ? ' is-active' : ''}" type="button" data-life-slug="${escapeHTML(card.slug)}">${escapeHTML(card.name)}</button>`).join('');
+}
+
+async function openRoundtablePicker() {
+  let picker = document.getElementById('rtPicker');
+  if (!picker) {
+    picker = document.createElement('div');
+    picker.className = 'rt-picker';
+    picker.id = 'rtPicker';
+    picker.innerHTML = `<div class="rt-picker-panel">
+      <div class="rt-picker-head"><div class="rt-picker-title">Invite someone to the table</div><button class="rt-picker-close" type="button" aria-label="Close">×</button></div>
+      <input class="rt-picker-search" type="search" placeholder="Search by name, field or era…">
+      <div class="rt-picker-list"><div class="rt-picker-hint">Loading advisors…</div></div>
+    </div>`;
+    document.body.append(picker);
+    ['pointerdown', 'wheel', 'touchstart', 'touchmove'].forEach((name) => picker.addEventListener(name, (event) => event.stopPropagation(), { passive: true }));
+    picker.addEventListener('click', async (event) => {
+      event.stopPropagation();
+      if (event.target === picker || event.target.closest('.rt-picker-close')) { picker.hidden = true; return; }
+      const pick = event.target.closest('[data-pick-slug]');
+      if (pick) { picker.hidden = true; await inviteRoundtableSeat(pick.dataset.pickSlug); }
+    });
+    picker.querySelector('.rt-picker-search').addEventListener('input', () => renderRoundtablePickerList());
+  }
+  picker.hidden = false;
+  picker.querySelector('.rt-picker-search').value = '';
+  try { await loadPeoplePage(); } catch (error) { /* keep empty */ }
+  renderRoundtablePickerList();
+  setTimeout(() => picker.querySelector('.rt-picker-search')?.focus(), 60);
+}
+
+function renderRoundtablePickerList() {
+  const picker = document.getElementById('rtPicker');
+  if (!picker) return;
+  const query = picker.querySelector('.rt-picker-search').value.trim().toLowerCase();
+  const seated = new Set(getSeatedCards().map((card) => card.slug));
+  const list = (state.people || []).filter((person) => !seated.has(person.slug))
+    .filter((person) => !query || `${person.name} ${person.domain} ${person.era} ${person.intro}`.toLowerCase().includes(query))
+    .slice(0, 80);
+  picker.querySelector('.rt-picker-list').innerHTML = list.length
+    ? list.map((person) => `<button class="rt-pick" type="button" data-pick-slug="${escapeHTML(person.slug)}"><img src="${person.image}" alt=""><span>${escapeHTML(person.name)}<small>${escapeHTML(person.domain || '')}</small></span></button>`).join('')
+    : '<div class="rt-picker-hint">No matching advisors.</div>';
+}
+
 function buildRoundtableHistory() {
   return (state.roundtable?.messages || [])
     .filter((message) => message.role === 'user' || message.type === 'advisor')
@@ -9562,7 +9672,7 @@ function buildRoundtableHistory() {
 }
 
 function buildPreviewRoundtableDiscussion(question) {
-  const answers = (state.currentCards || []).map((card) => ({
+  const answers = getSeatedCards().map((card) => ({
     person_slug: card.slug,
     person_name: card.name,
     answer: normalizeShortSpeech(card.answer || 'First clarify what you truly want.', ROUNDTABLE_SPEECH_LIMIT, '', card.name),
@@ -9579,16 +9689,21 @@ function buildPreviewRoundtableDiscussion(question) {
 }
 
 function renderRoundtableSpeakers() {
-  return (state.currentCards || []).map((card) => `
-    <div class="roundtable-speaker${state.roundtable?.activeSpeakerSlug === card.slug ? ' is-speaking' : ''}">
+  const seated = getSeatedCards();
+  const canKick = seated.length > 1;
+  return seated.map((card) => `
+    <div class="roundtable-speaker${state.roundtable?.activeSpeakerSlug === card.slug ? ' is-speaking' : ''}${state.roundtable?.lifeSlug === card.slug ? ' is-life' : ''}" data-slug="${escapeHTML(card.slug)}">
+      ${canKick ? `<button class="roundtable-seat-kick" type="button" data-kick-slug="${escapeHTML(card.slug)}" title="Remove ${escapeHTML(card.name)} from the table" aria-label="Remove ${escapeHTML(card.name)}">×</button>` : ''}
+      <button class="roundtable-speaker-life" type="button" data-life-slug="${escapeHTML(card.slug)}" title="See ${escapeHTML(card.name)}'s life">
       <div class="roundtable-avatar" style="${getAvatarStyle(card.slug)}">
         <div class="roundtable-avatar-canvas">
           <img src="${card.image}" alt="${escapeHTML(card.name)}">
         </div>
       </div>
       <div class="roundtable-speaker-name">${escapeHTML(card.name)}</div>
+      </button>
     </div>
-  `).join('');
+  `).join('') + `<button class="roundtable-invite" type="button" data-rt-invite ${seated.length >= ROUNDTABLE_MAX_SEATS ? 'disabled title="The table is full (6 seats)"' : ''}><span><b>+</b>Invite</span></button>`;
 }
 
 function renderRoundtableMessages() {
@@ -9654,6 +9769,11 @@ function syncRoundtableView() {
   view.setAttribute('aria-hidden', roundtable.active ? 'false' : 'true');
   speakers.innerHTML = renderRoundtableSpeakers();
   messages.innerHTML = renderRoundtableMessages();
+  const lifeTabs = document.getElementById('roundtableLifeTabs');
+  if (lifeTabs) lifeTabs.innerHTML = renderRoundtableLifeTabs();
+  if (roundtable.active && window.AdvisorLife && !roundtable.lifeSlug && getSeatedCards()[0]) {
+    showRoundtableLife(getSeatedCards()[0].slug);
+  }
   button.disabled = Boolean(roundtable.loading);
   button.textContent = roundtable.loading ? 'Roundtable discussion in progress' : 'Enter the round table';
   if (inputEl) {
@@ -9676,8 +9796,8 @@ async function fetchRoundtableDiscussion(question) {
     method: 'POST',
     body: {
       question: buildRoundtableRequestQuestion(question),
-      person_slugs: (state.currentCards || []).map((card) => card.slug).filter(Boolean),
-      top_k: Math.min(Math.max((state.currentCards || []).length, 1), 6),
+      person_slugs: getSeatedCards().map((card) => card.slug).filter(Boolean),
+      top_k: Math.min(Math.max(getSeatedCards().length, 1), 6),
       history: buildRoundtableHistory(),
       conversation_id: state.roundtable?.conversationId || null
     }
@@ -9724,7 +9844,9 @@ async function playRoundtableResponse(response, shouldSummarize = false) {
   }
 
   const answers = response.answers || [];
+  const kickedNow = new Set(state.roundtable.kicked || []);
   for (const item of answers) {
+    if (kickedNow.has(item.person_slug)) continue;
     state.roundtable.activeSpeakerSlug = item.person_slug || '';
     const speech = normalizeShortSpeech(item.answer, ROUNDTABLE_SPEECH_LIMIT, '', item.person_name);
     if (speech) {
@@ -9735,6 +9857,12 @@ async function playRoundtableResponse(response, shouldSummarize = false) {
         name: item.person_name,
         text: speech
       });
+      if (window.AdvisorLife) {
+        // Follow whoever just referenced their own life/works; otherwise keep the current panel.
+        if (await window.AdvisorLife.mentions(item.person_slug, speech) || state.roundtable.lifeSlug === item.person_slug) {
+          showRoundtableLife(item.person_slug, speech);
+        }
+      }
     }
     syncRoundtableView();
     await wait(520);
@@ -10356,6 +10484,7 @@ function renderCards(cardItems) {
                     <div class="poster-caption">${escapeHTML(card.tags[0] || 'Think Tank')}</div>
                     <div class="poster-flip">Open Back</div>
                   </div>
+                  <button class="poster-chat-btn" type="button" data-chat-slug="${escapeHTML(card.slug)}">Talk 1:1 →</button>
                 </div>
                 <div class="card-face card-back">
                   <div class="back-topbar">
@@ -10369,6 +10498,7 @@ function renderCards(cardItems) {
                       </div>
                       <div class="back-era">${escapeHTML(card.era)}</div>
                     </div>
+                    <button class="card-chat-btn" type="button" data-chat-slug="${escapeHTML(card.slug)}">Talk with ${escapeHTML(card.name)} 1:1 →</button>
 
                     <div class="back-scroll">
                       <div class="back-section back-answer-section">
@@ -10419,7 +10549,7 @@ function renderCards(cardItems) {
       <div class="roundtable-actions">
         <button class="roundtable-btn" id="roundtableBtn" type="button">Roundtable Discussion</button>
       </div>
-      <section class="roundtable-view" id="roundtableView" aria-hidden="true" aria-live="polite">
+      <section class="roundtable-view has-life" id="roundtableView" aria-hidden="true" aria-live="polite">
         <div class="roundtable-view-head">
           <div>
             <div class="roundtable-room-kicker">Roundtable</div>
@@ -10436,6 +10566,10 @@ function renderCards(cardItems) {
           <input class="roundtable-input" id="roundtableInput" type="text" maxlength="120" placeholder="Ask one follow-up question..." autocomplete="off">
           <button class="roundtable-send" id="roundtableSendBtn" type="submit">Send</button>
         </form>
+        <aside class="roundtable-life" aria-label="Life and works of the advisors">
+          <div class="roundtable-life-tabs" id="roundtableLifeTabs"></div>
+          <div class="advisor-life" id="roundtableLifeBody"></div>
+        </aside>
       </section>
     </div>
   `;
@@ -10626,8 +10760,20 @@ function renderCards(cardItems) {
   }
 
   track.addEventListener('click', async (event) => {
+    const chatBtn = event.target.closest?.('[data-chat-slug]');
+    if (chatBtn) {
+      event.preventDefault();
+      event.stopPropagation();
+      openCardChat(chatBtn.dataset.chatSlug);
+      return;
+    }
     if (suppressClick) return;
     const hit = document.elementFromPoint(event.clientX, event.clientY);
+    const hitChat = hit?.closest?.('[data-chat-slug]');
+    if (hitChat) {
+      openCardChat(hitChat.dataset.chatSlug);
+      return;
+    }
     const card = hit?.closest?.('.card');
     if (!card || !track.contains(card)) return;
     const index = Number(card.dataset.index);
@@ -10654,6 +10800,14 @@ function renderCards(cardItems) {
     roundtableView?.addEventListener(eventName, (event) => {
       event.stopPropagation();
     }, { passive: eventName === 'wheel' ? false : true });
+  });
+
+  roundtableView?.addEventListener('click', (event) => {
+    const kick = event.target.closest('[data-kick-slug]');
+    if (kick) { kickRoundtableSeat(kick.dataset.kickSlug); return; }
+    if (event.target.closest('[data-rt-invite]')) { openRoundtablePicker(); return; }
+    const life = event.target.closest('[data-life-slug]');
+    if (life) showRoundtableLife(life.dataset.lifeSlug);
   });
 
   syncRoundtableView();
@@ -10909,6 +11063,7 @@ peopleSearch?.addEventListener('input', filterPeoplePage);
 peopleGrid?.addEventListener('click', (event) => {
   const tile = event.target.closest('.person-tile');
   if (!tile) return;
+  if (personChatBack) personChatBack.textContent = 'Back to Character List';
   openPersonChat(tile.dataset.slug);
 });
 
