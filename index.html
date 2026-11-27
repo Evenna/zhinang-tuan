@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ask Socrates</title>
+  <title>Reply, Socrates</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Alegreya:wght@400;500;600&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=Cormorant+Garamond:wght@400;500;600&family=Cormorant+Infant:wght@400;500;600&family=DM+Serif+Display:ital@0;1&family=EB+Garamond:wght@400;500;600&family=Libre+Bodoni:wght@400;500;600&family=Lora:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;500;600&family=Prata&family=Sorts+Mill+Goudy:ital@0;1&family=Spectral:wght@400;500;600&family=Vidaloka&display=swap" rel="stylesheet">
@@ -838,6 +838,31 @@
       font-size: 0.82rem;
       line-height: 1.85;
     }
+
+    /* Brand + account (v9) */
+    .logo i { font-style: italic; color: var(--accent); }
+    .logo { font-size: 1.08rem; }
+    .brand-mark { font-family: var(--font-serif); font-style: italic; color: var(--accent); border-color: rgba(212,175,123,0.32); }
+    .hero-eyebrow { margin: 0 0 18px; font-size: 0.74rem; letter-spacing: 0.6em; text-indent: 0.6em; color: rgba(212,175,123,0.72); }
+    .hero-title { line-height: 1.04 !important; font-size: clamp(3.2rem, 6.4vw, 5.4rem) !important; letter-spacing: -0.02em; }
+    .hero-title em { font-style: italic !important; color: #e8c690 !important; }
+    .hero-subtitle { margin-top: 20px !important; letter-spacing: 0.03em !important; color: rgba(246,240,231,0.62) !important; line-height: 1.8 !important; }
+    .nav-btn.is-user { display: inline-flex; align-items: center; gap: 9px; padding: 5px 14px 5px 5px; }
+    .nav-avatar, .acct-avatar { display: inline-grid; place-items: center; border-radius: 50%; background: rgba(212,175,123,0.16); border: 1px solid rgba(212,175,123,0.45); color: #e8c690; font-family: var(--font-serif); }
+    .nav-avatar { width: 26px; height: 26px; font-size: 0.8rem; }
+    .nav-user { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .login-tabs { display: flex; gap: 22px; margin-top: 26px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .login-tabs[hidden] { display: none; }
+    .login-tabs button { background: none; border: 0; padding: 0 0 10px; color: rgba(246,240,231,0.45); font: inherit; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; border-bottom: 1px solid transparent; margin-bottom: -1px; transition: color .3s, border-color .3s; }
+    .login-tabs button.is-on { color: #e8c690; border-bottom-color: #e8c690; }
+    .login-name-row[hidden] { display: none !important; }
+    .login-form { margin-top: 22px !important; }
+    .login-submit:disabled { opacity: .6; cursor: wait; }
+    .acct-row { display: flex; align-items: center; gap: 14px; }
+    .acct-row > span:last-child { display: grid; gap: 2px; }
+    .acct-row em { font-style: normal; font-size: 0.82rem; color: rgba(246,240,231,0.55); }
+    .acct-avatar { width: 48px; height: 48px; font-size: 1.3rem; }
+    .acct-since { font-size: 0.74rem; letter-spacing: 0.08em; color: rgba(246,240,231,0.45); margin-top: 6px; }
 
     /* Login */
     .login-kicker,
@@ -4275,8 +4300,7 @@
         <a class="brand" href="#">
           <span class="brand-mark">S</span>
           <span class="brand-copy">
-            <span class="logo">Ask Socrates</span>
-            <span class="tagline">SOCRATES</span>
+            <span class="logo">Reply, <i>Socrates</i></span>
           </span>
         </a>
         <nav class="nav-links" aria-label="Primary">
@@ -4287,15 +4311,16 @@
           <a href="#" data-view="about" id="aboutNavLink">About</a>
         </nav>
         <div class="nav-actions">
-          <a class="nav-btn" href="#" data-view="login" id="loginNavLink">Log In</a>
+          <a class="nav-btn" href="#" data-view="login" id="loginNavLink">Sign in</a>
         </div>
       </div>
     </header>
 
     <div class="hero-center">
       <div class="hero-panel">
-        <h1 class="hero-title">Big questions.<br><em>Timeless<br>perspectives.</em></h1>
-        <p class="hero-subtitle">Explore timeless wisdom. Find a perspective of your own.</p>
+        <p class="hero-eyebrow">苏格拉底请回答</p>
+        <h1 class="hero-title">Reply,<br><em>Socrates.</em></h1>
+        <p class="hero-subtitle">Bring the question that keeps you up at night.<br>Twenty-five centuries are listening.</p>
 
         <section class="input-section" id="inputSection">
           <label class="input-label">Write down your question</label>
@@ -4398,7 +4423,7 @@
       <div class="dots" aria-hidden="true"></div>
       <div class="about-kicker">ABOUT</div>
       <h2 class="about-title">Most confusion is not caused by a lack of answers, but by a lack of perspective.</h2>
-      <p class="about-lead">Ask Socrates turns figures from history, literature, business, art, and science into conversational advisors.</p>
+      <p class="about-lead">Reply, Socrates turns figures from history, literature, business, art, and science into conversational advisors.</p>
       <div class="about-steps-list">
         <div><strong>01</strong><span>Write down a specific question</span></div>
         <div><strong>02</strong><span>Expand all four cards, with each one offering a brief comment</span></div>
@@ -4411,21 +4436,25 @@
   <section class="site-page" id="loginPage">
     <div class="login-wrap">
       <div class="login-card">
-        <span class="login-kicker">Account</span>
-        <h2>Log In</h2>
-        <span class="login-copy">After logging in, this device will remember your preferred name. Your account is stored only in this browser.</span>
-        <form class="login-form" id="loginForm">
-          <label>Title
-            <input id="loginName" type="text" maxlength="24" placeholder="What should I call you?" autocomplete="nickname">
+        <span class="login-kicker">Reply, Socrates</span>
+        <h2 id="loginTitle">Welcome back.</h2>
+        <span class="login-copy" id="loginCopy">Your conversations, debates and saved verdicts follow you to any device.</span>
+        <div class="login-tabs" role="tablist">
+          <button type="button" class="is-on" data-login-mode="signin">Sign in</button>
+          <button type="button" data-login-mode="signup">Create account</button>
+        </div>
+        <form class="login-form" id="loginForm" novalidate>
+          <label class="login-name-row" hidden>Name
+            <input id="loginName" type="text" maxlength="24" placeholder="What should the philosophers call you?" autocomplete="nickname">
           </label>
           <label>Email
-            <input id="loginEmail" type="email" maxlength="80" placeholder="name@example.com" autocomplete="username">
+            <input id="loginEmail" type="email" maxlength="120" placeholder="name@example.com" autocomplete="email">
           </label>
           <label>Password
-            <input id="loginPassword" type="password" maxlength="64" placeholder="At least 6 people" autocomplete="current-password">
+            <input id="loginPassword" type="password" maxlength="128" placeholder="At least 6 characters" autocomplete="current-password">
           </label>
           <div class="login-error" id="loginError"></div>
-          <button class="login-submit" id="loginSubmit" type="submit">Enter</button>
+          <button class="login-submit" id="loginSubmit" type="submit">Sign in</button>
         </form>
         <div class="login-account" id="loginAccount" hidden></div>
       </div>
@@ -4486,7 +4515,7 @@
 
   <!-- FOOTER -->
   <div class="footer">
-    Ask Socrates · For entertainment purposes only · Do not take this seriously
+    Reply, Socrates · For entertainment purposes only · Do not take this seriously
   </div>
 </div>
 
@@ -8791,21 +8820,75 @@ function readSession() {
   }
 }
 
+let loginMode = 'signin';
+function initialOf(name) { return String(name || '?').trim().charAt(0).toUpperCase() || '?'; }
+function setLoginMode(mode) {
+  loginMode = mode;
+  const up = mode === 'signup';
+  document.querySelectorAll('[data-login-mode]').forEach((b) => b.classList.toggle('is-on', b.dataset.loginMode === mode));
+  const nameRow = document.querySelector('.login-name-row');
+  if (nameRow) nameRow.hidden = !up;
+  const t = document.getElementById('loginTitle');
+  if (t) t.textContent = up ? 'Take a seat.' : 'Welcome back.';
+  if (loginPasswordInput) loginPasswordInput.autocomplete = up ? 'new-password' : 'current-password';
+  const btn = document.getElementById('loginSubmit');
+  if (btn) btn.textContent = up ? 'Create account' : 'Sign in';
+  if (loginError) loginError.textContent = '';
+}
 function renderLoginState() {
   const session = readSession();
-  const loggedIn = Boolean(session?.name && session?.email);
-  if (loginNavLink) loginNavLink.textContent = loggedIn ? session.name : 'Log In';
+  const loggedIn = Boolean(session?.name && session?.token);
+  if (loginNavLink) {
+    loginNavLink.classList.toggle('is-user', loggedIn);
+    loginNavLink.innerHTML = loggedIn
+      ? `<span class="nav-avatar">${escapeHTML(initialOf(session.name))}</span><span class="nav-user">${escapeHTML(session.name)}</span>`
+      : 'Sign in';
+  }
   if (!loginForm || !loginAccount) return;
   loginForm.hidden = loggedIn;
+  document.querySelector('.login-tabs')?.toggleAttribute('hidden', loggedIn);
+  const t = document.getElementById('loginTitle');
+  const c = document.getElementById('loginCopy');
   loginAccount.hidden = !loggedIn;
   if (loggedIn) {
+    if (t) t.textContent = 'Your seat is saved.';
+    if (c) c.textContent = 'Signed in on this device. Debates you publish carry your name.';
     loginAccount.innerHTML = `
-      <div>Signed in</div>
-      <strong>${escapeHTML(session.name)}</strong>
-      <div>${escapeHTML(session.email)}</div>
-      <button class="login-logout" id="logoutBtn" type="button">Log out</button>
+      <div class="acct-row"><span class="acct-avatar">${escapeHTML(initialOf(session.name))}</span>
+        <span><strong>${escapeHTML(session.name)}</strong><em>${escapeHTML(session.email)}</em></span></div>
+      ${session.since ? `<div class="acct-since">Member since ${escapeHTML(session.since)}</div>` : ''}
+      <button class="login-logout" id="logoutBtn" type="button">Sign out</button>
     `;
+  } else {
+    setLoginMode(loginMode);
+    if (c) c.textContent = 'Your conversations, debates and saved verdicts follow you to any device.';
   }
+}
+async function authCall(path, body, token) {
+  const res = await fetch(`${API_BASE}/auth/${path}`, {
+    method: body ? 'POST' : 'GET',
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  let data = {};
+  try { data = await res.json(); } catch (e) { /* ignore */ }
+  if (!res.ok) {
+    const d = data.detail;
+    const msg = typeof d === 'string' ? d : (Array.isArray(d) ? 'Please check the fields and try again.' : 'Something went wrong.');
+    const err = new Error(msg); err.status = res.status; throw err;
+  }
+  return data;
+}
+async function verifySession() {
+  const s = readSession();
+  if (!s?.token) { if (s && !s.token) localStorage.removeItem(SESSION_KEY); renderLoginState(); return; }
+  try {
+    const { user } = await authCall('me', null, s.token);
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ ...s, ...user, token: s.token }));
+  } catch (e) {
+    if (e.status === 401) localStorage.removeItem(SESSION_KEY);
+  }
+  renderLoginState();
 }
 
 function showLoginPage() {
@@ -11062,23 +11145,36 @@ storiesPage?.addEventListener('click', (event) => {
   if (index >= 0 && index !== storyCursor) setActiveStory(index);
 });
 
-loginForm?.addEventListener('submit', (event) => {
+document.querySelectorAll('[data-login-mode]').forEach((b) => b.addEventListener('click', () => setLoginMode(b.dataset.loginMode)));
+
+loginForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
+  const up = loginMode === 'signup';
   const name = loginNameInput.value.trim();
   const email = loginEmailInput.value.trim();
   const password = loginPasswordInput.value;
-  if (!name || !email || password.length < 6) {
-    loginError.textContent = 'Please enter your name and email. The password must be at least 6 people.';
-    return;
-  }
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ name, email }));
-  loginPasswordInput.value = '';
+  if (up && !name) { loginError.textContent = 'Tell us what to call you.'; return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { loginError.textContent = 'That email doesn’t look right.'; return; }
+  if (password.length < 6) { loginError.textContent = 'Password needs at least 6 characters.'; return; }
+  const btn = document.getElementById('loginSubmit');
+  btn.disabled = true; const label = btn.textContent; btn.textContent = up ? 'Creating…' : 'Signing in…';
   loginError.textContent = '';
-  renderLoginState();
+  try {
+    const data = await authCall(up ? 'register' : 'login', up ? { name, email, password } : { email, password });
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ ...data.user, token: data.token }));
+    loginPasswordInput.value = '';
+    renderLoginState();
+  } catch (e) {
+    loginError.textContent = e.status ? e.message : 'The server is resting right now. Please try again in a moment.';
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
 });
 
 loginAccount?.addEventListener('click', (event) => {
   if (event.target.id !== 'logoutBtn') return;
+  const s = readSession();
+  if (s?.token) authCall('logout', {}, s.token).catch(() => {});
   localStorage.removeItem(SESSION_KEY);
   renderLoginState();
 });
@@ -11184,11 +11280,13 @@ document.fonts.ready.then(schedulePosterFit);
 applyAllHomeFigureAdjustments();
 setupHomeFigureEditor();
 renderLoginState();
+verifySession();
 if (ADJUST_MODE) {
   initAdjustmentWorkbench();
 }
 submitBtn.disabled = input.value.trim().length < MIN_QUESTION_LENGTH;
 if (new URLSearchParams(location.search).get('view') === 'stories') openSitePage('stories');
+if (new URLSearchParams(location.search).get('view') === 'login') showLoginPage();
 if (new URLSearchParams(location.search).get('view') === 'themes') {
   showThemesPage().then(() => {
     const params = new URLSearchParams(location.search);
