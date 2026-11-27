@@ -440,3 +440,10 @@
   mask-image: radial-gradient(ellipse 22% 48% at 18% 48%, #000 0, #000 45%, rgba(0,0,0,0.5) 72%, transparent 100%); }
 .theme-menu > .ag-lines--index { opacity: 0.7; background-size: cover; background-position: center top; }
 .ag-debate .ag-log { background: rgba(9,7,5,0.94); }
+/* match the plate: lines barely above the ground (#101010 ground, lines ≈ rgb(53,41,30)) */
+.theme-menu > .ag-lines--index { opacity: 0.24; }
+.ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.3; }
+.ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.24; }
+.ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.5) brightness(0.8); }
+.ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.2; }
+.ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.6) brightness(0.78); }
