@@ -426,3 +426,17 @@
   mask-image: radial-gradient(ellipse 17% 40% at 17% 46%, #000 0, rgba(0,0,0,0.75) 40%, rgba(0,0,0,0.3) 72%, transparent 100%);
   -webkit-mask-composite: source-over; mask-composite: add; }
 .theme-menu > .ag-colonnade { opacity: 0.32; }
+/* v4: background line art = the approved design plate, traced 1:1 (no masks, no SVG approximation) */
+.ag-lines { background: url("agora-debate-lines.webp") center / cover no-repeat; -webkit-mask-image: none !important; mask-image: none !important; }
+.ag-lines svg { display: none; }
+.theme-menu > .ag-lines--index { position: fixed; inset: 0; z-index: 0; opacity: 0.62; background-image: url("agora-index-lines.webp"); background-position: center; }
+.ag-debate .ag-lines, .ag-hall .ag-lines, .ag-verdict .ag-lines { opacity: 0.5; }
+.ag-debate .ag-lines { top: 0; bottom: 0; height: auto; }
+/* faces: clearly visible, still behind the words */
+.ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.42; }
+.ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.35) brightness(0.9); }
+.theme-menu .ag-wall {
+  -webkit-mask-image: radial-gradient(ellipse 22% 48% at 18% 48%, #000 0, #000 45%, rgba(0,0,0,0.5) 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 22% 48% at 18% 48%, #000 0, #000 45%, rgba(0,0,0,0.5) 72%, transparent 100%); }
+.theme-menu > .ag-lines--index { opacity: 0.7; background-size: cover; background-position: center top; }
+.ag-debate .ag-log { background: rgba(9,7,5,0.94); }

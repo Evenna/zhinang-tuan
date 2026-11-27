@@ -97,7 +97,11 @@
   }
   const tag = (stance) => `<span class="ag-tag is-${esc(stance || 'undecided')}">${STANCE_LABEL[stance] || 'Undecided'}</span>`;
 
-  function colonnade() {
+  // Line art traced 1:1 from the approved design plates (assets/agora-*-lines.webp).
+  function colonnade(kind = 'debate') {
+    return `<div class="ag-colonnade ag-lines ag-lines--${kind}" aria-hidden="true"></div>`;
+  }
+  function colonnadeSvg() {
     // Thin-line Roman architecture: fluted columns with Doric capitals, coffered barrel arch, stepped floor in perspective.
     const W = 1440, H = 900, cx = 720;
     let g = '';
@@ -212,7 +216,7 @@
     if (!menu) return;
     let wall = menu.querySelector('.ag-wall');
     if (!wall) { wall = document.createElement('div'); wall.className = 'ag-wall'; wall.setAttribute('aria-hidden', 'true'); menu.prepend(wall); }
-    if (!menu.querySelector(':scope > .ag-colonnade')) menu.insertAdjacentHTML('afterbegin', colonnade());
+    if (!menu.querySelector(':scope > .ag-colonnade')) menu.insertAdjacentHTML('afterbegin', colonnade('index'));
     if (wall.dataset.hall === hall.id) return;
     wall.dataset.hall = hall.id;
     const featured = new Set(hall.featured);
