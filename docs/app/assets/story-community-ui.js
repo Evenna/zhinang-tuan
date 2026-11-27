@@ -353,36 +353,27 @@ window.StoryCommunityScene = StoryCommunityScene;
     const participants = story.participants?.length ? story.participants : [...new Set(turns.map(t => t.speaker).filter(s => s !== 'user'))];
     const isTable = story.mode === 'roundtable' || participants.length > 1;
     const sum = story.summary || {};
-    const positions = (sum.positions || []).map(p => `<li class="st-position">${imgTag(portrait(p.speaker), speakerName(story, p.speaker))}
-        <div><b>${esc(speakerName(story, p.speaker))}</b><p>${esc(p.stance)}</p></div></li>`).join('');
-    const chat = turns.map(turn => {
-      if (turn.speaker === 'system') return `<div class="st-sys">${esc(turn.text)}</div>`;
+    let prev = '';
+    const norm = t => String(t || '').replace(/\W+/g, '').toLowerCase();
+    const body = turns[0]?.speaker === 'user' && norm(turns[0].text) === norm(story.question) ? turns.slice(1) : turns;
+    const chat = body.map(turn => {
+      if (turn.speaker === 'system') { prev = ''; return `<div class="st-sys">${esc(turn.text)}</div>`; }
       const mine = turn.speaker === 'user';
-      return `<div class="st-line${mine ? ' is-user' : ''}"><span class="st-who">${esc(speakerName(story, turn.speaker))}</span><p>${esc(turn.text)}</p></div>`;
+      const showName = turn.speaker !== prev;
+      prev = turn.speaker;
+      return `<div class="st-line${mine ? ' is-user' : ''}${showName ? '' : ' is-cont'}">${showName ? `<span class="st-who">${esc(mine ? (story.name || 'User').split(' ')[0] : speakerName(story, turn.speaker))}</span>` : ''}<p>${esc(turn.text)}</p></div>`;
     }).join('');
-    const who = [story.age && `${story.age}`, story.role, story.city].filter(Boolean).map(esc).join(', ');
-    const notes = [
-      sum.tension && ['The sticking point', sum.tension],
-      sum.conclusion && ['Where it ended', sum.conclusion],
-      story.outcome && ['What happened next', story.outcome],
-    ].filter(Boolean).map(([k, v]) => `<div class="st-note-row"><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
+    const summary = sum.conclusion || sum.tldr || story.context || '';
     root.innerHTML = `<div class="st-panel">
       <button class="st-close" type="button" aria-label="Close">×</button>
       <header class="st-top">
-        <div class="st-byline">${imgTag(story.avatar, story.name)}<span><b>${esc(story.name)}</b>${who ? ` · ${who}` : ''}</span></div>
-        <div class="st-kicker">${isTable ? 'Roundtable' : 'One-on-one'} with ${esc(participants.map(s => speakerName(story, s)).join(', '))}${date ? ` · ${esc(date)}` : ''}</div>
-        <h2 class="st-headline">${esc(story.headline)}</h2>
-        <p class="st-question">“${esc(story.question)}”</p>
+        <div class="st-kicker">${esc(story.name)}${date ? ` · ${esc(date)}` : ''}</div>
+        <h2 class="st-headline">${esc(story.question)}</h2>
+        ${summary ? `<p class="st-tldr">${esc(summary)}</p>` : ''}
       </header>
-      <p class="st-tldr">${esc(sum.tldr || story.context || '')}</p>
-      ${positions ? `<ul class="st-positions">${positions}</ul>` : ''}
-      ${notes ? `<dl class="st-notes">${notes}</dl>` : ''}
-      <section class="st-convo">
-        <div class="st-label">The conversation <span>${turns.length}</span></div>
-        <div class="st-transcript">${chat}</div>
-      </section>
+      <div class="st-transcript">${chat}</div>
       <div class="st-actions">
-        <button type="button" class="st-act" data-st-like><span class="st-heart">♥</span> <b></b></button>
+        <button type="button" class="st-act" data-st-like>♥ <b></b></button>
         <button type="button" class="st-act" data-st-jump-comments>Comments <b data-st-comment-count></b></button>
         <button type="button" class="st-act" data-st-share>Share</button>
         <span class="st-share-tip" hidden>Link copied</span>

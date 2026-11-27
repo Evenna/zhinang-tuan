@@ -4278,10 +4278,25 @@
       #storyPreviewQuestion { font-size: 13px; }
     }
 
-  </style>
-  <link rel="stylesheet" href="assets/story-community.css?v=20261128m">
+  
+    /* v12 1:1 — no header, no bubbles; name lives only beside the portrait. */
+    .person-chat-header { display: none; }
+    .person-chat-main { grid-template-rows: 1fr auto; padding: 44px clamp(28px, 4vw, 64px) 28px; }
+    .person-chat-messages { gap: 26px; padding: 0 0 24px; }
+    .person-chat-empty { margin: auto; max-width: 420px; text-align: center; font-family: Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.8; color: rgba(242,235,223,0.4); }
+    .person-message { max-width: min(640px, 100%); gap: 6px; }
+    .person-message.user { align-self: flex-start; align-items: flex-start; padding-left: 16px; border-left: 1px solid rgba(212,175,123,0.4); }
+    .person-message-role { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(212,175,123,0.7); }
+    .person-message.user .person-message-role { color: rgba(242,235,223,0.4); }
+    .person-message-bubble, .person-message.user .person-message-bubble { padding: 0; border: 0; border-radius: 0; background: none; font-size: 15px; line-height: 1.8; color: rgba(246,239,226,0.86); }
+    .person-message.user .person-message-bubble { font-family: Georgia, serif; color: #f6efe2; }
+    .person-chat-side { background: none; }
+    .person-chat-meta { font-size: 0.7rem; letter-spacing: 0.08em; color: rgba(246,240,231,0.4); }
+    .person-chat-back { border-color: rgba(212,175,123,0.25); background: none; font-size: 0.68rem; letter-spacing: 0.04em; }
+</style>
+  <link rel="stylesheet" href="assets/story-community.css?v=20261128o">
   <link rel="stylesheet" href="assets/agora.css?v=20261128l">
-  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128m">
+  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128o">
 </head>
 <body>
 
@@ -4549,9 +4564,9 @@
 </div>
 
 <script src="assets/story-community.js"></script>
-<script src="assets/story-community-ui.js?v=20261128m"></script>
+<script src="assets/story-community-ui.js?v=20261128o"></script>
 <script src="assets/person-timelines.js" defer></script>
-<script src="assets/advisor-life.js?v=20261128m" defer></script>
+<script src="assets/advisor-life.js?v=20261128o" defer></script>
 <script src="assets/agora.js?v=20261128l" defer></script>
 <script src="assets/agora-floor.js?v=20261128l" defer></script>
 <script>
@@ -8959,17 +8974,12 @@ function filterPeoplePage() {
 function renderPersonChatMessages() {
   if (!personChatMessages) return;
   if (!state.personChat.messages.length) {
-    personChatMessages.innerHTML = `
-      <div class="person-message assistant">
-        <div class="person-message-role">${escapeHTML(state.selectedPerson?.name || 'Think Tank')}</div>
-        <div class="person-message-bubble">You can ask me a specific question.</div>
-      </div>
-    `;
+    personChatMessages.innerHTML = `<div class="person-chat-empty">${(() => { const q = window.PERSON_TIMELINES?.[state.selectedPerson?.slug]?.quote; return escapeHTML(q ? `“${String(q).replace(/^["“]|["”]$/g, '')}”` : 'Ask anything.'); })()}</div>`;
     return;
   }
   personChatMessages.innerHTML = state.personChat.messages.map((message) => `
     <div class="person-message ${message.role === 'user' ? 'user' : 'assistant'}">
-      <div class="person-message-role">${message.role === 'user' ? 'You' : escapeHTML(state.selectedPerson?.name || 'Think Tank')}</div>
+      <div class="person-message-role">${message.role === 'user' ? 'You' : escapeHTML(state.selectedPerson?.name?.split(' ').slice(-1)[0] || '')}</div>
       <div class="person-message-bubble">${escapeHTML(message.content)}</div>
     </div>
   `).join('');
@@ -8999,7 +9009,7 @@ function openPersonChat(slug, fallbackPerson = null) {
   };
   const adjust = person.portraitAdjust || { scale: 1, x: 0, y: 0, flip: false };
   personChatName.textContent = person.name;
-  personChatMeta.textContent = [person.domain, person.archetype, person.era].filter(Boolean).join(' · ');
+  personChatMeta.textContent = person.era || person.domain || '';
   personChatTitle.textContent = `Talk with ${person.name}`;
   personChatHint.textContent = person.intro || 'Ask this advisor a specific question.';
   personChatPortrait.src = person.image;

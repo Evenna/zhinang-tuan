@@ -131,3 +131,24 @@
 .roundtable-life-tab { border: 0; border-bottom: 1px solid transparent; border-radius: 0; padding: 0 0 10px; background: none; font-size: 11px; color: rgba(242,235,223,0.45); transition: color 300ms ease, border-color 300ms ease; }
 .roundtable-life-tab:hover { color: rgba(242,235,223,0.8); }
 .roundtable-life-tab.is-active { background: none; color: #f6efe2; border-color: #d4af7b; }
+
+/* v12: one thin line from top to bottom; nothing else. */
+.advisor-life { padding: 44px 30px 56px 34px; }
+.al-head, .al-mention, .al-section { display: none !important; }
+.al-timeline { position: relative; list-style: none; margin: 0; padding: 0 0 0 22px; }
+.al-timeline::before { display: block; content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: linear-gradient(180deg, rgba(212,175,123,0.45), rgba(212,175,123,0.12)); }
+.al-event { display: block; position: relative; padding: 0 0 26px; border: 0; }
+.al-event:last-child { padding-bottom: 0; }
+.al-event::before { content: ''; position: absolute; left: -24.5px; top: 5px; width: 4px; height: 4px; border-radius: 50%; background: #12100d; box-shadow: 0 0 0 1px rgba(212,175,123,0.55); transition: background 500ms ease, box-shadow 500ms ease; }
+.al-year { display: block; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(212,175,123,0.6); }
+.al-title { margin-top: 4px; font-size: 12.5px; line-height: 1.55; color: rgba(242,235,223,0.68); transition: color 500ms ease; }
+.al-event.is-turning .al-title { color: rgba(242,235,223,0.68); }
+.al-detail { font-size: 11.5px; color: rgba(242,235,223,0.42); }
+.al-event:hover .al-title { color: rgba(246,239,226,0.9); }
+.al-event.is-hit::before { background: #e8c48a; box-shadow: 0 0 0 1px #e8c48a; }
+.al-event.is-hit .al-year { color: #e8c48a; }
+.al-event.is-hit .al-title { color: #f6efe2; }
+.is-pulse { animation: none; }
+.al-works { display: block; list-style: none; margin: 40px 0 0 22px; padding: 0; }
+.al-work { display: block; padding: 0; border: 0; font-family: Georgia, serif; font-style: italic; font-size: 12px; line-height: 2; color: rgba(242,235,223,0.42); transition: color 500ms ease; }
+.al-work.is-hit { color: #e8c48a; }

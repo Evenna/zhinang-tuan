@@ -292,3 +292,22 @@
   .st-note-row { grid-template-columns: 1fr; gap: 4px; }
   .st-actions { flex-wrap: wrap; gap: 16px; }
 }
+
+/* v5 reader: question → one-line summary → the original conversation. */
+.st-panel { width: min(600px, 100%); padding: 64px 60px 80px; }
+.st-kicker { margin-top: 0; font-size: 10.5px; letter-spacing: 0.1em; text-transform: none; color: rgba(242,235,223,0.42); }
+.st-headline { margin-top: 18px; font-size: 27px; line-height: 1.35; }
+.st-tldr { margin: 22px 0 0; padding: 0; border: 0; font-size: 13.5px; line-height: 1.8; color: rgba(242,235,223,0.55); }
+.st-transcript { margin-top: 44px; padding-top: 14px; border-top: 1px solid rgba(212,175,123,0.14); }
+.st-line { padding: 18px 0 0; }
+.st-line.is-cont { padding-top: 10px; }
+.st-line.is-user { margin: 0; padding-left: 0; border: 0; }
+.st-line .st-who { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(212,175,123,0.7); margin-bottom: 6px; }
+.st-line.is-user .st-who { color: rgba(242,235,223,0.38); }
+.st-line p { font-size: 14.5px; line-height: 1.85; color: rgba(242,235,223,0.78); }
+.st-line.is-user p { font-family: inherit; font-size: 14.5px; color: #f6efe2; }
+.st-sys { margin: 34px 0 6px; text-align: center; font-size: 9.5px; letter-spacing: 0.22em; color: rgba(242,235,223,0.28); }
+.st-actions { margin-top: 56px; padding: 18px 0; border-bottom: 0; }
+.st-comments { margin-top: 6px; }
+.st-comment-form { border-bottom-color: rgba(212,175,123,0.18); }
+@media (max-width: 700px) { .st-panel { padding: 48px 22px 56px; } .st-headline { font-size: 22px; } }

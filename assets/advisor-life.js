@@ -39,28 +39,13 @@
     const events = (data.events || []).map((event, index) => `
       <li class="al-event is-${esc(event.kind || 'life')}" data-al-event="${index}">
         <span class="al-year">${esc(event.year)}</span>
-        <div class="al-body">
-          <div class="al-title">${esc(event.title)}</div>
-          ${event.detail ? `<div class="al-detail">${esc(event.detail)}</div>` : ''}
-        </div>
+        <div class="al-title">${esc(event.title)}</div>
+        ${event.detail ? `<div class="al-detail">${esc(event.detail)}</div>` : ''}
       </li>`).join('');
-    const works = (data.works || []).map((work, index) => `
-      <li class="al-work" data-al-work="${index}">
-        <span class="al-work-title">${esc(work.title)}</span>
-        <span class="al-work-year">${esc(work.year || '')}</span>
-        ${work.note ? `<div class="al-work-note">${esc(work.note)}</div>` : ''}
-      </li>`).join('');
-    const quote = data.quote ? String(data.quote).replace(/^["“]|["”]$/g, '') : '';
+    const works = (data.works || []).map((work, index) => `<li class="al-work" data-al-work="${index}">${esc(work.title)}</li>`).join('');
     root.innerHTML = `
-      <div class="al-head">
-        <div class="al-name">${esc(person.name || data.slug)}</div>
-        ${person.meta ? `<div class="al-meta">${esc(person.meta)}</div>` : ''}
-        ${quote ? `<p class="al-quote">“${esc(quote)}”</p>` : ''}
-      </div>
-      <div class="al-mention" hidden></div>
-      <div class="al-section">Life</div>
       <ol class="al-timeline">${events}</ol>
-      ${works ? `<div class="al-section">Works</div><ul class="al-works">${works}</ul>` : ''}
+      ${works ? `<ul class="al-works">${works}</ul>` : ''}
     `;
     root.dataset.slug = data.slug;
     root.scrollTop = 0;
