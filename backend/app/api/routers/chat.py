@@ -29,18 +29,18 @@ async def group_chat(request: GroupChatRequest, db: Session = Depends(get_db)) -
 class RoundLine(BaseModel):
     speaker: str
     name: str = ''
-    text: str = Field(min_length=1, max_length=2000)
+    text: str = Field(min_length=1, max_length=20000)
 
 
 class RoundPrepareRequest(BaseModel):
-    question: str = Field(min_length=2, max_length=4000)
+    question: str = Field(min_length=2, max_length=20000)
     person_slugs: list[str] = Field(default_factory=list)
     transcript: list[RoundLine] = Field(default_factory=list)
     conversation_id: Optional[str] = None
 
 
 class RoundTurnRequest(BaseModel):
-    question: str = Field(min_length=2, max_length=4000)
+    question: str = Field(min_length=2, max_length=20000)
     person_slugs: list[str]
     speaker: str
     transcript: list[RoundLine] = Field(default_factory=list)
@@ -50,7 +50,7 @@ class RoundTurnRequest(BaseModel):
 
 
 class RoundSynthesisRequest(BaseModel):
-    question: str = Field(min_length=2, max_length=4000)
+    question: str = Field(min_length=2, max_length=20000)
     transcript: list[RoundLine] = Field(default_factory=list)
     conversation_id: Optional[str] = None
 

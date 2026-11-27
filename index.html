@@ -4270,8 +4270,8 @@
 
   </style>
   <link rel="stylesheet" href="assets/story-community.css">
-  <link rel="stylesheet" href="assets/agora.css?v=20261128k">
-  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128k">
+  <link rel="stylesheet" href="assets/agora.css?v=20261128l">
+  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128l">
 </head>
 <body>
 
@@ -4348,11 +4348,10 @@
               class="input-box"
               id="questionInput"
               placeholder="Over to you — what’s on your mind?"
-              maxlength="200"
             ></textarea>
             <button class="submit-btn" id="submitBtn" disabled>Ask the advisors</button>
           </div>
-          <div class="char-count"><span id="charCount">0</span> / 200</div>
+          <div class="char-count"><span id="charCount">0</span></div>
           <div class="api-status" id="apiStatus" aria-live="polite"></div>
         </section>
       </div>
@@ -4498,7 +4497,7 @@
       </header>
       <div class="person-chat-messages" id="personChatMessages"></div>
       <form class="person-chat-form" id="personChatForm">
-        <textarea class="person-chat-input" id="personChatInput" maxlength="1000" placeholder="What would you like to ask?"></textarea>
+        <textarea class="person-chat-input" id="personChatInput" placeholder="What would you like to ask?"></textarea>
         <button class="person-chat-send" id="personChatSend" type="submit">Send</button>
       </form>
     </main>
@@ -4542,8 +4541,8 @@
 <script src="assets/story-community-ui.js"></script>
 <script src="assets/person-timelines.js" defer></script>
 <script src="assets/advisor-life.js" defer></script>
-<script src="assets/agora.js?v=20261128k" defer></script>
-<script src="assets/agora-floor.js?v=20261128k" defer></script>
+<script src="assets/agora.js?v=20261128l" defer></script>
+<script src="assets/agora-floor.js?v=20261128l" defer></script>
 <script>
 // ─── LINE AVATAR SVGs ───
 // Each person has a unique minimalist line-art face silhouette
@@ -10929,7 +10928,7 @@ function renderCards(cardItems) {
           <div class="roundtable-message-list" id="roundtableMessages"></div>
         </div>
         <form class="roundtable-compose" id="roundtableForm">
-          <input class="roundtable-input" id="roundtableInput" type="text" maxlength="120" placeholder="Ask one follow-up question..." autocomplete="off">
+          <input class="roundtable-input" id="roundtableInput" type="text" placeholder="Ask one follow-up question..." autocomplete="off">
           <button class="roundtable-send" id="roundtableSendBtn" type="submit">Send</button>
         </form>
         <aside class="roundtable-life" aria-label="Life and works of the advisors">

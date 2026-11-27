@@ -168,7 +168,7 @@ class ChatService:
     # ── Sequential roundtable: one speaker per call, each hears the ones before ──
     async def roundtable_prepare(self, request) -> dict:
         seats = list(dict.fromkeys(request.person_slugs))
-        history = [ConversationTurn(role='user' if line.speaker == 'user' else 'assistant', content=line.text[:4000]) for line in request.transcript[-6:]]
+        history = [ConversationTurn(role='user' if line.speaker == 'user' else 'assistant', content=line.text[:20000]) for line in request.transcript[-6:]]
         invites = await self._resolve_invites(
             GroupChatRequest(question=request.question, person_slugs=seats, history=history, conversation_id=request.conversation_id),
             seats,

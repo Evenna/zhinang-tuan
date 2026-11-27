@@ -17,7 +17,7 @@ class AgentCloseRequest(BaseModel):
 
 class AgentAskRequest(BaseModel):
     session_id: str = Field(min_length=1)
-    question: str = Field(min_length=1, max_length=4000)
+    question: str = Field(min_length=1, max_length=20000)
 
 
 class AgentAskResponse(BaseModel):

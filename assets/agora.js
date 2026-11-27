@@ -379,7 +379,7 @@
         <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><span>${esc(hall.title)}</span></div>
         <h1 class="ag-h1">The <em>${esc(hall.title)}</em> Hall</h1>
         <div class="ag-motion-box">
-          <textarea class="ag-motion-input" id="agMotion" rows="2" maxlength="300" placeholder="Write a motion — a question with a yes or no">${esc(AG.motion)}</textarea>
+          <textarea class="ag-motion-input" id="agMotion" rows="2" placeholder="Write a motion — a question with a yes or no">${esc(AG.motion)}</textarea>
           <div class="ag-motion-alt"><span class="ag-motion-or">or</span>${motions.map((m) => `<button type="button" class="ag-alt" data-ag-motion="${esc(m)}">${esc(m)}</button>`).join('')}</div>
         </div>
         <div class="ag-pick-head"><span>Who takes the floor</span><b id="agPickCount">${AG.picked.length} / ${MAX_SEATS}</b><button type="button" class="ag-alt" data-ag-invite>Invite anyone →</button></div>

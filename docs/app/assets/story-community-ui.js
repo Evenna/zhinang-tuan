@@ -389,7 +389,7 @@ window.StoryCommunityScene = StoryCommunityScene;
       </div>
       <section class="st-comments">
         <div class="st-summary-label">Comments</div>
-        <form class="st-comment-form"><input name="c" maxlength="400" placeholder="Add a thought…" autocomplete="off"><button type="submit">Post</button></form>
+        <form class="st-comment-form"><input name="c" placeholder="Add a thought…" autocomplete="off"><button type="submit">Post</button></form>
         <div class="st-comments-list"></div>
       </section>
       <details class="st-transcript-wrap">

@@ -127,11 +127,11 @@ class Turn(BaseModel):
 
 
 class RoundRequest(BaseModel):
-    motion: str = Field(min_length=3, max_length=300)
+    motion: str = Field(min_length=3, max_length=20000)
     seats: list[str] = Field(min_length=1, max_length=MAX_SEATS)
     transcript: list[Turn] = []
     stances: dict[str, str] = {}
-    question: Optional[str] = Field(default=None, max_length=400)
+    question: Optional[str] = Field(default=None, max_length=20000)
     target: Optional[str] = None
     round: int = 1
 
@@ -211,12 +211,12 @@ async def debate_round(req: RoundRequest, db: Session = Depends(get_db)) -> dict
 
 
 class TurnRequest(BaseModel):
-    motion: str = Field(min_length=3, max_length=300)
+    motion: str = Field(min_length=3, max_length=20000)
     seats: list[str] = Field(min_length=1, max_length=MAX_SEATS)
     speaker: str
     transcript: list[Turn] = []
     stances: dict[str, str] = {}
-    question: Optional[str] = Field(default=None, max_length=400)
+    question: Optional[str] = Field(default=None, max_length=20000)
     direct: bool = False
     allow_pass: bool = False
     round: int = 1
