@@ -4294,9 +4294,9 @@
     .person-chat-meta { font-size: 0.7rem; letter-spacing: 0.08em; color: rgba(246,240,231,0.4); }
     .person-chat-back { border-color: rgba(212,175,123,0.25); background: none; font-size: 0.68rem; letter-spacing: 0.04em; }
 </style>
-  <link rel="stylesheet" href="assets/story-community.css?v=20261128o">
-  <link rel="stylesheet" href="assets/agora.css?v=20261128l">
-  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128o">
+  <link rel="stylesheet" href="assets/story-community.css?v=20261128p">
+  <link rel="stylesheet" href="assets/agora.css?v=20261128p">
+  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128p">
 </head>
 <body>
 
@@ -4566,11 +4566,12 @@
 <script src="api-config.js"></script>
 <script src="public-preview.js"></script>
 <script src="assets/story-community.js"></script>
-<script src="assets/story-community-ui.js?v=20261128o"></script>
+<script src="assets/story-community-ui.js?v=20261128p"></script>
+<script src="assets/story-detail.js?v=20261128p"></script>
 <script src="assets/person-timelines.js" defer></script>
-<script src="assets/advisor-life.js?v=20261128o" defer></script>
-<script src="assets/agora.js?v=20261128l" defer></script>
-<script src="assets/agora-floor.js?v=20261128l" defer></script>
+<script src="assets/advisor-life.js?v=20261128p" defer></script>
+<script src="assets/agora.js?v=20261128p" defer></script>
+<script src="assets/agora-floor.js?v=20261128p" defer></script>
 <script>
 // ─── LINE AVATAR SVGs ───
 // Each person has a unique minimalist line-art face silhouette
@@ -8571,7 +8572,7 @@ function hideSitePages() {
 }
 
 function showHomePage() {
-  document.body.classList.remove('people-mode', 'subpage-mode');
+  document.body.classList.remove('people-mode', 'subpage-mode', 'is-deep');
   hideSitePages();
   closePersonChat();
   setNavActive('home');
@@ -8649,6 +8650,7 @@ async function showPeoplePage() {
 }
 
 function openSitePage(view) {
+  document.body.classList.remove('is-deep');
   resetResultOnly();
   document.body.classList.remove('people-mode');
   document.body.classList.add('subpage-mode');

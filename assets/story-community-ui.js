@@ -341,7 +341,8 @@ window.StoryCommunityScene = StoryCommunityScene;
       <p>${esc(c.text)}</p></div>`).join('') || '<p class="st-empty">No comments yet.</p>';
   }
 
-  async function open(user, advisor) {
+  const open = (user, advisor) => window.StoryDetail?.open(user, advisor);
+  async function openLegacy(user, advisor) {
     if (!user || !advisor) return;
     const root = ensureOverlay();
     root.innerHTML = '<div class="st-panel"><button class="st-close" type="button" aria-label="Close">×</button><div class="st-meta">Loading…</div></div>';

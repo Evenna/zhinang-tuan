@@ -311,3 +311,90 @@
 .st-comments { margin-top: 6px; }
 .st-comment-form { border-bottom-color: rgba(212,175,123,0.18); }
 @media (max-width: 700px) { .st-panel { padding: 48px 22px 56px; } .st-headline { font-size: 22px; } }
+
+/* ── Hierarchy: level-1 pages keep the site nav; any sub-page (story detail, hall, debate) hides it. ── */
+body.is-deep { --site-header-height: 0px; }
+body.is-deep .home-hero { display: none !important; }
+
+/* ── Story detail · full-screen sub-page (16:9 first) ── */
+.sd[hidden] { display: none; }
+.sd { position: fixed; inset: 0; z-index: 900; color: #f2ebdf; background: radial-gradient(circle at 22% 0%, rgba(212,175,123,0.07), transparent 38%), #0d0c0a; animation: sdIn 420ms ease both; }
+@keyframes sdIn { from { opacity: 0; } }
+.sd-page { height: 100%; display: flex; flex-direction: column; }
+.sd-bar { flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 60px; padding: 0 clamp(24px, 3.4vw, 56px); border-bottom: 1px solid rgba(212,175,123,0.12); }
+.sd-back, .sd-share { justify-self: start; border: 0; background: none; padding: 6px 0; font: inherit; font-size: 12px; letter-spacing: 0.04em; color: rgba(242,235,223,0.6); cursor: pointer; transition: color .3s; }
+.sd-back:hover, .sd-share:hover { color: #f6efe2; }
+.sd-bar-meta { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(212,175,123,0.7); }
+.sd-bar-end { justify-self: end; display: flex; align-items: center; gap: 14px; }
+.sd-tip { font-size: 11px; color: #e8c78f; }
+.sd-loading { margin: auto; font-size: 12px; letter-spacing: 0.1em; color: rgba(242,235,223,0.4); }
+.sd-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(380px, 0.92fr) minmax(0, 1.08fr); }
+.sd-brief, .sd-convo { min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(212,175,123,0.2) transparent; }
+.sd-brief { padding: clamp(30px, 4.4vh, 52px) clamp(28px, 3.6vw, 64px) 56px clamp(24px, 3.4vw, 56px); border-right: 1px solid rgba(212,175,123,0.12); }
+.sd-convo { padding: clamp(30px, 4.4vh, 52px) clamp(28px, 4vw, 72px) 64px; }
+
+.sd-byline { display: flex; align-items: center; gap: 12px; }
+.sd-uav { flex: none; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; filter: grayscale(0.55) sepia(0.15); background: #2a2620; display: grid; place-items: center; font-size: 13px; color: #d4af7b; }
+.sd-byline b { display: block; font-size: 13px; font-weight: 500; color: #f6efe2; }
+.sd-byline span { display: block; margin-top: 2px; font-size: 11px; color: rgba(242,235,223,0.45); }
+.sd-q { margin: 26px 0 0; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: clamp(26px, 2.15vw, 36px); line-height: 1.24; letter-spacing: -0.01em; color: #f6efe2; }
+.sd-tldr { margin: 18px 0 0; font-size: 14px; line-height: 1.8; color: rgba(242,235,223,0.62); }
+.sd-label { margin: 34px 0 14px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(212,175,123,0.72); }
+.sd-voices { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.sd-voices li { display: grid; grid-template-columns: 38px 1fr; gap: 14px; align-items: start; }
+.sd-voices b { font-size: 12px; font-weight: 500; letter-spacing: 0.03em; color: #e8d3ad; }
+.sd-voices p { margin: 3px 0 0; font-size: 13.5px; line-height: 1.65; color: rgba(242,235,223,0.72); }
+.sd-av { position: relative; display: block; width: 38px; height: 50px; overflow: hidden; border-radius: 999px 999px 3px 3px; background: linear-gradient(180deg, var(--c2, #555), var(--c1, #333)); box-shadow: 0 0 0 1px rgba(212,175,123,0.45); }
+.sd-av img { position: absolute; left: 50%; bottom: 0; width: 130%; height: 100%; object-fit: contain; object-position: center bottom; transform: translateX(-50%); }
+.sd-answer { margin: 0; padding-left: 18px; border-left: 1px solid #d4af7b; font-family: Georgia, serif; font-size: 16px; line-height: 1.7; color: #f3dfb8; }
+.sd-after { margin: 0; font-size: 13.5px; line-height: 1.75; color: rgba(242,235,223,0.68); }
+
+.sd-actions { display: flex; align-items: center; gap: 24px; margin-top: 38px; padding: 16px 0; border-top: 1px solid rgba(212,175,123,0.14); border-bottom: 1px solid rgba(212,175,123,0.14); }
+.sd-act { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; font: inherit; font-size: 13px; color: rgba(242,235,223,0.62); cursor: pointer; transition: color .3s; }
+.sd-act i { font-style: normal; font-size: 15px; line-height: 1; }
+.sd-act b { font-weight: 400; }
+.sd-act:hover { color: #f6efe2; }
+.sd-act.is-on { color: #e8a998; }
+.sd-ask { margin-left: auto; border: 1px solid rgba(212,175,123,0.5); background: none; color: #f0dfbf; border-radius: 99px; padding: 8px 18px; font: inherit; font-size: 12px; cursor: pointer; transition: background .3s, color .3s; }
+.sd-ask:hover { background: #d4af7b; color: #15130f; }
+.sd-comments { margin-top: 14px; scroll-margin-top: 20px; }
+.sd-comment-form { display: flex; border-bottom: 1px solid rgba(212,175,123,0.2); }
+.sd-comment-form input { flex: 1; min-width: 0; border: 0; background: none; padding: 12px 0; font: inherit; font-size: 13px; color: #f2ebdf; outline: none; }
+.sd-comment-form input::placeholder { color: rgba(242,235,223,0.35); }
+.sd-comment-form button { border: 0; background: none; padding: 0 0 0 12px; font: inherit; font-size: 12px; color: #d4af7b; cursor: pointer; }
+.sd-comment { display: grid; grid-template-columns: 26px 1fr; gap: 12px; padding: 16px 0 0; }
+.sd-comment-av { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; color: #d4af7b; background: rgba(212,175,123,0.1); }
+.sd-comment-head { display: flex; align-items: baseline; gap: 8px; font-size: 12px; }
+.sd-comment-head b { font-weight: 500; color: rgba(246,239,226,0.88); }
+.sd-comment-head em { font-style: normal; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(212,175,123,0.8); }
+.sd-comment-head span { margin-left: auto; font-size: 11px; color: rgba(242,235,223,0.32); }
+.sd-comment p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.65; color: rgba(242,235,223,0.7); }
+.sd-empty { margin-top: 14px; font-size: 12px; color: rgba(242,235,223,0.35); }
+.sd-note { margin-top: 36px; font-size: 10px; color: rgba(242,235,223,0.26); }
+
+.sd-convo-label { margin-top: 0; display: flex; justify-content: space-between; }
+.sd-convo-label span { color: rgba(242,235,223,0.3); letter-spacing: 0.1em; }
+.sd-chat { max-width: 760px; }
+.sd-msg { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 14px; margin-top: 22px; }
+.sd-msg.is-cont { margin-top: 8px; }
+.sd-msg-body { min-width: 0; }
+.sd-who { display: block; margin: 2px 0 7px; font-size: 11px; letter-spacing: 0.06em; color: rgba(212,175,123,0.82); }
+.sd-bubble { display: inline-block; max-width: min(600px, 100%); padding: 12px 16px; border-radius: 4px 16px 16px 16px; background: rgba(255,255,255,0.045); border: 1px solid rgba(212,175,123,0.12); font-size: 14px; line-height: 1.72; color: rgba(242,235,223,0.84); white-space: pre-wrap; }
+.sd-msg.is-cont .sd-bubble { border-radius: 16px; }
+.sd-msg.is-user { grid-template-columns: minmax(0, 1fr) 38px; }
+.sd-msg.is-user .sd-msg-av { order: 2; display: flex; justify-content: center; }
+.sd-msg.is-user .sd-msg-body { order: 1; text-align: right; }
+.sd-msg.is-user .sd-who { color: rgba(242,235,223,0.45); }
+.sd-msg.is-user .sd-bubble { text-align: left; border-radius: 16px 4px 16px 16px; background: rgba(212,175,123,0.13); border-color: rgba(212,175,123,0.28); color: #fbf1df; }
+.sd-msg.is-user.is-cont .sd-bubble { border-radius: 16px; }
+.sd-msg.is-user .sd-uav { margin-top: 2px; }
+.sd-sys { display: flex; align-items: center; gap: 14px; margin: 34px 0 10px; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(212,175,123,0.55); }
+.sd-sys::before, .sd-sys::after { content: ''; flex: 1; height: 1px; background: rgba(212,175,123,0.14); }
+
+@media (max-width: 900px) {
+  .sd { overflow-y: auto; }
+  .sd-page { height: auto; min-height: 100%; }
+  .sd-grid { display: block; }
+  .sd-brief, .sd-convo { overflow: visible; border: 0; padding: 26px 20px 40px; }
+  .sd-bar { padding: 0 20px; position: sticky; top: 0; background: #0d0c0a; z-index: 2; }
+}

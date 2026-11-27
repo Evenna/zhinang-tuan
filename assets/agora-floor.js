@@ -57,7 +57,7 @@
     const keep = document.getElementById('agAsk')?.value || '';
     view.innerHTML = `<div class="ag-debate ag-debate--v7">${colonnade()}
       <div class="ag-debate-main">
-        <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><button type="button" data-ag-back-hall>${esc(hall?.title || d.hall)} Hall</button></div>
+        <div class="ag-crumb"><button type="button" data-ag-back-index>← Themes</button><span>/</span><button type="button" data-ag-back-hall>${esc(hall?.title || d.hall)} Hall</button></div>
         <div class="ag-stage" id="agStage">${stageHTML()}</div>
         <div class="ag-log" id="agLog">${logHTML()}</div>
         <form class="ag-composer" id="agComposer" autocomplete="off">${composerHTML()}</form>
@@ -519,6 +519,7 @@
   // Called by showThemesPage(): always land on the index.
   window.agoraOnThemes = function () {
     document.getElementById('themesPage')?.classList.remove('agora-open');
+    document.body.classList.remove('is-deep');
     closeModal();
     syncAside();
   };

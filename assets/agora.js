@@ -338,10 +338,12 @@
   }
   function openAgora() {
     page?.classList.add('agora-open');
+    document.body.classList.add('is-deep');
     window.scrollTo({ top: 0 });
   }
   function closeAgora() {
     page?.classList.remove('agora-open');
+    document.body.classList.remove('is-deep');
     closeModal();
     setURL({ view: 'themes' });
     syncAside();
@@ -376,7 +378,7 @@
     const motions = hall.motions.filter((m) => m !== AG.motion).slice(0, 3);
     view.innerHTML = `<div class="ag-hall ag-hall--v7">${colonnade()}
       <div class="ag-hall-main">
-        <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><span>${esc(hall.title)}</span></div>
+        <div class="ag-crumb"><button type="button" data-ag-back-index>← Themes</button><span>/</span><span>${esc(hall.title)}</span></div>
         <h1 class="ag-h1">The <em>${esc(hall.title)}</em> Hall</h1>
         <div class="ag-motion-box">
           <textarea class="ag-motion-input" id="agMotion" rows="2" placeholder="Write a motion — a question with a yes or no">${esc(AG.motion)}</textarea>
