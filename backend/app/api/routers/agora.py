@@ -210,6 +210,71 @@ async def debate_round(req: RoundRequest, db: Session = Depends(get_db)) -> dict
     return {'round': req.round, 'turns': turns, 'stances': stances, 'tally': _tally(stances, seats)}
 
 
+class TurnRequest(BaseModel):
+    motion: str = Field(min_length=3, max_length=300)
+    seats: list[str] = Field(min_length=1, max_length=MAX_SEATS)
+    speaker: str
+    transcript: list[Turn] = []
+    stances: dict[str, str] = {}
+    question: Optional[str] = Field(default=None, max_length=400)
+    direct: bool = False
+    allow_pass: bool = False
+    round: int = 1
+
+
+@router.post('/turn')
+async def debate_turn(req: TurnRequest, db: Session = Depends(get_db)) -> dict:
+    """One speaker, one turn — called in sequence so each voice hears the one before it. May pass."""
+    svc = ChatService(db)
+    seats = list(dict.fromkeys(req.seats))[:MAX_SEATS]
+    if req.speaker not in seats:
+        raise HTTPException(status_code=400, detail='That speaker is not on the floor.')
+    names = {}
+    for slug in dict.fromkeys(seats + [t.speaker for t in req.transcript if t.speaker not in ('user', 'host', 'system')]):
+        try:
+            names[slug] = svc._get_person(slug).english_name
+        except HTTPException:
+            names[slug] = slug
+    person = svc._get_person(req.speaker)
+    profile = svc._get_profile(person.id)
+    if not profile:
+        raise HTTPException(status_code=404, detail='No profile for this speaker.')
+    retrieved = svc.retrieval_service.retrieve_for_person(person, f'{req.motion} {req.question or ""}', limit=3)
+    system = build_persona_system_prompt(
+        person_name=person.english_name, person_slug=person.slug,
+        profile=svc._serialize_profile(profile),
+        retrieved_chunks=[svc._retrieved_to_dict(r) for r in retrieved],
+    )
+    others = ', '.join(names[s] for s in seats if s != req.speaker) or 'nobody else'
+    ask = ''
+    if req.question:
+        ask = (f'\nThe audience member just said to {"you directly" if req.direct else "the floor"}: "{req.question}". '
+               + ('Answer them first, through the lens of the motion.' if req.direct else
+                  'If others have already answered, do not repeat them: add, push back, or build on what was just said.'))
+    elif req.transcript:
+        ask = '\nReact to what was just said — the last speaker especially — rather than restating your opening.'
+    passing = ('\nYou do NOT have to speak. Only speak if you have something genuinely new, a sharp disagreement, '
+               'or the remark touches your own life. Otherwise reply exactly {"pass": true}.') if req.allow_pass else ''
+    user_msg = (
+        f'{TURN_INSTRUCTIONS}{passing}\n\nMOTION: "{req.motion}"\nRound {req.round}. Also on the floor: {others}.\n'
+        f'Your previous stance: {req.stances.get(req.speaker, "none yet")}.\n\nDEBATE SO FAR:\n'
+        f'{_render_transcript(req.transcript, names)}{ask}'
+    )
+    try:
+        raw = await svc.llm_service.chat([{'role': 'system', 'content': system}, {'role': 'user', 'content': user_msg}],
+                                         temperature=0.85, max_tokens=260)
+    except HTTPException as exc:
+        raise HTTPException(status_code=502, detail='The floor fell silent. Try again in a moment.') from exc
+    if req.allow_pass and re.search(r'"pass"\s*:\s*true', raw):
+        return {'turn': None, 'speaker': req.speaker}
+    data = _parse_turn(raw)
+    if not data:
+        if req.allow_pass:
+            return {'turn': None, 'speaker': req.speaker}
+        raise HTTPException(status_code=502, detail='The floor fell silent. Try again in a moment.')
+    return {'turn': {'speaker': req.speaker, 'name': names[req.speaker], 'round': req.round, **data}, 'speaker': req.speaker}
+
+
 def _parse_turn(raw: str) -> Optional[dict]:
     text = raw.strip()
     match = re.search(r'\{.*\}', text, re.S)

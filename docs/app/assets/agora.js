@@ -370,38 +370,43 @@
     const hall = AG.hallDetail[AG.hall];
     if (!hall) return;
     const picked = new Set(AG.picked);
-    const slots = Array.from({ length: MAX_SEATS - AG.picked.length }, () => '<button type="button" class="ag-slot" data-ag-invite aria-label="Invite someone">+</button>').join('');
-    view.innerHTML = `<div class="ag-hall">${colonnade()}
+    const residents = hall.residents.map((r) => r.slug);
+    const guests = AG.picked.filter((s) => !residents.includes(s));
+    const pool = [...guests, ...residents];
+    const motions = hall.motions.filter((m) => m !== AG.motion).slice(0, 3);
+    view.innerHTML = `<div class="ag-hall ag-hall--v7">${colonnade()}
       <div class="ag-hall-main">
         <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><span>${esc(hall.title)} · ${esc(hall.zh || '')}</span></div>
         <h1 class="ag-h1">The <em>${esc(hall.title)}</em> Hall</h1>
         <div class="ag-motion-box">
-          <span class="ag-pill">Motion on the floor</span>
-          <textarea class="ag-motion-input" id="agMotion" rows="2" maxlength="300" placeholder="Or write your own motion — a question with a yes or no">${esc(AG.motion)}</textarea>
-          <div class="ag-motion-alt">${hall.motions.map((m) => `<button type="button" class="ag-chip${m === AG.motion ? ' is-on' : ''}" data-ag-motion="${esc(m)}">${esc(m)}</button>`).join('')}</div>
+          <textarea class="ag-motion-input" id="agMotion" rows="2" maxlength="300" placeholder="Write a motion — a question with a yes or no">${esc(AG.motion)}</textarea>
+          <div class="ag-motion-alt"><span class="ag-motion-or">or</span>${motions.map((m) => `<button type="button" class="ag-alt" data-ag-motion="${esc(m)}">${esc(m)}</button>`).join('')}</div>
         </div>
-        <div class="ag-gallery-head"><span>Residents of the hall · ${hall.residents.length}</span>
-          <button type="button" class="ag-round" data-ag-scroll="-1" aria-label="Scroll left">←</button><button type="button" class="ag-round" data-ag-scroll="1" aria-label="Scroll right">→</button></div>
-        <div class="ag-gallery" id="agGallery">${hall.residents.map((r) => niche(r.slug, { width: 112, picked: picked.has(r.slug), attrs: 'data-ag-pick' })).join('')}</div>
-        <div class="ag-steps"></div>
-        <section class="ag-floor">
-          <div class="ag-floor-head">The floor · ${AG.picked.length} / ${MAX_SEATS}</div>
-          <div class="ag-floor-row">${AG.picked.map((s) => `<div style="position:relative">${niche(s, { width: 92, extra: `<span class="ag-niche-x" data-ag-unpick="${esc(s)}" role="button" aria-label="Remove">×</span>` })}<div class="ag-plinth"></div></div>`).join('')}${slots}</div>
-          <div class="ag-floor-foot">
-            <span class="ag-floor-hint">${AG.picked.length < MIN_SEATS ? `Pick at least ${MIN_SEATS} minds to open a debate.` : 'Opposing views make the best debates. Anyone among the 251 can be invited.'}</span>
-            <span style="display:flex;gap:10px;flex-wrap:wrap"><button type="button" class="ag-btn" data-ag-invite>+ Invite anyone</button>
-            <button type="button" class="ag-btn is-solid" data-ag-open ${AG.picked.length < MIN_SEATS ? 'disabled' : ''}>Open the debate →</button></span>
-          </div>
-        </section>
+        <div class="ag-pick-head"><span>Who takes the floor</span><b id="agPickCount">${AG.picked.length} / ${MAX_SEATS}</b><button type="button" class="ag-alt" data-ag-invite>Invite anyone →</button></div>
+        <div class="ag-gallery" id="agGallery">${pool.map((s) => niche(s, { width: 88, picked: picked.has(s), attrs: 'data-ag-pick' })).join('')}</div>
+        <div class="ag-hall-foot">
+          <span class="ag-floor-hint" id="agPickHint">${pickHint()}</span>
+          <button type="button" class="ag-btn is-solid" data-ag-open ${AG.picked.length < MIN_SEATS ? 'disabled' : ''}>Open the debate →</button>
+        </div>
       </div>
       <aside class="ag-side">
-        <div class="ag-side-head">Debates on record · ${hall.debates.length}</div>
-        ${hall.debates.map(pastItem).join('') || '<p class="ag-side-note">No debates yet. Yours could be the first.</p>'}
-        <p class="ag-side-note">Visitors shown here are illustrative; every reply comes from the AI personas.</p>
+        <div class="ag-side-head">On record · ${hall.debates.length}</div>
+        <div class="ag-side-list">${hall.debates.map(pastLine).join('') || '<p class="ag-side-note">No debates yet. Yours could be the first.</p>'}</div>
       </aside>
     </div>`;
+    const g = document.getElementById('agGallery');
+    g?.addEventListener('wheel', (e) => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { g.scrollLeft += e.deltaY; e.preventDefault(); } }, { passive: false });
+  }
+  function pickHint() {
+    return AG.picked.length < MIN_SEATS ? `Choose at least ${MIN_SEATS}` : AG.picked.map((s) => esc(firstName(s))).join(' · ');
   }
 
+  function pastLine(d) {
+    return `<button type="button" class="ag-past ag-past--line" data-ag-read="${esc(d.id)}">
+      <div class="ag-past-q">${esc(d.motion)}</div>
+      <div class="ag-past-row"><span class="ag-faces">${(d.participants || []).map(face).join('')}</span><span>${esc(d.name || '')} · ${d.replies} replies</span></div>
+    </button>`;
+  }
   function pastItem(d) {
     return `<button type="button" class="ag-past" data-ag-read="${esc(d.id)}">
       <div class="ag-past-q">${esc(d.motion)}</div>
@@ -415,10 +420,11 @@
     if (i >= 0) AG.picked.splice(i, 1);
     else if (AG.picked.length < MAX_SEATS) AG.picked.push(slug);
     else return flash('The floor holds five. Remove someone first.');
-    const scroll = document.getElementById('agGallery')?.scrollLeft || 0;
-    renderHall();
-    const g = document.getElementById('agGallery');
-    if (g) g.scrollLeft = scroll;
+    // update in place — no re-render, nothing jumps
+    document.querySelectorAll('#agGallery .ag-niche').forEach((n) => n.classList.toggle('is-picked', AG.picked.includes(n.dataset.slug)));
+    const c = document.getElementById('agPickCount'); if (c) c.textContent = `${AG.picked.length} / ${MAX_SEATS}`;
+    const h = document.getElementById('agPickHint'); if (h) h.innerHTML = pickHint();
+    const b = document.querySelector('[data-ag-open]'); if (b) b.disabled = AG.picked.length < MIN_SEATS;
   }
 
   function flash(text) {

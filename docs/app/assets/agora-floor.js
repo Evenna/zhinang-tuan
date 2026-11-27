@@ -25,44 +25,84 @@
     return d.seats.filter((s) => (d.stances[s] || 'undecided') === stance);
   }
 
+  /* The stage is the only place people appear: click a face to address them, × to send them off, + to pull someone in. */
+  function stageHTML() {
+    const d = AG.debate;
+    const person = (s) => niche(s, {
+      width: 66,
+      cls: ['ag-seat-n', AG.target === s ? 'is-target' : '', d.speaking === s ? 'is-speaking' : '', d.thinking.has(s) ? 'is-thinking' : ''].join(' '),
+      attrs: `data-ag-at="${esc(s)}" title="Talk to ${esc(nameOf(s))}"`,
+      extra: d.seats.length > 1 ? `<span class="ag-niche-x" data-ag-kick="${esc(s)}" role="button" title="Send off the floor">×</span>` : '',
+    });
+    const row = [...camp('for'), ...camp('undecided'), ...camp('against')].map((s) => `<div class="ag-seat-col">${person(s)}${tag(d.stances[s])}</div>`).join('');
+    const pull = d.seats.length < MAX_SEATS ? '<div class="ag-seat-col"><button type="button" class="ag-slot ag-slot--sm" data-ag-pull title="Pull someone in">+</button></div>' : '';
+    return `<div class="ag-stage-motion">${esc(d.motion)}</div>
+      ${tallyBar(tallyOf(d.seats, d.stances))}
+      <div class="ag-seat-row">${row}${pull}</div>`;
+  }
+  function composerHTML() {
+    const d = AG.debate;
+    return `${AG.target ? `<button type="button" class="ag-at-chip" data-ag-untarget title="Talk to everyone instead">@${esc(firstName(AG.target))} <i>×</i></button>` : ''}
+      <input id="agAsk" maxlength="400" placeholder="${AG.target ? `Say something to ${esc(nameOf(AG.target))}…` : 'Say something to the floor — or tap a face to talk to one'}">
+      <button type="submit" class="ag-send" ${AG.busy ? 'disabled' : ''} aria-label="Send">↑</button>
+      <span class="ag-comp-sep"></span>
+      <button type="button" class="ag-comp-act" data-ag-next ${AG.busy ? 'disabled' : ''}>Next round</button>
+      <button type="button" class="ag-comp-act is-gold" data-ag-close ${AG.busy || !d.round ? 'disabled' : ''}>Verdict</button>`;
+  }
+
   function renderDebate() {
     const d = AG.debate;
     const hall = AG.hallDetail[d.hall];
-    const t = tallyOf(d.seats, d.stances);
-    const campHTML = (stance, mid = false) => {
-      const people = camp(stance);
-      const inner = people.map((s) => niche(s, { width: 64, cls: [d.speaking === s ? 'is-speaking' : '', d.thinking.has(s) ? 'is-thinking' : ''].join(' '), attrs: 'tabindex="-1"' })).join('') || (mid ? '' : '<span class="ag-camp-empty"></span>');
-      return `<div class="ag-camp${mid ? ' is-mid' : ''}"><div class="ag-camp-people">${inner}</div><div class="ag-camp-label is-${stance}">${STANCE_LABEL[stance]}</div></div>`;
-    };
-    view.innerHTML = `<div class="ag-debate">${colonnade()}
+    const keep = document.getElementById('agAsk')?.value || '';
+    view.innerHTML = `<div class="ag-debate ag-debate--v7">${colonnade()}
       <div class="ag-debate-main">
-        <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><button type="button" data-ag-back-hall>${esc(hall?.title || d.hall)} Hall</button><span>/</span><span>${d.round ? `Round ${d.round}` : 'Opening'}</span></div>
-        <div class="ag-stage">
-          <div class="ag-stage-motion">${esc(d.motion)}</div>
-          ${tallyBar(t)}
-          <div class="ag-camps">${campHTML('for')}${campHTML('undecided', true)}${campHTML('against')}</div>
-          <div class="ag-stage-base"></div>
-        </div>
+        <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><button type="button" data-ag-back-hall>${esc(hall?.title || d.hall)} Hall</button></div>
+        <div class="ag-stage" id="agStage">${stageHTML()}</div>
         <div class="ag-log" id="agLog">${logHTML()}</div>
-        <form class="ag-composer" id="agComposer" autocomplete="off">
-          ${AG.target ? `<span class="ag-chip is-on" data-ag-untarget title="Ask everyone instead">@${esc(firstName(AG.target))} ×</span>` : ''}
-          <input id="agAsk" maxlength="400" placeholder="${AG.target ? `Ask ${esc(nameOf(AG.target))} directly…` : 'Put a question to the floor, or tell them about your situation…'}" ${AG.busy ? 'disabled' : ''}>
-          <button type="submit" class="ag-btn is-solid" ${AG.busy ? 'disabled' : ''}>Ask</button>
-        </form>
-      </div>
-      <aside class="ag-floor-side">
-        <div class="ag-side-head">On the floor · ${d.seats.length} / ${MAX_SEATS}</div>
-        ${[...camp("for"), ...camp("undecided"), ...camp("against")].map((s) => `<div class="ag-seat${d.speaking === s ? ' is-speaking' : ''}">${niche(s, { width: 72, plate: false, attrs: 'tabindex="-1"' })}<div><div class="ag-seat-name">${esc(nameOf(s))}</div>${tag(d.stances[s])}<button type="button" class="ag-seat-at" data-ag-at="${esc(s)}">Ask directly</button></div>
-          <button type="button" class="ag-seat-x" data-ag-kick="${esc(s)}" title="Send off the floor" ${AG.busy || d.seats.length <= 1 ? 'disabled' : ''}>×</button></div>`).join('')}
-        ${d.seats.length < MAX_SEATS ? `<button type="button" class="ag-pull" data-ag-pull ${AG.busy ? 'disabled' : ''}>+ Pull someone in</button>` : ''}
-        <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
-          <button type="button" class="ag-btn" data-ag-next ${AG.busy ? 'disabled' : ''}>Next round →</button>
-          <button type="button" class="ag-btn is-solid" data-ag-close ${AG.busy || !d.round ? 'disabled' : ''}>Close the debate · see the verdict</button>
-        </div>
-        <p class="ag-side-note">Stances move as minds change. Debaters are AI personas grounded in each person's writing and life.</p>
-      </aside></div>`;
+        <form class="ag-composer" id="agComposer" autocomplete="off">${composerHTML()}</form>
+      </div></div>`;
+    const input = document.getElementById('agAsk');
+    if (input && keep) input.value = keep;
+    scrollLog();
+  }
+  // light updates — nothing re-mounts, so nothing pops
+  function refreshStage() {
+    const d = AG.debate;
+    const st = document.getElementById('agStage');
+    if (!st) return;
+    const order = d.seats.map((s) => d.stances[s] || 'undecided').join();
+    if (st.dataset.order !== order || st.dataset.n !== String(d.seats.length) || st.dataset.t !== String(AG.target)) {
+      st.innerHTML = stageHTML();
+      st.dataset.order = order; st.dataset.n = d.seats.length; st.dataset.t = AG.target;
+      return;
+    }
+    st.querySelectorAll('.ag-seat-n').forEach((n) => {
+      const s = n.dataset.slug;
+      n.classList.toggle('is-speaking', d.speaking === s);
+      n.classList.toggle('is-thinking', d.thinking.has(s));
+    });
+  }
+  function refreshComposer() {
+    const f = document.getElementById('agComposer');
+    if (!f) return;
+    const v = document.getElementById('agAsk')?.value || '';
+    const focused = document.activeElement?.id === 'agAsk';
+    f.innerHTML = composerHTML();
+    const input = document.getElementById('agAsk');
+    input.value = v;
+    if (focused) input.focus();
+  }
+  function scrollLog(smooth = false) {
     const log = document.getElementById('agLog');
-    if (log) log.scrollTop = log.scrollHeight;
+    if (log) log.scrollTo({ top: log.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
+  }
+  function appendHTML(html) {
+    const log = document.getElementById('agLog');
+    if (!log) return null;
+    log.querySelector('.ag-log-empty')?.remove();
+    log.insertAdjacentHTML('beforeend', html);
+    scrollLog(true);
+    return log.lastElementChild;
   }
 
   function turnHTML(turn) {
@@ -71,6 +111,10 @@
       return `<div class="ag-turn is-user"><div class="ag-turn-body"><div class="ag-turn-head"><span class="ag-turn-name">${esc(turn.name || 'You')}${turn.target ? ` → ${esc(nameOf(turn.target))}` : ''}</span></div><div class="ag-turn-text">${esc(turn.text)}</div></div></div>`;
     }
     return `<div class="ag-turn">${miniAv(turn.speaker)}<div class="ag-turn-body"><div class="ag-turn-head"><span class="ag-turn-name">${esc(turn.name || nameOf(turn.speaker))}</span>${tag(turn.stance)}${turn.move ? `<span class="ag-move">${esc(MOVE_LABEL[turn.move] || turn.move)}</span>` : ''}${turn.shift ? `<span class="ag-shift">${esc(turn.shift)}</span>` : ''}</div><div class="ag-turn-text">${esc(turn.text)}</div></div></div>`;
+  }
+  function pendingHTML(s) {
+    const line = THINKING[(s.length + AG.debate.round) % THINKING.length];
+    return `<div class="ag-turn is-pending" data-pending="${esc(s)}">${miniAv(s)}<div class="ag-turn-body"><div class="ag-turn-head"><span class="ag-turn-name">${esc(nameOf(s))}</span></div><div class="ag-turn-text">${esc(firstName(s))} ${esc(line)}<span class="ag-dots"></span></div></div></div>`;
   }
 
   function logHTML() {
@@ -84,12 +128,10 @@
       }
       out.push(turnHTML(turn));
     });
-    d.thinking.forEach((s) => {
-      const line = THINKING[(s.length + d.round) % THINKING.length];
-      out.push(`<div class="ag-turn is-pending">${miniAv(s)}<div class="ag-turn-body"><div class="ag-turn-head"><span class="ag-turn-name">${esc(nameOf(s))}</span></div><div class="ag-turn-text">${esc(firstName(s))} ${esc(line)}<span class="ag-dots"></span></div></div></div>`);
-    });
+    d.thinking.forEach((s) => out.push(pendingHTML(s)));
     if (d.error) out.push(`<div class="ag-error">${esc(d.error)} <button type="button" class="ag-link" data-ag-retry>Try again</button></div>`);
-    if (!out.length) out.push('<p class="ag-floor-hint" style="text-align:center;margin-top:30px">The floor is quiet. The first round is about to open.</p>');
+    if (!out.length) out.push('<p class="ag-floor-hint ag-log-empty" style="text-align:center;margin-top:30px">The floor is quiet.</p>');
+    d._lastRound = lastRound;
     return out.join('');
   }
 
@@ -97,71 +139,138 @@
     return AG.debate.transcript.filter((t) => t.speaker !== 'system').map((t) => ({ speaker: t.speaker, text: t.text, stance: t.stance || null, round: t.round || 0 }));
   }
 
-  // One round: everyone (or one target) answers. Replies are revealed one by one so camps visibly shift.
+  // reveal a reply at speaking pace, word by word
+  async function speak(el, text, d) {
+    const box = el?.querySelector('.ag-turn-text');
+    if (!box) return;
+    const words = text.split(/(\s+)/);
+    box.textContent = '';
+    box.classList.add('is-typing');
+    let shown = '';
+    for (let i = 0; i < words.length; i += 1) {
+      if (AG.debate !== d) return;
+      shown += words[i];
+      box.textContent = shown;
+      if (words[i].trim()) await sleep(/[.!?;:]$/.test(words[i]) ? 210 : 62);
+    }
+    box.classList.remove('is-typing');
+    scrollLog(true);
+  }
+
+  /* One voice at a time. Each speaker hears everyone before them; after the first, anyone may stay silent. */
   async function runRound({ question = null, target = null } = {}) {
     const d = AG.debate;
     if (AG.busy) return;
     AG.busy = true;
     d.error = '';
-    const round = question && target ? Math.max(d.round, 1) : d.round + 1;
-    const speakers = target ? [target] : [...d.seats];
-    d.thinking = new Set(speakers);
-    renderDebate();
-    let data;
-    try {
-      data = await post('/round', { motion: d.motion, seats: d.seats, transcript: payloadTranscript(), stances: d.stances, question, target, round });
-    } catch (e) {
+    refreshComposer();
+    const opening = !d.round && !question;
+    const round = question ? Math.max(d.round, 1) : d.round + 1;
+    let order;
+    if (target) order = [target, ...shuffle(d.seats.filter((s) => s !== target)).slice(0, 1)];
+    else if (opening) order = [...d.seats];
+    else order = shuffle([...d.seats]);
+    const maxVoices = opening ? d.seats.length : question ? (target ? 2 : 3) : Math.min(d.seats.length, 4);
+    if (d._lastRound !== round && !question) { appendHTML(`<div class="ag-round-sep">Round ${round}</div>`); d._lastRound = round; }
+    let spoken = 0;
+    for (let i = 0; i < order.length && spoken < maxVoices; i += 1) {
+      const s = order[i];
+      if (AG.debate !== d) return;
+      if (!d.seats.includes(s)) continue;
+      const mustSpeak = opening || (target ? s === target : spoken === 0);
+      d.thinking = new Set([s]);
+      refreshStage();
+      const pending = appendHTML(pendingHTML(s));
+      const started = Date.now();
+      let res;
+      try {
+        res = await post('/turn', { motion: d.motion, seats: d.seats, speaker: s, transcript: payloadTranscript(), stances: d.stances, question, direct: s === target, allow_pass: !mustSpeak, round });
+      } catch (e) {
+        pending?.remove();
+        if (mustSpeak && spoken === 0) {
+          d.thinking = new Set(); d.error = e.message; d._retry = { question, target };
+          AG.busy = false; refreshStage(); refreshComposer();
+          appendHTML(`<div class="ag-error">${esc(e.message)} <button type="button" class="ag-link" data-ag-retry>Try again</button></div>`);
+          return;
+        }
+        continue;
+      }
+      if (AG.debate !== d) return;
+      await sleep(Math.max(0, 1400 - (Date.now() - started))); // a breath before anyone speaks
       d.thinking = new Set();
-      d.error = e.message;
-      d._retry = { question, target };
-      AG.busy = false;
-      renderDebate();
-      return;
+      const turn = res.turn;
+      if (!turn) { // chose to stay silent
+        pending?.remove();
+        refreshStage();
+        continue;
+      }
+      if (d._lastRound !== round && round > 0) { pending?.insertAdjacentHTML('beforebegin', `<div class="ag-round-sep">Round ${round}</div>`); d._lastRound = round; }
+      const before = d.stances[s];
+      const shift = before && turn.stance && before !== turn.stance ? `moved from ${STANCE_LABEL[before]}` : '';
+      d.speaking = s;
+      d.stances[s] = turn.stance || before || 'undecided';
+      const full = { ...turn, shift };
+      d.transcript.push(full);
+      d.round = round;
+      refreshStage();
+      const tmp = document.createElement('div');
+      tmp.innerHTML = turnHTML(full);
+      const el = tmp.firstElementChild;
+      if (pending) pending.replaceWith(el); else appendHTML(el.outerHTML);
+      await speak(el, full.text, d);
+      spoken += 1;
+      await sleep(650);
+      d.speaking = null;
+      refreshStage();
     }
     if (AG.debate !== d) return;
-    d.round = round;
-    for (const turn of data.turns || []) {
-      const before = d.stances[turn.speaker];
-      const shift = before && turn.stance && before !== turn.stance ? `moved from ${STANCE_LABEL[before]}` : '';
-      d.thinking.delete(turn.speaker);
-      d.speaking = turn.speaker;
-      d.stances[turn.speaker] = turn.stance || before || 'undecided';
-      d.transcript.push({ ...turn, shift });
-      renderDebate();
-      await sleep(900);
-    }
+    d.round = Math.max(d.round, round);
+    if (!spoken) appendHTML('<div class="ag-round-sep">The floor listens in silence</div>');
     d.thinking = new Set();
     d.speaking = null;
     AG.busy = false;
-    renderDebate();
+    refreshStage();
+    refreshComposer();
   }
+  function shuffle(a) { for (let i = a.length - 1; i > 0; i -= 1) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
   function ask(text) {
     const d = AG.debate;
+    if (AG.busy) return flash('Let them finish first.');
     const session = (() => { try { return JSON.parse(localStorage.getItem('zhinang-local-session') || 'null'); } catch (e) { return null; } })();
-    d.transcript.push({ speaker: 'user', name: session?.name || 'You', text, target: AG.target, round: d.round });
+    const turn = { speaker: 'user', name: session?.name || 'You', text, target: AG.target, round: d.round };
+    d.transcript.push(turn);
+    appendHTML(turnHTML(turn));
     const target = AG.target;
     AG.target = null;
+    refreshStage();
+    const input = document.getElementById('agAsk'); if (input) input.value = '';
     runRound({ question: text, target });
   }
 
   function kick(slug) {
     const d = AG.debate;
-    if (d.seats.length <= 1) return;
+    if (d.seats.length <= 1 || AG.busy) return AG.busy ? flash('Wait until this exchange ends.') : null;
     d.seats = d.seats.filter((s) => s !== slug);
     delete d.stances[slug];
     if (AG.target === slug) AG.target = null;
-    d.transcript.push({ speaker: 'system', text: `${nameOf(slug)} leaves the floor` });
-    renderDebate();
+    const t = { speaker: 'system', text: `${nameOf(slug)} leaves the floor` };
+    d.transcript.push(t);
+    appendHTML(turnHTML(t));
+    refreshStage(); refreshComposer();
   }
 
   async function pullIn(slug) {
     const d = AG.debate;
     if (!d || d.seats.includes(slug)) return;
     if (d.seats.length >= MAX_SEATS) return flash('The floor holds five. Send someone off first.');
+    if (AG.busy) return flash('Wait until this exchange ends.');
     d.seats.push(slug);
-    d.transcript.push({ speaker: 'system', text: `${nameOf(slug)} steps onto the floor` });
-    if (!d.round) return renderDebate();
+    const t = { speaker: 'system', text: `${nameOf(slug)} steps onto the floor` };
+    d.transcript.push(t);
+    appendHTML(turnHTML(t));
+    refreshStage();
+    if (!d.round) return;
     await runRound({ question: 'You have just joined this debate. Give your opening position on the motion and respond to what has been said so far.', target: slug });
   }
   A.pullIn = pullIn;
@@ -341,10 +450,10 @@
     if ((n = el('[data-ag-read]'))) return openReader(n.dataset.agRead);
     if (el('[data-ag-pull]')) return openPicker('debate');
     if ((n = el('[data-ag-kick]'))) return kick(n.dataset.agKick);
-    if ((n = el('[data-ag-at]'))) { AG.target = n.dataset.agAt; renderDebate(); return document.getElementById('agAsk')?.focus(); }
-    if (el('[data-ag-untarget]')) { AG.target = null; return renderDebate(); }
+    if ((n = el('[data-ag-at]'))) { AG.target = AG.target === n.dataset.agAt ? null : n.dataset.agAt; refreshStage(); refreshComposer(); return document.getElementById('agAsk')?.focus(); }
+    if (el('[data-ag-untarget]')) { AG.target = null; refreshStage(); refreshComposer(); return document.getElementById('agAsk')?.focus(); }
     if (el('[data-ag-next]')) return runRound();
-    if (el('[data-ag-retry]')) { const r = AG.debate?._retry || {}; return runRound(r); }
+    if ((n = el('[data-ag-retry]'))) { n.closest('.ag-error')?.remove(); const r = AG.debate?._retry || {}; return runRound(r); }
     if (el('[data-ag-close]')) return closeDebate();
     if (el('[data-ag-publish]')) return publish();
     if (el('[data-ag-continue]')) { AG.debate.published = AG.debate.published || null; return renderDebate(); }
