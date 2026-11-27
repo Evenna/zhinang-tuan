@@ -1,0 +1,88 @@
+{
+  "halls": [
+    {
+      "id": "philosophy", "title": "Philosophy", "zh": "哲学",
+      "copy": "Choice, meaning, and how to turn a vague worry into a clear question.",
+      "domains": ["哲学 / 思想家", "心理学 / 自我成长领域"],
+      "featured": ["socrates", "albert-camus", "laozi", "simone-de-beauvoir", "immanuel-kant", "nietzsche", "zhuangzi", "plato", "confucius", "hannah-arendt", "marcus-aurelius", "jean-paul-sartre", "viktor-frankl", "carl-jung"],
+      "motions": [
+        "Is an unexamined life worth living?",
+        "Should you follow your passion, or your duty?",
+        "Is happiness the point of a good life?",
+        "Can you be free if you never choose against your upbringing?"
+      ]
+    },
+    {
+      "id": "science", "title": "Science", "zh": "科学",
+      "copy": "Evidence, experiments, and how to keep going when something has not yet produced a result.",
+      "domains": ["科学家 / 发明家", "数学 / 计算机 / AI"],
+      "featured": ["albert-einstein", "marie-curie", "richard-feynman", "ada-lovelace", "alan-turing", "charles-darwin", "isaac-newton", "nikola-tesla", "stephen-hawking", "geoffrey-hinton", "carl-sagan", "galileo-galilei", "oppenheimer", "demis-hassabis"],
+      "motions": [
+        "Should science stop where conscience begins?",
+        "Will AI make human genius obsolete?",
+        "Is curiosity enough reason to spend a life on a problem?",
+        "Should a scientist ever keep a discovery secret?"
+      ]
+    },
+    {
+      "id": "business", "title": "Business", "zh": "商业",
+      "copy": "When product, trade-offs, taste, and market collide.",
+      "domains": ["企业家 / 科技领袖"],
+      "featured": ["steve-jobs", "warren-buffett", "elon-musk", "charlie-munger", "jensen-huang", "jeff-bezos", "bill-gates", "ray-dalio", "sam-altman", "jack-ma", "satya-nadella", "peter-thiel", "naval-ravikant", "coco-chanel"],
+      "motions": [
+        "Should a founder build what users ask for, or what they need?",
+        "Is getting rich a worthy life goal?",
+        "Should you quit a stable job to start something?",
+        "Does great taste matter more than speed?"
+      ]
+    },
+    {
+      "id": "literature", "title": "Literature", "zh": "文学",
+      "copy": "Turn experiences into sentences and ground emotions in specific events.",
+      "domains": ["文学家 / 作家", "经典小说角色"],
+      "featured": ["franz-kafka", "virginia-woolf", "leo-tolstoy", "fyodor-dostoevsky", "lu-xun", "haruki-murakami", "jane-austen", "william-shakespeare", "george-orwell", "ernest-hemingway", "oscar-wilde", "jorge-luis-borges", "toni-morrison", "kazuo-ishiguro"],
+      "motions": [
+        "Must a writer suffer to write truly?",
+        "Is it better to love and lose than never to love at all?",
+        "Should you write for readers, or for yourself?",
+        "Can a story change a person more than an argument?"
+      ]
+    },
+    {
+      "id": "art", "title": "Art", "zh": "艺术",
+      "copy": "Style, craft, and what deserves to be seen.",
+      "domains": ["艺术家 / 音乐家", "建筑 / 设计 / 时尚", "导演 / 编剧 / 电影大师"],
+      "featured": ["vincent-van-gogh", "frida-kahlo", "pablo-picasso", "salvador-dali", "hayao-miyazaki", "leonardo-da-vinci", "claude-monet", "ludwig-van-beethoven", "dieter-rams", "zaha-hadid", "wong-kar-wai", "andy-warhol", "yayoi-kusama", "stanley-kubrick"],
+      "motions": [
+        "Should art please people, or disturb them?",
+        "Is AI-made art still art?",
+        "Should an artist chase recognition while alive?",
+        "Is technique worth more than vision?"
+      ]
+    },
+    {
+      "id": "history", "title": "Politics", "zh": "政治",
+      "copy": "Power, timing, and what a person can do when the larger picture is at stake.",
+      "domains": ["政治 / 历史人物", "古代文明 / 帝王 / 战略家", "社会运动 / 精神领袖"],
+      "featured": ["abraham-lincoln", "mahatma-gandhi", "winston-churchill", "nelson-mandela", "zhuge-liang", "napoleon", "julius-caesar", "martin-luther-king-jr", "sun-tzu", "cleopatra", "empress-wu-zetian", "malala-yousafzai", "rosa-parks", "cao-cao"],
+      "motions": [
+        "Do the ends ever justify the means?",
+        "Is compromise a strength or a betrayal?",
+        "Should a leader follow the people, or lead them against their will?",
+        "Can one person really change history?"
+      ]
+    },
+    {
+      "id": "fiction", "title": "Narrative", "zh": "叙事",
+      "copy": "How fictional characters make decisions and what their choices cost.",
+      "domains": ["电影 / 动漫 / 小说角色", "动漫 / 游戏角色", "神话 / 传说人物"],
+      "featured": ["sherlock-holmes", "gandalf", "dumbledore", "walter-white", "forrest-gump", "sun-wukong", "odysseus", "mulan", "monkey-d-luffy", "rocky-balboa", "spock", "jean-valjean", "don-quixote", "thomas-shelby"],
+      "motions": [
+        "Is it worth becoming the villain to protect the people you love?",
+        "Should you always keep a promise, even when it hurts you?",
+        "Is it braver to stay home or to leave on the journey?",
+        "Can a good person do a terrible thing and still be good?"
+      ]
+    }
+  ]
+}

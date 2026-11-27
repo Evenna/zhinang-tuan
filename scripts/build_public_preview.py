@@ -45,8 +45,15 @@ def main() -> None:
         source = source.replace(before, after)
     source = source.replace('assets/character_cutouts/${slug}.png', 'assets/character_cutouts/${slug}.webp')
 
-    for name in ['story-community.js', 'story-community-ui.js', 'story-community.css', 'advisor-life.js', 'advisor-life.css', 'person-timelines.js']:
+    for name in ['story-community.js', 'story-community-ui.js', 'story-community.css', 'advisor-life.js', 'advisor-life.css', 'person-timelines.js', 'agora.css', 'agora.js', 'agora-floor.js']:
         shutil.copy2(ROOT / 'assets' / name, DEST / 'assets' / name)
+    # Offline snapshot of the Agora (halls, residents, debates on record) for when the backend is unreachable.
+    from app.api.routers import agora as agora_api
+    with SessionLocal() as db:
+        halls = agora_api.list_halls(db)['halls']
+        details = {h['id']: agora_api.get_hall(h['id'], db) for h in halls}
+    debates = {d['id']: d for d in agora_api._published() + agora_api._seeded()}
+    (DEST / 'assets' / 'agora-static.json').write_text(json.dumps({'halls': halls, 'details': details, 'debates': debates}, ensure_ascii=False))
     shutil.copytree(ROOT / 'assets' / 'story-users', DEST / 'assets' / 'story-users', dirs_exist_ok=True)
     catalog = []
     with SessionLocal() as db:

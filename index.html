@@ -4225,6 +4225,7 @@
 
   </style>
   <link rel="stylesheet" href="assets/story-community.css">
+  <link rel="stylesheet" href="assets/agora.css">
   <link rel="stylesheet" href="assets/advisor-life.css">
 </head>
 <body>
@@ -4336,6 +4337,7 @@
       </aside>
       <div class="theme-index" id="themeGrid"></div>
     </div>
+    <div class="agora-view" id="agoraView"></div>
   </section>
 
   <section class="site-page" id="storiesPage">
@@ -4492,6 +4494,8 @@
 <script src="assets/story-community-ui.js"></script>
 <script src="assets/person-timelines.js" defer></script>
 <script src="assets/advisor-life.js" defer></script>
+<script src="assets/agora.js" defer></script>
+<script src="assets/agora-floor.js" defer></script>
 <script>
 // ─── LINE AVATAR SVGs ───
 // Each person has a unique minimalist line-art face silhouette
@@ -8629,6 +8633,7 @@ async function showThemesPage() {
     // Theme cards still work without counts.
   }
   renderThemes();
+  window.agoraOnThemes?.();
 }
 
 const STORY_HEADLINES = [
@@ -11030,15 +11035,7 @@ loginNavLink?.addEventListener('click', (event) => {
   showLoginPage();
 });
 
-themeGrid?.addEventListener('click', async (event) => {
-  const card = event.target.closest('[data-theme]');
-  if (!card) return;
-  const theme = THEMES.find((item) => item.id === card.dataset.theme);
-  if (!theme) return;
-  await showPeoplePage();
-  if (peopleSearch) peopleSearch.value = theme.query;
-  filterPeoplePage();
-});
+// Theme rows open their Agora hall (handled in assets/agora-floor.js).
 
 function askWithActiveStory() {
   const card = getStoryCards()[storyCursor];
@@ -11192,6 +11189,13 @@ if (ADJUST_MODE) {
 }
 submitBtn.disabled = input.value.trim().length < MIN_QUESTION_LENGTH;
 if (new URLSearchParams(location.search).get('view') === 'stories') openSitePage('stories');
+if (new URLSearchParams(location.search).get('view') === 'themes') {
+  showThemesPage().then(() => {
+    const params = new URLSearchParams(location.search);
+    const go = () => window.agoraRoute?.(params);
+    if (window.agoraRoute) go(); else window.addEventListener('load', go, { once: true });
+  });
+}
 
 </script>
 </body>
