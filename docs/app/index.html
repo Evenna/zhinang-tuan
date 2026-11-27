@@ -4270,7 +4270,7 @@
   </style>
   <link rel="stylesheet" href="assets/story-community.css">
   <link rel="stylesheet" href="assets/agora.css?v=20261128i">
-  <link rel="stylesheet" href="assets/advisor-life.css">
+  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128j">
 </head>
 <body>
 
@@ -10773,7 +10773,7 @@ function renderCards(cardItems) {
                     <div class="poster-caption">${escapeHTML(card.tags[0] || 'Think Tank')}</div>
                     <div class="poster-flip">Open Back</div>
                   </div>
-                  <button class="poster-chat-btn" type="button" data-chat-slug="${escapeHTML(card.slug)}">Talk 1:1 →</button>
+                  <button class="poster-chat-btn" type="button" data-chat-slug="${escapeHTML(card.slug)}">Talk 1:1 <span aria-hidden="true">→</span></button>
                 </div>
                 <div class="card-face card-back">
                   <div class="back-topbar">
@@ -10787,7 +10787,6 @@ function renderCards(cardItems) {
                       </div>
                       <div class="back-era">${escapeHTML(card.era)}</div>
                     </div>
-                    <button class="card-chat-btn" type="button" data-chat-slug="${escapeHTML(card.slug)}">Talk with ${escapeHTML(card.name)} 1:1 →</button>
 
                     <div class="back-scroll">
                       <div class="back-section back-answer-section">

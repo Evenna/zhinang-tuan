@@ -45,6 +45,10 @@
 .card-chat-btn:hover { filter: brightness(1.12); }
 .poster-chat-btn { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 6; border: 1px solid rgba(255,255,255,0.6); background: rgba(10,10,10,0.55); backdrop-filter: blur(6px); color: #fff; border-radius: 99px; padding: 7px 14px; font: inherit; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; opacity: 0; transition: opacity 200ms ease; white-space: nowrap; }
 .card:hover .poster-chat-btn, .card.is-active .poster-chat-btn { opacity: 1; }
+/* v10: 1:1 lives on the front only, always visible at the foot of the card */
+.poster-chat-btn { opacity: 1; bottom: 14px; left: 16px; transform: none; padding: 6px 14px; line-height: 1.2; font-size: 0.62rem; background: rgba(20,16,12,0.72); border-color: rgba(212,175,123,0.7); color: #f6ead6; }
+.poster-chat-btn:hover { background: rgba(212,175,123,0.92); color: #1a140e; }
+.card.is-flipped .poster-chat-btn { pointer-events: none; }
 
 /* Roundtable: seat management + life panel. */
 .roundtable-view.has-life { grid-template-columns: minmax(0, 1fr) minmax(280px, 360px); column-gap: clamp(18px, 3vw, 40px); padding-right: 0; }
