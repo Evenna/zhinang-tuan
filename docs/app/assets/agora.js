@@ -221,10 +221,13 @@
       const rest = residents.filter((r) => !featured.has(r.slug));
       const pool = rest.length ? rest : residents;
       const slots = [];
-      while (slots.length < 54) slots.push(...pool);
+      let sd = [...hall.id].reduce((x, c) => x * 31 + c.charCodeAt(0), 7) >>> 0;
+      const rn = () => { sd = (sd * 1664525 + 1013904223) >>> 0; return sd / 4294967296; };
+      // shuffled passes, no neighbour repeats at the seams, so the repetition doesn't read as a pattern
+      while (slots.length < 72) { const pass = pool.slice().sort(() => rn() - 0.5); if (slots.length && pass[0] === slots[slots.length - 1]) pass.push(pass.shift()); slots.push(...pass); }
       if (fade) wall.classList.remove('is-in');
-      wall.innerHTML = slots.slice(0, Math.max(54, pool.length)).map((r, i) => niche(r.slug, { width: 84, plate: false, attrs: `tabindex="-1" data-d="${i % 12}"` })).join('');
-      requestAnimationFrame(() => { placeLit(wall, hall, rest); requestAnimationFrame(() => wall.classList.add('is-in')); });
+      wall.innerHTML = slots.slice(0, Math.max(72, pool.length)).map((r, i) => niche(r.slug, { width: 84, plate: false, attrs: `tabindex="-1" data-d="${i % 12}"` })).join('');
+      requestAnimationFrame(() => requestAnimationFrame(() => wall.classList.add('is-in')));
     };
     const cached = AG.hallDetail[hall.id]?.residents;
     if (cached) { paint(cached, true); return; }

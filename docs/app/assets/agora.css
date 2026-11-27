@@ -397,3 +397,32 @@
 .ag-wall.is-in .ag-lit-float.is-glow { opacity: 0.4; }
 .ag-wall.is-in .ag-lit-float.is-glow { opacity: 0.6; }
 .ag-wall .ag-lit-float.is-glow .ag-niche-arch { filter: none; box-shadow: 0 0 0 1px rgba(212,175,123,0.7), 0 0 0 4px #050505, 0 0 0 5px rgba(212,175,123,0.25); }
+/* v3: no lit residents on the wall — a faint field of the hall's people that dissolves before it reaches the words */
+.theme-menu .ag-wall { inset: 0 0 0 26%; padding: 28px 24px; gap: 20px 16px; align-content: center; justify-content: flex-start;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 24%, rgba(0,0,0,0.35) 40%, transparent 56%), linear-gradient(180deg, transparent, #000 10%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 24%, rgba(0,0,0,0.35) 40%, transparent 56%), linear-gradient(180deg, transparent, #000 10%, #000 88%, transparent); }
+.ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.2; }
+.ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.55) brightness(0.8); box-shadow: 0 0 0 1px rgba(212,175,123,0.4); }
+.ag-wall .ag-lit-float { display: none; }
+@media (max-width: 980px) { .theme-menu .ag-wall { inset: 0; -webkit-mask-image: linear-gradient(180deg, #000 0, rgba(0,0,0,0.4) 60%, transparent); mask-image: linear-gradient(180deg, #000 0, rgba(0,0,0,0.4) 60%, transparent); } }
+.theme-menu .ag-wall { align-content: flex-start; padding-top: 6px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 26%, rgba(0,0,0,0.35) 41%, transparent 56%), linear-gradient(180deg, transparent 0, #000 16%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 26%, rgba(0,0,0,0.35) 41%, transparent 56%), linear-gradient(180deg, transparent 0, #000 16%, #000 80%, transparent 100%); }
+.theme-menu .ag-wall {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 24%, rgba(0,0,0,0.3) 36%, transparent 47%), linear-gradient(180deg, transparent 0, #000 18%, #000 66%, transparent 94%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 24%, rgba(0,0,0,0.3) 36%, transparent 47%), linear-gradient(180deg, transparent 0, #000 18%, #000 66%, transparent 94%); }
+.ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.15; }
+.ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.75) brightness(0.75); }
+.theme-menu .ag-wall {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 15%, #000 22%, rgba(0,0,0,0.3) 30%, transparent 37%), linear-gradient(180deg, transparent 4%, #000 22%, #000 64%, transparent 92%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 15%, #000 22%, rgba(0,0,0,0.3) 30%, transparent 37%), linear-gradient(180deg, transparent 4%, #000 22%, #000 64%, transparent 92%); }
+.theme-menu .ag-wall { padding-top: 34px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 2%, #000 13%, #000 18%, rgba(0,0,0,0.3) 25%, transparent 30%), linear-gradient(180deg, transparent 6%, #000 26%, #000 62%, transparent 90%);
+  mask-image: linear-gradient(90deg, transparent 2%, #000 13%, #000 18%, rgba(0,0,0,0.3) 25%, transparent 30%), linear-gradient(180deg, transparent 6%, #000 26%, #000 62%, transparent 90%); }
+.theme-menu > .ag-colonnade { -webkit-mask-image: linear-gradient(90deg, transparent 26%, #000 38%, #000 52%, rgba(0,0,0,0.25) 62%, rgba(0,0,0,0.12)); mask-image: linear-gradient(90deg, transparent 26%, #000 38%, #000 52%, rgba(0,0,0,0.25) 62%, rgba(0,0,0,0.12)); }
+/* soft oval of faces: no rectangular block edges, gone before the words */
+.theme-menu .ag-wall {
+  -webkit-mask-image: radial-gradient(ellipse 17% 40% at 17% 46%, #000 0, rgba(0,0,0,0.75) 40%, rgba(0,0,0,0.3) 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 17% 40% at 17% 46%, #000 0, rgba(0,0,0,0.75) 40%, rgba(0,0,0,0.3) 72%, transparent 100%);
+  -webkit-mask-composite: source-over; mask-composite: add; }
+.theme-menu > .ag-colonnade { opacity: 0.32; }
