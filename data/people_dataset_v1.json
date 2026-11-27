@@ -1,7 +1,7 @@
 {
   "meta": {
     "source_roster": "/Users/bytedance/Downloads/AI智囊团人物名单.xlsx",
-    "count": 255,
+    "count": 251,
     "generated_at": "2026-05-13 04:11:41",
     "notes": [
       "This dataset combines local roster metadata with public Wikipedia and Wikidata data.",
@@ -4941,53 +4941,6 @@
       }
     },
     {
-      "id": "yoda",
-      "english_name": "Yoda",
-      "chinese_name": "尤达",
-      "domain_category": "电影 / 动漫 / 小说角色",
-      "ai_archetype": "温柔导师型",
-      "portrait_asset": null,
-      "source_brief_intro": "经典虚拟角色，以引导他人成长的温和智慧著称。",
-      "personality_seed": [
-        "温柔导师型"
-      ],
-      "biography": {
-        "wikipedia_title": "Yoda",
-        "description": "Fictional character in the Star Wars universe",
-        "summary": "Yoda is a fictional character in the Star Wars franchise. He is a small, green, elderly humanoid alien who is powerful with the Force, and he typically speaks in an inverted phrase order. He first appeared in the 1980 film The Empire Strikes Back, in which he is voiced and puppeteered by Frank Oz, who reprised the role in the sequel film Return of the Jedi (1983), and in the Star Wars prequel trilogy, the sequel trilogy, and the animated series Star Wars Rebels. Other actors who have voiced Yoda are Tom Kane, John Lithgow, Peter McConnell, Piotr Michael and Tony Pope. In addition to films and television series, Yoda has appeared in comics, novels, video games and commercials.",
-        "full_extract": "Yoda is a fictional character in the Star Wars franchise. He is a small, green, elderly humanoid alien who is powerful with the Force, and he typically speaks in an inverted phrase order. He first appeared in the 1980 film The Empire Strikes Back, in which he is voiced and puppeteered by Frank Oz, who reprised the role in the sequel film Return of the Jedi (1983), and in the Star Wars prequel trilogy, the sequel trilogy, and the animated series Star Wars Rebels. Other actors who have voiced Yoda are Tom Kane, John Lithgow, Peter McConnell, Piotr Michael and Tony Pope. In addition to films and television series, Yoda has appeared in comics, novels, video games and commercials.",
-        "story_seeds": [
-          "Yoda is a fictional character in the Star Wars franchise.",
-          "He is a small, green, elderly humanoid alien who is powerful with the Force, and he typically speaks in an inverted phrase order.",
-          "He first appeared in the 1980 film The Empire Strikes Back, in which he is voiced and puppeteered by Frank Oz, who reprised the role in the sequel film Return of the Jedi (1983), and in the Star Wars prequel trilogy, the sequel trilogy, and the animated series Star Wars Rebels.",
-          "Other actors who have voiced Yoda are Tom Kane, John Lithgow, Peter McConnell, Piotr Michael and Tony Pope."
-        ]
-      },
-      "structured_facts": {
-        "instance_of": [],
-        "occupations": [],
-        "citizenship": [],
-        "countries": [],
-        "birth_date": null,
-        "death_date": null,
-        "birth_place": [],
-        "death_place": []
-      },
-      "source_links": {
-        "wikipedia": "https://en.wikipedia.org/wiki/Yoda",
-        "wikidata_id": "Q51730",
-        "thumbnail": "https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png",
-        "original_image": "https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png"
-      },
-      "research_status": {
-        "summary_fetched": true,
-        "extract_fetched": false,
-        "wikidata_fetched": true,
-        "needs_manual_personality_curation": true,
-        "needs_manual_story_curation": true
-      }
-    },
-    {
       "id": "sherlock-holmes",
       "english_name": "Sherlock Holmes",
       "chinese_name": "夏洛克·福尔摩斯",
@@ -5023,74 +4976,6 @@
         "wikidata_id": "Q4653",
         "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Sherlock_Holmes_Portrait_Paget.jpg",
         "original_image": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Sherlock_Holmes_Portrait_Paget.jpg"
-      },
-      "research_status": {
-        "summary_fetched": true,
-        "extract_fetched": false,
-        "wikidata_fetched": true,
-        "needs_manual_personality_curation": true,
-        "needs_manual_story_curation": true
-      }
-    },
-    {
-      "id": "batman",
-      "english_name": "Batman",
-      "chinese_name": "蝙蝠侠",
-      "domain_category": "电影 / 动漫 / 小说角色",
-      "ai_archetype": "理想主义",
-      "portrait_asset": null,
-      "source_brief_intro": "经典虚拟角色，以鲜明人格与价值抉择著称。",
-      "personality_seed": [
-        "理想主义"
-      ],
-      "biography": {
-        "wikipedia_title": "Batman",
-        "description": "DC Comics superhero",
-        "summary": "Batman is a superhero who appears in American comic books published by DC Comics. Batman was created by writer Bill Finger and artist Bob Kane, and debuted in the 27th issue of the comic book Detective Comics on March 30, 1939. In the DC Universe, Batman is the alias of Bruce Wayne, a wealthy American playboy, philanthropist, and industrialist who resides in the fictional Gotham City. Originally a millionaire, later versions of the character depict him as a billionaire. His origin story features him swearing vengeance against criminals after witnessing the murder of his parents, Thomas and Martha, as a child, a vendetta tempered by the ideal of justice. He trains himself physically and intellectually, crafts a bat-inspired persona, and monitors the Gotham streets at night. Kane, Finger, and other creators accompanied Batman with supporting characters, including his sidekicks Robin and Batgirl; allies Alfred Pennyworth and James Gordon; love interest and occasional adversary Catwoman; as well as foes such as the Penguin, the Riddler, Two-Face, and his archenemy, the Joker.",
-        "full_extract": "Batman is a superhero who appears in American comic books published by DC Comics. Batman was created by writer Bill Finger and artist Bob Kane, and debuted in the 27th issue of the comic book Detective Comics on March 30, 1939. In the DC Universe, Batman is the alias of Bruce Wayne, a wealthy American playboy, philanthropist, and industrialist who resides in the fictional Gotham City. Originally a millionaire, later versions of the character depict him as a billionaire. His origin story features him swearing vengeance against criminals after witnessing the murder of his parents, Thomas and Martha, as a child, a vendetta tempered by the ideal of justice. He trains himself physically and intellectually, crafts a bat-inspired persona, and monitors the Gotham streets at night. Kane, Finger, and other creators accompanied Batman with supporting characters, including his sidekicks Robin and Batgirl; allies Alfred Pennyworth and James Gordon; love interest and occasional adversary Catwoman; as well as foes such as the Penguin, the Riddler, Two-Face, and his archenemy, the Joker.",
-        "story_seeds": [
-          "Batman is a superhero who appears in American comic books published by DC Comics.",
-          "Batman was created by writer Bill Finger and artist Bob Kane, and debuted in the 27th issue of the comic book Detective Comics on March 30, 1939.",
-          "In the DC Universe, Batman is the alias of Bruce Wayne, a wealthy American playboy, philanthropist, and industrialist who resides in the fictional Gotham City.",
-          "Originally a millionaire, later versions of the character depict him as a billionaire."
-        ]
-      },
-      "structured_facts": {
-        "instance_of": [
-          "comics character",
-          "fictional human",
-          "film character",
-          "television character",
-          "animated character",
-          "anime character",
-          "mutant",
-          "Faunus"
-        ],
-        "occupations": [
-          "businessperson",
-          "detective",
-          "vigilante",
-          "chief executive officer",
-          "superhero",
-          "philanthropist",
-          "martial artist"
-        ],
-        "citizenship": [
-          "United States"
-        ],
-        "countries": [],
-        "birth_date": null,
-        "death_date": null,
-        "birth_place": [
-          "Gotham City"
-        ],
-        "death_place": []
-      },
-      "source_links": {
-        "wikipedia": "https://en.wikipedia.org/wiki/Batman",
-        "wikidata_id": "Q2695156",
-        "thumbnail": "https://upload.wikimedia.org/wikipedia/en/c/c7/Batman_Infobox.jpg",
-        "original_image": "https://upload.wikimedia.org/wikipedia/en/c/c7/Batman_Infobox.jpg"
       },
       "research_status": {
         "summary_fetched": true,
@@ -5366,52 +5251,6 @@
       }
     },
     {
-      "id": "spider-man",
-      "english_name": "Spider-Man",
-      "chinese_name": "蜘蛛侠",
-      "domain_category": "电影 / 动漫 / 小说角色",
-      "ai_archetype": "理想主义",
-      "portrait_asset": null,
-      "source_brief_intro": "经典虚拟角色，以鲜明人格与价值抉择著称。",
-      "personality_seed": [
-        "理想主义"
-      ],
-      "biography": {
-        "wikipedia_title": "Spider-Man",
-        "description": "Marvel Comics superhero",
-        "summary": "Spider-Man is a superhero in American comic books published by Marvel Comics. Created by writer-editor Stan Lee and artist Steve Ditko, he first appeared in the anthology comic book Amazing Fantasy #15 in the Silver Age of Comic Books. Widely regarded as one of the most popular and commercially successful superheroes, he has been featured in comic books, television shows, films, video games, novels, and plays.",
-        "full_extract": "Spider-Man is a superhero in American comic books published by Marvel Comics. Created by writer-editor Stan Lee and artist Steve Ditko, he first appeared in the anthology comic book Amazing Fantasy #15 in the Silver Age of Comic Books. Widely regarded as one of the most popular and commercially successful superheroes, he has been featured in comic books, television shows, films, video games, novels, and plays.",
-        "story_seeds": [
-          "Spider-Man is a superhero in American comic books published by Marvel Comics.",
-          "Created by writer-editor Stan Lee and artist Steve Ditko, he first appeared in the anthology comic book Amazing Fantasy #15 in the Silver Age of Comic Books.",
-          "Widely regarded as one of the most popular and commercially successful superheroes, he has been featured in comic books, television shows, films, video games, novels, and plays."
-        ]
-      },
-      "structured_facts": {
-        "instance_of": [],
-        "occupations": [],
-        "citizenship": [],
-        "countries": [],
-        "birth_date": null,
-        "death_date": null,
-        "birth_place": [],
-        "death_place": []
-      },
-      "source_links": {
-        "wikipedia": "https://en.wikipedia.org/wiki/Spider-Man",
-        "wikidata_id": "Q79037",
-        "thumbnail": "https://upload.wikimedia.org/wikipedia/en/2/21/Web_of_Spider-Man_Vol_1_129-1.png",
-        "original_image": "https://upload.wikimedia.org/wikipedia/en/2/21/Web_of_Spider-Man_Vol_1_129-1.png"
-      },
-      "research_status": {
-        "summary_fetched": true,
-        "extract_fetched": false,
-        "wikidata_fetched": true,
-        "needs_manual_personality_curation": true,
-        "needs_manual_story_curation": true
-      }
-    },
-    {
       "id": "mulan",
       "english_name": "Mulan",
       "chinese_name": "花木兰",
@@ -5535,50 +5374,6 @@
       "source_links": {
         "wikipedia": "https://en.wikipedia.org/wiki/Walter_White",
         "wikidata_id": "Q7966403",
-        "thumbnail": null,
-        "original_image": null
-      },
-      "research_status": {
-        "summary_fetched": true,
-        "extract_fetched": false,
-        "wikidata_fetched": true,
-        "needs_manual_personality_curation": true,
-        "needs_manual_story_curation": true
-      }
-    },
-    {
-      "id": "joker",
-      "english_name": "Joker",
-      "chinese_name": "小丑",
-      "domain_category": "电影 / 动漫 / 小说角色",
-      "ai_archetype": "黑暗魅力型",
-      "portrait_asset": null,
-      "source_brief_intro": "经典反派角色，展现混乱与人性阴影的复杂张力。",
-      "personality_seed": [
-        "黑暗魅力型"
-      ],
-      "biography": {
-        "wikipedia_title": "Joker",
-        "description": "Topics referred to by the same term",
-        "summary": "Joker(s) or The Joker(s) may refer to:",
-        "full_extract": "Joker(s) or The Joker(s) may refer to:",
-        "story_seeds": [
-          "Joker(s) or The Joker(s) may refer to:"
-        ]
-      },
-      "structured_facts": {
-        "instance_of": [],
-        "occupations": [],
-        "citizenship": [],
-        "countries": [],
-        "birth_date": null,
-        "death_date": null,
-        "birth_place": [],
-        "death_place": []
-      },
-      "source_links": {
-        "wikipedia": "https://en.wikipedia.org/wiki/Joker",
-        "wikidata_id": "Q225000",
         "thumbnail": null,
         "original_image": null
       },
