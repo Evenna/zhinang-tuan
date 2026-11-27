@@ -3034,13 +3034,19 @@
     .roundtable-message.is-user .roundtable-message-text {
       color: #f8efe2;
     }
+    .roundtable-message.is-pending { opacity: 0.95; animation: rtSoftIn 0.6s ease both; }
+    .roundtable-message.is-live { animation: rtSoftIn 0.5s ease both; }
+    @keyframes rtSoftIn { from { opacity: 0; } }
+    .roundtable-message-text.is-typing::after { content: ''; display: inline-block; width: 6px; height: 1em; margin-left: 3px; vertical-align: -2px; background: rgba(212,175,123,0.6); animation: rtBlink 0.9s steps(2) infinite; }
+    @keyframes rtBlink { 50% { opacity: 0; } }
     .roundtable-typing {
       display: inline-flex;
       gap: 5px;
       align-items: center;
-      color: rgba(246,240,231,0.58);
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
+      color: rgba(246,240,231,0.82);
+      font-size: 0.86rem;
+      letter-spacing: 0.04em;
+      font-style: italic;
     }
     .roundtable-typing i {
       width: 5px;
@@ -9837,7 +9843,7 @@ function renderRoundtableSpeakers() {
 function renderRoundtableMessages() {
   const messages = state.roundtable?.messages || [];
   if (!messages.length && !state.roundtable?.loading) {
-    return '<div class="roundtable-message is-system"><div class="roundtable-bubble"><div class="roundtable-message-text">Once you enter the round table, each of them will say one complete short sentence.</div></div></div>';
+    return '<div class="roundtable-message is-system"><div class="roundtable-bubble"><div class="roundtable-message-text">Ask anything. They will answer one at a time, and may answer each other.</div></div></div>';
   }
 
   return messages.map((message) => {
@@ -9863,18 +9869,30 @@ function renderRoundtableMessages() {
     }
 
     const card = getRoundtableCard(message.slug);
+    if (message.type === 'pending') {
+      return `
+      <div class="roundtable-message is-pending">
+        <div class="roundtable-message-avatar" style="${getAvatarStyle(message.slug)}">
+          ${card?.image ? `<div class="roundtable-avatar-canvas"><img src="${card.image}" alt="${escapeHTML(message.name)}"></div>` : ''}
+        </div>
+        <div class="roundtable-bubble">
+          <div class="roundtable-message-name">${escapeHTML(message.name || '')}</div>
+          <div class="roundtable-typing"><span>${escapeHTML(message.line || 'is thinking')}</span><i></i><i></i><i></i></div>
+        </div>
+      </div>`;
+    }
     return `
-      <div class="roundtable-message">
+      <div class="roundtable-message${message.typing ? ' is-live' : ''}">
         <div class="roundtable-message-avatar" style="${getAvatarStyle(message.slug)}">
           ${card?.image ? `<div class="roundtable-avatar-canvas"><img src="${card.image}" alt="${escapeHTML(message.name)}"></div>` : ''}
         </div>
         <div class="roundtable-bubble">
           <div class="roundtable-message-name">${escapeHTML(message.name || 'Think Tank')}</div>
-          <div class="roundtable-message-text">${escapeHTML(message.text)}</div>
+          <div class="roundtable-message-text${message.typing ? ' is-typing' : ''}">${escapeHTML(message.shown ?? message.text)}</div>
         </div>
       </div>
     `;
-  }).join('') + (state.roundtable?.loading ? `
+  }).join('') + (state.roundtable?.loading && !state.roundtable?.sequential ? `
     <div class="roundtable-message is-system">
       <div class="roundtable-bubble">
         <div class="roundtable-typing"><span>Thinking</span><i></i><i></i><i></i></div>
@@ -10012,6 +10030,146 @@ async function playRoundtableResponse(response, shouldSummarize = false) {
   syncRoundtableView();
 }
 
+const RT_THINKING = ['is gathering a thought', 'is weighing it', 'is choosing words', 'leans in', 'is considering'];
+
+function rtTranscript() {
+  return (state.roundtable?.messages || [])
+    .filter((m) => (m.type === 'user' || m.type === 'advisor' || (m.type === 'system' && m.kind === 'invite')) && m.text)
+    .slice(-14)
+    .map((m) => ({
+      speaker: m.type === 'user' ? 'user' : (m.type === 'advisor' ? m.slug : 'moderator'),
+      name: m.name || '',
+      text: m.text
+    }));
+}
+
+function rtShuffle(list) {
+  const a = [...list];
+  for (let i = a.length - 1; i > 0; i -= 1) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+// Reveal a line at speaking pace, word by word, without re-rendering the whole log.
+async function typeRoundtableLine(message, token) {
+  const words = String(message.text).split(/(\s+)/);
+  message.shown = '';
+  message.typing = true;
+  syncRoundtableView();
+  const nodes = document.querySelectorAll('#roundtableMessages .roundtable-message-text');
+  const box = nodes[nodes.length - 1];
+  const dialogue = document.getElementById('roundtableDialogue');
+  for (let i = 0; i < words.length; i += 1) {
+    if (state.roundtable?.runToken !== token) break;
+    message.shown += words[i];
+    if (box) box.textContent = message.shown;
+    if (dialogue) dialogue.scrollTop = dialogue.scrollHeight;
+    if (words[i].trim()) await wait(/[.!?;:]$/.test(words[i]) ? 230 : (/,$/.test(words[i]) ? 130 : 66));
+  }
+  message.shown = undefined;
+  message.typing = false;
+  syncRoundtableView();
+}
+
+async function runSequentialRoundtable(question, shouldSummarize) {
+  const rt = state.roundtable;
+  const token = Date.now() + Math.random();
+  rt.runToken = token;
+  rt.sequential = true;
+  const prep = await apiFetch('/chat/group/prepare', {
+    method: 'POST',
+    body: {
+      question,
+      person_slugs: getSeatedCards().map((c) => c.slug).filter(Boolean),
+      transcript: rtTranscript().slice(0, -1),
+      conversation_id: rt.conversationId || null
+    }
+  });
+  rt.conversationId = prep.conversation_id || rt.conversationId || null;
+  const invitedSlugs = new Set();
+  for (const invite of prep.invited || []) {
+    try { await ensureRoundtableGuest(invite); invitedSlugs.add(invite.person_slug); } catch (e) { continue; }
+    rt.messages.push({ type: 'system', kind: 'invite', role: 'assistant', text: invite.host_line || `I have invited ${invite.person_name} to join.` });
+    syncRoundtableView();
+    await wait(700);
+  }
+
+  const seats = getSeatedCards().map((c) => c.slug).filter(Boolean);
+  const opening = rt.roundCount === 1;
+  const newcomers = seats.filter((s) => invitedSlugs.has(s));
+  const order = opening ? seats : [...newcomers, ...rtShuffle(seats.filter((s) => !invitedSlugs.has(s)))];
+  const maxVoices = opening ? seats.length : Math.min(seats.length, 3 + newcomers.length);
+  let spoken = 0;
+  for (const slug of order) {
+    if (state.roundtable?.runToken !== token || spoken >= maxVoices) break;
+    if ((state.roundtable.kicked || []).includes(slug) || !getSeatedCards().some((c) => c.slug === slug)) continue;
+    const card = getRoundtableCard(slug);
+    const mustSpeak = opening || spoken === 0 || invitedSlugs.has(slug);
+    const pending = { type: 'pending', slug, name: card?.name || slug, line: RT_THINKING[(slug.length + spoken) % RT_THINKING.length] };
+    rt.activeSpeakerSlug = slug;
+    rt.messages.push(pending);
+    syncRoundtableView();
+    const started = Date.now();
+    let res = null;
+    try {
+      res = await apiFetch('/chat/group/turn', {
+        method: 'POST',
+        body: {
+          question,
+          person_slugs: getSeatedCards().map((c) => c.slug).filter(Boolean),
+          speaker: slug,
+          transcript: rtTranscript(),
+          allow_pass: !mustSpeak,
+          newly_invited: invitedSlugs.has(slug),
+          conversation_id: rt.conversationId
+        }
+      });
+    } catch (error) {
+      rt.messages = rt.messages.filter((m) => m !== pending);
+      if (spoken === 0 && mustSpeak && slug === order[order.length - 1]) throw error;
+      syncRoundtableView();
+      continue;
+    }
+    await wait(Math.max(0, 1300 - (Date.now() - started)));
+    if (state.roundtable?.runToken !== token) return;
+    const idx = rt.messages.indexOf(pending);
+    const answer = res?.answer;
+    const speech = answer ? normalizeLongSpeech(answer.answer) : '';
+    if (!speech) {
+      if (idx >= 0) rt.messages.splice(idx, 1);
+      syncRoundtableView();
+      continue;
+    }
+    const msg = { type: 'advisor', role: 'assistant', slug, name: answer.person_name || card?.name, text: speech };
+    rt.messages.splice(idx, 1, msg);
+    await typeRoundtableLine(msg, token);
+    if (window.AdvisorLife && (await window.AdvisorLife.mentions(slug, speech) || rt.lifeSlug === slug)) {
+      showRoundtableLife(slug, speech);
+    }
+    spoken += 1;
+    await wait(600);
+  }
+  if (state.roundtable?.runToken !== token) return;
+  if (!spoken) rt.messages.push({ type: 'system', role: 'assistant', text: 'The table listens in silence.' });
+
+  if (shouldSummarize && spoken) {
+    rt.activeSpeakerSlug = 'moderator';
+    try {
+      const syn = await apiFetch('/chat/group/synthesis', { method: 'POST', body: { question, transcript: rtTranscript(), conversation_id: rt.conversationId } });
+      if (syn?.synthesis) rt.messages.push({ type: 'system', role: 'assistant', text: syn.synthesis });
+    } catch (e) { /* the host can stay quiet */ }
+  }
+  rt.activeSpeakerSlug = '';
+  rt.loading = false;
+  rt.sequential = false;
+  syncRoundtableView();
+}
+
+function normalizeLongSpeech(value) {
+  const text = String(value || '').replace(/\s+/g, ' ').replace(/^["“”']+|["“”']+$/g, '').replace(/\.{3,}|…+/g, '').trim();
+  if (!text || /^(pass|skip|silence)\.?$/i.test(text)) return '';
+  return /[.!?]$/.test(text) ? text : `${text}.`;
+}
+
 async function submitRoundtableMessage(question) {
   if (!state.currentCards.length) return;
   const cleanQuestion = String(question || '').trim();
@@ -10034,14 +10192,15 @@ async function submitRoundtableMessage(question) {
   syncRoundtableView();
 
   try {
-    const response = await fetchRoundtableDiscussion(cleanQuestion);
-    state.roundtable = {
-      ...state.roundtable,
-      conversationId: response.conversation_id || null,
-      error: ''
-    };
-    await playRoundtableResponse(response, nextRoundCount % 3 === 0);
+    if (window.ASK_SOCRATES_PREVIEW) {
+      const response = await fetchRoundtableDiscussion(cleanQuestion);
+      await playRoundtableResponse(response, nextRoundCount % 3 === 0);
+    } else {
+      await runSequentialRoundtable(cleanQuestion, nextRoundCount % 3 === 0);
+    }
   } catch (error) {
+    state.roundtable.messages = state.roundtable.messages.filter((m) => m.type !== 'pending');
+    state.roundtable.sequential = false;
     state.roundtable = {
       ...state.roundtable,
       loading: false,
