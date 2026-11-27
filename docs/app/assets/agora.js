@@ -376,7 +376,7 @@
     const motions = hall.motions.filter((m) => m !== AG.motion).slice(0, 3);
     view.innerHTML = `<div class="ag-hall ag-hall--v7">${colonnade()}
       <div class="ag-hall-main">
-        <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><span>${esc(hall.title)} · ${esc(hall.zh || '')}</span></div>
+        <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><span>${esc(hall.title)}</span></div>
         <h1 class="ag-h1">The <em>${esc(hall.title)}</em> Hall</h1>
         <div class="ag-motion-box">
           <textarea class="ag-motion-input" id="agMotion" rows="2" maxlength="300" placeholder="Write a motion — a question with a yes or no">${esc(AG.motion)}</textarea>
