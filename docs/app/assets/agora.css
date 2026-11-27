@@ -447,3 +447,6 @@
 .ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.5) brightness(0.8); }
 .ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.2; }
 .ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.6) brightness(0.78); }
+/* inner pages: same quiet line art as the index, warm ground + soft vignette */
+.ag-hall .ag-lines, .ag-debate .ag-lines, .ag-verdict .ag-lines { opacity: 0.3 !important; }
+.ag-hall, .ag-debate, .ag-verdict { background: radial-gradient(ellipse 80% 75% at 50% 42%, #17130e 0%, #110e0b 60%, #0a0807 100%); }
