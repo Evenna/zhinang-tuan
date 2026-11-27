@@ -447,6 +447,10 @@
 .ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.5) brightness(0.8); }
 .ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.2; }
 .ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.6) brightness(0.78); }
-/* inner pages: same quiet line art as the index, warm ground + soft vignette */
-.ag-hall .ag-lines, .ag-debate .ag-lines, .ag-verdict .ag-lines { opacity: 0.3 !important; }
-.ag-hall, .ag-debate, .ag-verdict { background: radial-gradient(ellipse 80% 75% at 50% 42%, #17130e 0%, #110e0b 60%, #0a0807 100%); }
+/* inner pages: same quiet line art as the index — dark flat ground like the reference (~#0f0e0d), faint lines */
+.ag-hall .ag-lines, .ag-debate .ag-lines, .ag-verdict .ag-lines { opacity: 0.13 !important; }
+.ag-hall, .ag-debate, .ag-verdict { background: #0e0d0b; }
+.ag-hall .ag-floor { background: rgba(10,9,7,0.7); border-color: rgba(212,175,123,0.16); }
+.ag-debate .ag-stage { background: none; }
+.ag-debate .ag-log { background: rgba(10,9,7,0.6); box-shadow: none; border-color: rgba(212,175,123,0.1); }
+.ag-hall .ag-niche-arch, .ag-debate .ag-niche-arch { filter: brightness(0.85); }
