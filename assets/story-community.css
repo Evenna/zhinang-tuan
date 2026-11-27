@@ -362,8 +362,8 @@ body.is-deep .home-hero { display: none !important; }
 .sd-comment-form input { flex: 1; min-width: 0; border: 0; background: none; padding: 12px 0; font: inherit; font-size: 13px; color: #f2ebdf; outline: none; }
 .sd-comment-form input::placeholder { color: rgba(242,235,223,0.35); }
 .sd-comment-form button { border: 0; background: none; padding: 0 0 0 12px; font: inherit; font-size: 12px; color: #d4af7b; cursor: pointer; }
-.sd-comment { display: grid; grid-template-columns: 26px 1fr; gap: 12px; padding: 16px 0 0; }
-.sd-comment-av { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; color: #d4af7b; background: rgba(212,175,123,0.1); }
+.sd-comment { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 16px 0 0; }
+.sd-comment-av { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; font-size: 11px; color: #d4af7b; background: rgba(212,175,123,0.1); }
 .sd-comment-head { display: flex; align-items: baseline; gap: 8px; font-size: 12px; }
 .sd-comment-head b { font-weight: 500; color: rgba(246,239,226,0.88); }
 .sd-comment-head em { font-style: normal; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(212,175,123,0.8); }
@@ -398,3 +398,5 @@ body.is-deep .home-hero { display: none !important; }
   .sd-brief, .sd-convo { overflow: visible; border: 0; padding: 26px 20px 40px; }
   .sd-bar { padding: 0 20px; position: sticky; top: 0; background: #0d0c0a; z-index: 2; }
 }
+
+.sd-comment-av img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(0.35) sepia(0.12); }

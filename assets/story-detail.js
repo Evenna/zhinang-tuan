@@ -76,7 +76,7 @@
     const all = [...mine, ...(story.comments || [])];
     root.querySelector('[data-st-comment-count]').textContent = all.length;
     root.querySelector('.sd-comments-list').innerHTML = all.map(c => `<div class="sd-comment">
-      <span class="sd-comment-av">${esc(String(c.name || '?').charAt(0))}</span>
+      <span class="sd-comment-av">${c.avatar ? `<img src="${esc(c.avatar)}" alt="" loading="lazy">` : esc(String(c.name || '?').charAt(0))}</span>
       <div><div class="sd-comment-head"><b>${esc(c.name)}</b>${c.is_author ? '<em>author</em>' : ''}${c.mine ? '<em>you</em>' : ''}<span>♥ ${esc(c.likes ?? 0)}</span></div>
       <p>${esc(c.text)}</p></div></div>`).join('') || '<p class="sd-empty">No comments yet.</p>';
   }
@@ -181,7 +181,8 @@
       const text = input.value.trim();
       if (!text) return;
       const all = read(COMMENT_KEY, {});
-      all[story.id] = [{name: 'You', text, likes: 0, mine: true}, ...(all[story.id] || [])];
+      const me = window.DearSocratesMe?.() || null;
+      all[story.id] = [{name: me?.name || 'You', avatar: me?.avatar || '', text, likes: 0, mine: true}, ...(all[story.id] || [])];
       write(COMMENT_KEY, all);
       input.value = '';
       renderSocial(story);

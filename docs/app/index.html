@@ -863,6 +863,11 @@
     .nav-btn.is-user { display: inline-flex; align-items: center; gap: 9px; padding: 5px 14px 5px 5px; }
     .nav-avatar, .acct-avatar { display: inline-grid; place-items: center; border-radius: 50%; background: rgba(212,175,123,0.16); border: 1px solid rgba(212,175,123,0.45); color: #e8c690; font-family: var(--font-serif); }
     .nav-avatar { width: 26px; height: 26px; font-size: 0.8rem; }
+    .nav-avatar, .acct-avatar { position: relative; overflow: hidden; }
+    .nav-avatar img, .acct-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.35) sepia(0.12); }
+    .acct-avatar-wrap { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+    .acct-avatar-edit { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(232,198,144,0.55); transition: color .3s; }
+    .acct-avatar-wrap:hover .acct-avatar-edit { color: #e8c690; }
     .nav-user { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .login-tabs { display: flex; gap: 22px; margin-top: 26px; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .login-tabs[hidden] { display: none; }
@@ -4294,9 +4299,9 @@
     .person-chat-meta { font-size: 0.7rem; letter-spacing: 0.08em; color: rgba(246,240,231,0.4); }
     .person-chat-back { border-color: rgba(212,175,123,0.25); background: none; font-size: 0.68rem; letter-spacing: 0.04em; }
 </style>
-  <link rel="stylesheet" href="assets/story-community.css?v=20261128p">
-  <link rel="stylesheet" href="assets/agora.css?v=20261128p">
-  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128p">
+  <link rel="stylesheet" href="assets/story-community.css?v=20261128q">
+  <link rel="stylesheet" href="assets/agora.css?v=20261128q">
+  <link rel="stylesheet" href="assets/advisor-life.css?v=20261128q">
 </head>
 <body>
 
@@ -4566,12 +4571,12 @@
 <script src="api-config.js"></script>
 <script src="public-preview.js"></script>
 <script src="assets/story-community.js"></script>
-<script src="assets/story-community-ui.js?v=20261128p"></script>
-<script src="assets/story-detail.js?v=20261128p"></script>
+<script src="assets/story-community-ui.js?v=20261128q"></script>
+<script src="assets/story-detail.js?v=20261128q"></script>
 <script src="assets/person-timelines.js" defer></script>
-<script src="assets/advisor-life.js?v=20261128p" defer></script>
-<script src="assets/agora.js?v=20261128p" defer></script>
-<script src="assets/agora-floor.js?v=20261128p" defer></script>
+<script src="assets/advisor-life.js?v=20261128q" defer></script>
+<script src="assets/agora.js?v=20261128q" defer></script>
+<script src="assets/agora-floor.js?v=20261128q" defer></script>
 <script>
 // ─── LINE AVATAR SVGs ───
 // Each person has a unique minimalist line-art face silhouette
@@ -8870,6 +8875,19 @@ function readSession() {
 
 let loginMode = 'signin';
 function initialOf(name) { return String(name || '?').trim().charAt(0).toUpperCase() || '?'; }
+const AVATAR_KEY = 'askSocrates.avatar.';
+function avatarOf(session) {
+  if (!session) return '';
+  try { const own = localStorage.getItem(AVATAR_KEY + session.email); if (own) return own; } catch (e) { /* default below */ }
+  let h = 0;
+  for (const ch of String(session.email || session.name)) h = (h * 31 + ch.charCodeAt(0)) | 0;
+  const n = Math.abs(h);
+  return `assets/story-users/${n % 2 ? 'women' : 'men'}-${String(n % 100).padStart(2, '0')}.jpg`;
+}
+window.DearSocratesMe = () => { const s = readSession(); return s?.token ? {name: s.name, avatar: avatarOf(s)} : null; };
+function avatarImg(session, cls) {
+  return `<span class="${cls}"><img src="${escapeHTML(avatarOf(session))}" alt="" onerror="this.remove()">${escapeHTML(initialOf(session.name))}</span>`;
+}
 function setLoginMode(mode) {
   loginMode = mode;
   const up = mode === 'signup';
@@ -8889,7 +8907,7 @@ function renderLoginState() {
   if (loginNavLink) {
     loginNavLink.classList.toggle('is-user', loggedIn);
     loginNavLink.innerHTML = loggedIn
-      ? `<span class="nav-avatar">${escapeHTML(initialOf(session.name))}</span><span class="nav-user">${escapeHTML(session.name)}</span>`
+      ? `${avatarImg(session, 'nav-avatar')}<span class="nav-user">${escapeHTML(session.name)}</span>`
       : 'Sign in';
   }
   if (!loginForm || !loginAccount) return;
@@ -8902,7 +8920,7 @@ function renderLoginState() {
     if (t) t.textContent = 'Your seat is saved.';
     if (c) c.textContent = 'Signed in on this device. Debates you publish carry your name.';
     loginAccount.innerHTML = `
-      <div class="acct-row"><span class="acct-avatar">${escapeHTML(initialOf(session.name))}</span>
+      <div class="acct-row"><label class="acct-avatar-wrap" title="Change photo">${avatarImg(session, 'acct-avatar')}<input type="file" accept="image/*" id="acctPhoto" hidden><span class="acct-avatar-edit">Change</span></label>
         <span><strong>${escapeHTML(session.name)}</strong><em>${escapeHTML(session.email)}</em></span></div>
       ${session.since ? `<div class="acct-since">Member since ${escapeHTML(session.since)}</div>` : ''}
       <button class="login-logout" id="logoutBtn" type="button">Sign out</button>
@@ -11471,6 +11489,22 @@ loginAccount?.addEventListener('click', (event) => {
   if (s?.token) authCall('logout', {}, s.token).catch(() => {});
   localStorage.removeItem(SESSION_KEY);
   renderLoginState();
+});
+loginAccount?.addEventListener('change', (event) => {
+  if (event.target.id !== 'acctPhoto') return;
+  const file = event.target.files?.[0];
+  const s = readSession();
+  if (!file || !s) return;
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas'); c.width = c.height = 160;
+    const k = Math.min(img.width, img.height);
+    c.getContext('2d').drawImage(img, (img.width - k) / 2, (img.height - k) / 2, k, k, 0, 0, 160, 160);
+    try { localStorage.setItem(AVATAR_KEY + s.email, c.toDataURL('image/jpeg', 0.85)); } catch (e) { /* storage full */ }
+    URL.revokeObjectURL(img.src);
+    renderLoginState();
+  };
+  img.src = URL.createObjectURL(file);
 });
 
 peopleSearch?.addEventListener('input', filterPeoplePage);
