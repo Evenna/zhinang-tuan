@@ -217,16 +217,14 @@
     wall.dataset.hall = hall.id;
     const featured = new Set(hall.featured);
     const paint = (residents, fade) => {
-      // everyone once (featured spread through the middle rows), then repeat the rest faintly to fill the wall
+      // faint wall of the hall's residents; the lit ones are placed afterwards into gaps the words don't cover
       const rest = residents.filter((r) => !featured.has(r.slug));
-      const lit = residents.filter((r) => featured.has(r.slug));
-      const order = [...rest];
-      lit.forEach((r, k) => order.splice(Math.min(order.length, 13 + k * 9), 0, r));
-      const slots = [...order];
-      while (slots.length < 54) slots.push(...rest.length ? rest : residents);
+      const pool = rest.length ? rest : residents;
+      const slots = [];
+      while (slots.length < 54) slots.push(...pool);
       if (fade) wall.classList.remove('is-in');
-      wall.innerHTML = slots.slice(0, Math.max(54, order.length)).map((r, i) => niche(r.slug, { width: 84, plate: false, cls: featured.has(r.slug) && i < order.length ? 'is-lit' : '', attrs: `tabindex="-1" data-d="${i % 12}"` })).join('');
-      requestAnimationFrame(() => requestAnimationFrame(() => wall.classList.add('is-in')));
+      wall.innerHTML = slots.slice(0, Math.max(54, pool.length)).map((r, i) => niche(r.slug, { width: 84, plate: false, attrs: `tabindex="-1" data-d="${i % 12}"` })).join('');
+      requestAnimationFrame(() => { placeLit(wall, hall, rest); requestAnimationFrame(() => wall.classList.add('is-in')); });
     };
     const cached = AG.hallDetail[hall.id]?.residents;
     if (cached) { paint(cached, true); return; }
@@ -236,6 +234,90 @@
       if (residents && wall.dataset.hall === hall.id) paint(residents, false);
     } catch (e) { /* featured only */ }
   }
+  // Light a few residents only where no word sits, spread evenly over top / middle / bottom.
+  function placeLit(wall, hall, rest) {
+    const menu = wall.parentElement;
+    const niches = [...wall.querySelectorAll('.ag-niche')];
+    if (!niches.length) return;
+    const words = [];
+    menu.querySelectorAll('.theme-row').forEach((row) => {
+      const t = row.querySelector('.theme-title');
+      if (t) {
+        const r = document.createRange(); r.selectNodeContents(t);
+        const b = r.getBoundingClientRect();
+        const pad = b.height * 0.2; // range box includes line-height; trim to the glyphs
+        words.push({ l: b.left - 70, r: b.right + 20, t: b.top + pad, b: b.bottom - pad * 0.6 }); // room for the hover shift + arrow
+      }
+      const n = row.querySelector('.theme-num');
+      if (n) { const b = n.getBoundingClientRect(); words.push({ l: b.left - 14, r: b.right + 14, t: b.top - 10, b: b.bottom + 10 }); }
+    });
+    const box = wall.getBoundingClientRect();
+    const fade = (b) => b.left < box.left + 20 || b.right > box.right - 20 || b.top < box.top + 20 || b.bottom > box.bottom - 30;
+    const free = niches.map((el) => ({ el, b: el.getBoundingClientRect() }))
+      .filter(({ b }) => b.width && !fade(b) && !words.some((w) => b.left < w.r && b.right > w.l && b.top < w.b && b.bottom > w.t))
+      .map((o) => ({ ...o, x: o.b.left + o.b.width / 2, y: o.b.top + o.b.height / 2 }));
+    // dim every niche that sits under a word even further, so the type always wins
+    niches.forEach((el) => {
+      const b = el.getBoundingClientRect();
+      el.classList.toggle('is-under', words.some((w) => b.left < w.r && b.right > w.l && b.top < w.b && b.bottom > w.t));
+    });
+    // Lit residents float freely in the open space left of the words (not snapped to the wall grid),
+    // one per vertical band so the composition never gets top-heavy.
+    let seed = [...hall.id].reduce((a, c) => a * 31 + c.charCodeAt(0), 7) >>> 0;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    const NW = 78, NH = Math.round(NW * 1.4), GAP = 44;
+    const blocked = words.map((w) => ({ l: w.l - GAP, r: w.r + GAP, t: w.t - GAP * 0.6, b: w.b + GAP * 0.6 }));
+    const aside = document.querySelector('#themesPage .theme-aside')?.getBoundingClientRect();
+    const minX = Math.max(box.left + 40, aside ? aside.right + 60 : 0);
+    const cands = [];
+    for (let y = box.top + 40; y + NH < box.bottom - 40; y += 14) {
+      for (let x = minX; x + NW < box.right - 30; x += 14) {
+        if (!blocked.some((w) => x < w.r && x + NW > w.l && y < w.b && y + NH > w.t)) cands.push({ x, y, cx: x + NW / 2, cy: y + NH / 2 });
+      }
+    }
+    wall.querySelectorAll('.ag-lit-float').forEach((n) => n.remove());
+    if (!cands.length) return;
+    // one light per horizontal band (top → bottom), zig-zagging left/right so they read as a loose constellation
+    const want = hall.featured.length + 1;
+    const H = box.bottom - box.top;
+    const picks = [];
+    const xs = cands.map((c) => c.cx), xMin = Math.min(...xs), xMax = Math.max(...xs);
+    let side = rnd() < 0.5 ? 0 : 1;
+    for (let k = 0; k < want; k += 1) {
+      const lo = box.top + 30 + ((H - 60) * k) / want, hi = box.top + 30 + ((H - 60) * (k + 1)) / want;
+      const inBand = cands.filter((c) => c.y >= lo - 10 && c.y + NH <= hi + 30 && !picks.some((p) => Math.abs(p.cy - c.cy) < NH + 16 && Math.abs(p.cx - c.cx) < NW + 30));
+      if (!inBand.length) continue;
+      const target = side ? xMax : xMin; side = 1 - side;
+      let best = null, bestS = Infinity;
+      inBand.forEach((c) => { const sc = Math.abs(c.cx - target) + Math.abs(c.cy - (lo + hi) / 2) * 0.6 + rnd() * 40; if (sc < bestS) { bestS = sc; best = c; } });
+      picks.push(best);
+    }
+    // stagger: alternate the bands between the inner and outer half so they zig-zag instead of forming a line
+    picks.sort((a, b) => a.cy - b.cy);
+    const extra = rest.slice().sort(() => rnd() - 0.5);
+    const order = [...hall.featured, ...extra.map((r) => r.slug)];
+    const featuredBands = picks.map((_, i) => i).sort(() => rnd() - 0.5);
+    const isFeat = new Set(featuredBands.slice(0, hall.featured.length));
+    let fi = 0, ei = hall.featured.length;
+    picks.forEach((p, i) => {
+      const feat = isFeat.has(i);
+      const slug = feat ? order[fi++] : order[ei++];
+      if (!slug) return;
+      const tmp = document.createElement('div');
+      tmp.innerHTML = niche(slug, { width: NW, plate: false, cls: `ag-lit-float ${feat ? 'is-lit' : 'is-glow'}`, attrs: `tabindex="-1" data-d="${i * 2}"` }).trim();
+      const el = tmp.firstElementChild;
+      el.style.left = `${p.x - box.left}px`; el.style.top = `${p.y - box.top}px`;
+      wall.append(el);
+    });
+    // fade the grid niches the floating ones sit on
+    const lit = [...wall.querySelectorAll('.ag-lit-float')].map((e) => e.getBoundingClientRect());
+    niches.forEach((el) => { const b = el.getBoundingClientRect(); if (lit.some((l) => b.left < l.right + 8 && b.right > l.left - 8 && b.top < l.bottom + 8 && b.bottom > l.top - 8)) el.classList.add('is-under'); });
+  }
+  window.addEventListener('resize', () => {
+    clearTimeout(AG._wallT);
+    AG._wallT = setTimeout(() => { const w = document.querySelector('#themesPage .ag-wall'); if (w?.dataset.hall) { const id = w.dataset.hall; w.dataset.hall = ''; halls().then((l) => { const h = l.find((x) => x.id === id); if (h) paintWall(h); }).catch(() => {}); } }, 250);
+  });
+
   // warm all halls so hovering is instant
   setTimeout(async () => { try { (await halls()).forEach((h) => hallDetail(h.id).catch(() => {})); } catch (e) { /* offline */ } }, 1200);
 

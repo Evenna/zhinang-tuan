@@ -387,3 +387,13 @@
 .theme-menu > .ag-colonnade { opacity: 0.24; -webkit-mask-image: linear-gradient(90deg, transparent 0, transparent 26%, #000 40%); mask-image: linear-gradient(90deg, transparent 0, transparent 26%, #000 40%); }
 .theme-menu .ag-wall { inset: 0 0 0 31%; padding: 36px 40px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 92%, transparent), linear-gradient(180deg, transparent, #000 12%, #000 86%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 18%, #000 92%, transparent), linear-gradient(180deg, transparent, #000 12%, #000 86%, transparent); mask-composite: intersect; }
 .ag-wall.is-in .ag-niche.is-lit { opacity: 0.4; }
+/* lit residents live only in the gaps between words; anything under a word steps back */
+.ag-wall.is-in .ag-niche.is-under { opacity: 0.05; }
+.ag-wall.is-in .ag-niche.is-glow { opacity: 0.26; }
+.ag-wall.is-in .ag-niche.is-glow .ag-niche-arch { filter: grayscale(0.2) brightness(0.9); }
+.ag-wall.is-in .ag-niche.is-lit { opacity: 0.6; }
+.ag-wall .ag-lit-float { position: absolute; z-index: 1; width: 78px !important; }
+.ag-wall.is-in .ag-lit-float.is-lit { opacity: 0.85; }
+.ag-wall.is-in .ag-lit-float.is-glow { opacity: 0.4; }
+.ag-wall.is-in .ag-lit-float.is-glow { opacity: 0.6; }
+.ag-wall .ag-lit-float.is-glow .ag-niche-arch { filter: none; box-shadow: 0 0 0 1px rgba(212,175,123,0.7), 0 0 0 4px #050505, 0 0 0 5px rgba(212,175,123,0.25); }
