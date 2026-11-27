@@ -43,7 +43,7 @@
   function composerHTML() {
     const d = AG.debate;
     return `${AG.target ? `<button type="button" class="ag-at-chip" data-ag-untarget title="Talk to everyone instead">@${esc(firstName(AG.target))} <i>×</i></button>` : ''}
-      <input id="agAsk" maxlength="400" placeholder="${AG.target ? `Say something to ${esc(nameOf(AG.target))}…` : 'Say something to the floor — or tap a face to talk to one'}">
+      <input id="agAsk" maxlength="400" placeholder="${AG.target ? `Say something to ${esc(nameOf(AG.target))}…` : 'Over to you. Speak to the floor — or tap a face'}">
       <button type="submit" class="ag-send" ${AG.busy ? 'disabled' : ''} aria-label="Send">↑</button>
       <span class="ag-comp-sep"></span>
       <button type="button" class="ag-comp-act" data-ag-pull ${d.seats.length >= MAX_SEATS ? 'title="The floor holds five — send someone off first"' : ''}>+ Invite</button>

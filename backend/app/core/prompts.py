@@ -60,7 +60,7 @@ def build_persona_system_prompt(
 
 def build_recommend_prompt(question: str, catalog: str, top_k: int) -> str:
     return (
-        'You match users with advisors for Ask Socrates. Prioritize lived experience relevant to the question, '
+        'You match users with advisors for Dear Socrates. Prioritize lived experience relevant to the question, '
         'then relevant partners, rivals, or collaborators. Do not sacrifice relevance for domain diversity. '
         f'Select exactly {top_k} advisors using only slugs from the catalog. '
         'Write each reason in English, one complete sentence of up to 25 words explaining their relevant experience. '
