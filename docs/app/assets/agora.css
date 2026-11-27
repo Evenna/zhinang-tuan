@@ -565,3 +565,6 @@
 .ag-seat-col .ag-slot--sm { width: 70px; height: 98px; aspect-ratio: auto; border-radius: 999px 999px 4px 4px; }
 .ag-slot-cap { margin-top: 8px; font-size: 8px; color: rgba(242,235,223,0.7); }
 .ag-debate--v7 .ag-log { margin-top: 14px; }
+/* v9: wall faces a touch brighter — legible, still behind the words */
+.ag-wall.is-in .ag-niche, .ag-wall.is-in .ag-niche.is-lit, .ag-wall.is-in .ag-niche.is-under { opacity: 0.36; }
+.ag-wall .ag-niche .ag-niche-arch, .ag-wall .ag-niche.is-lit .ag-niche-arch { filter: grayscale(0.3) brightness(1); }

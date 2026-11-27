@@ -839,6 +839,20 @@
       line-height: 1.85;
     }
 
+    /* Result deck fix (v9): portraits stay inside their card; deck sits larger and centred */
+    .card-face { clip-path: inset(0 round 28px); }
+    .card-front .poster-cutout { max-height: 88%; }
+    body.result-mode .card { flex-basis: clamp(228px, 18.5vw, 276px); width: clamp(228px, 18.5vw, 276px); }
+    body.result-mode .cards-track { padding-bottom: 96px; }
+    body.result-mode .cards-stage.stack-mode.few-cards .card { margin-left: 30px; --card-rotate: calc(var(--stack-rotate, 0deg) * 0.35); }
+    .card-front .poster-title-block { background: linear-gradient(180deg, #efe7da 70%, rgba(239,231,218,0)); padding: 2px 6px 10px; margin-left: 12px !important; margin-right: 12px !important; width: calc(100% - 24px) !important; border-radius: 6px; }
+    body.result-mode .cards-stage.stack-mode.few-cards .card:first-child { margin-left: 0; }
+    .card-front .poster-title-block, .card-front .poster-meta, .card-front .poster-footer { z-index: 5; }
+    .card-front .poster-caption { background: rgba(239,231,218,0.92); padding: 3px 8px; border-radius: 99px; }
+    body.result-mode .cards-stage-glow { -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent); mask-image: linear-gradient(180deg, #000 30%, transparent); }
+    body.result-mode .cards-track { padding-top: 56px; }
+    .deck-hint { color: rgba(246,240,231,0.66) !important; letter-spacing: 0.08em !important; }
+
     /* Brand + account (v9) */
     .logo i { font-style: italic; color: var(--accent); }
     .logo { font-size: 1.08rem; }
@@ -4250,7 +4264,7 @@
 
   </style>
   <link rel="stylesheet" href="assets/story-community.css">
-  <link rel="stylesheet" href="assets/agora.css?v=20261128h">
+  <link rel="stylesheet" href="assets/agora.css?v=20261128i">
   <link rel="stylesheet" href="assets/advisor-life.css">
 </head>
 <body>
@@ -4524,8 +4538,8 @@
 <script src="assets/story-community-ui.js"></script>
 <script src="assets/person-timelines.js" defer></script>
 <script src="assets/advisor-life.js" defer></script>
-<script src="assets/agora.js?v=20261128h" defer></script>
-<script src="assets/agora-floor.js?v=20261128h" defer></script>
+<script src="assets/agora.js?v=20261128i" defer></script>
+<script src="assets/agora-floor.js?v=20261128i" defer></script>
 <script>
 // ─── LINE AVATAR SVGs ───
 // Each person has a unique minimalist line-art face silhouette
@@ -10566,7 +10580,7 @@ function renderCards(cardItems) {
       <div class="cards-stage-glow"></div>
       <div class="deck-status">
         <div class="deck-kicker">Think Tank Deck</div>
-        <div class="deck-hint" id="deckHint">Recommendations and brief answers generated · Click this stack to expand it, then click an individual card to flip it and view the response.</div>
+        <div class="deck-hint" id="deckHint">Your council is seated. Turn any card to hear its answer.</div>
       </div>
       <div class="cards-deck-shell">
         <div class="cards-track" id="cardsTrack">
@@ -10765,8 +10779,8 @@ function renderCards(cardItems) {
     stage.classList.toggle('stack-mode', !nextSpread);
     scrollHint.classList.toggle('show', nextSpread);
     deckHint.textContent = nextSpread
-      ? 'Swipe left or right with your trackpad to browse · Click any card to flip it and view the response.'
-      : 'The card spread is now complete · Click this stack of cards to expand it.';
+      ? 'Swipe to browse. Turn any card to hear its answer.'
+      : 'Your council is seated. Turn any card to hear its answer.';
     // #region debug-point A:set-spread
     reportCardDebug('A', 'setSpread', {
       nextSpread,
