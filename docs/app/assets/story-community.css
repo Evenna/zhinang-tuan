@@ -230,3 +230,65 @@
 .st-transcript-wrap > summary::before { content: '▸ '; }
 .st-transcript-wrap[open] > summary::before { content: '▾ '; }
 .st-sys { text-align: center; font-size: 11px; letter-spacing: .1em; color: #9c917e; margin: 18px 0; font-style: italic; }
+
+/* v4 reader: one quiet editorial column. */
+.story-transcript { background: rgba(8,7,6,0.7); backdrop-filter: blur(8px); animation: stFade 400ms ease; }
+.st-panel { width: min(620px, 100%); padding: 56px 56px 72px; background: #12100d; border-left: 1px solid rgba(212,175,123,0.14); animation: stSlide 520ms cubic-bezier(.2,.7,.2,1); scrollbar-width: thin; scrollbar-color: rgba(212,175,123,0.25) transparent; }
+@keyframes stSlide { from { transform: translateX(24px); opacity: 0; } }
+.st-close { position: sticky; top: -32px; float: right; margin: -32px -32px 0 0; width: 32px; height: 32px; border: 1px solid rgba(212,175,123,0.25); background: #12100d; color: rgba(246,240,231,0.7); font-size: 18px; line-height: 1; padding-bottom: 2px; transition: border-color .3s, color .3s; z-index: 2; }
+.st-close:hover { border-color: rgba(212,175,123,0.7); color: #f6efe2; }
+.st-byline { display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(242,235,223,0.5); }
+.st-byline img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; filter: grayscale(0.6) sepia(0.15); }
+.st-byline b { font-weight: 500; color: rgba(246,239,226,0.85); }
+.st-kicker { margin-top: 36px; font-size: 10px; letter-spacing: 0.16em; color: rgba(212,175,123,0.75); text-transform: uppercase; line-height: 1.6; }
+.st-headline { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 34px; line-height: 1.18; letter-spacing: -0.01em; margin: 12px 0 0; color: #f6efe2; }
+.st-question { font-family: Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.7; color: rgba(242,235,223,0.6); margin: 18px 0 0; }
+.st-tldr { margin: 34px 0 0; padding-top: 30px; border-top: 1px solid rgba(212,175,123,0.14); font-family: inherit; font-size: 15px; line-height: 1.8; color: rgba(246,239,226,0.88); }
+.st-positions { list-style: none; margin: 26px 0 0; padding: 0; display: grid; gap: 18px; }
+.st-position { display: grid; grid-template-columns: 28px 1fr; gap: 14px; align-items: start; }
+.st-position img { width: 28px; height: 28px; border: 0; filter: grayscale(0.3); }
+.st-position b { font-size: 11px; letter-spacing: 0.06em; font-weight: 500; color: rgba(212,175,123,0.9); }
+.st-position p { margin: 3px 0 0; font-size: 13.5px; line-height: 1.65; color: rgba(242,235,223,0.72); }
+.st-notes { margin: 34px 0 0; display: grid; gap: 20px; }
+.st-note-row { display: grid; grid-template-columns: 128px 1fr; gap: 18px; }
+.st-note-row dt { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(212,175,123,0.65); line-height: 1.9; }
+.st-note-row dd { margin: 0; font-size: 13.5px; line-height: 1.7; color: rgba(242,235,223,0.75); }
+.st-convo { margin-top: 48px; padding-top: 30px; border-top: 1px solid rgba(212,175,123,0.14); }
+.st-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(212,175,123,0.75); margin-bottom: 10px; }
+.st-label span { color: rgba(242,235,223,0.3); margin-left: 6px; letter-spacing: 0.06em; }
+.st-transcript { display: block; }
+.st-line { padding: 14px 0; }
+.st-line .st-who { display: block; font-size: 10.5px; letter-spacing: 0.08em; color: rgba(212,175,123,0.8); margin: 0 0 5px; }
+.st-line p { margin: 0; font-size: 14px; line-height: 1.75; color: rgba(242,235,223,0.8); }
+.st-line.is-user { padding-left: 16px; border-left: 1px solid rgba(212,175,123,0.3); margin: 6px 0; }
+.st-line.is-user .st-who { color: rgba(242,235,223,0.5); }
+.st-line.is-user p { color: #f6efe2; font-family: Georgia, serif; font-size: 14.5px; }
+.st-sys { margin: 18px 0; text-align: left; font-style: normal; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(242,235,223,0.3); }
+.st-actions { display: flex; align-items: center; gap: 22px; margin: 40px 0 0; padding: 20px 0; border-top: 1px solid rgba(212,175,123,0.14); border-bottom: 1px solid rgba(212,175,123,0.14); }
+.st-act { padding: 0; border: 0; border-radius: 0; background: none; font-size: 12px; color: rgba(242,235,223,0.6); gap: 6px; }
+.st-act:hover { background: none; color: #f6efe2; }
+.st-act b { font-weight: 400; color: rgba(242,235,223,0.4); }
+.st-act.is-on { background: none; border: 0; color: #e8b0a0; }
+.st-act.is-on b { color: #e8b0a0; }
+.st-ask { margin-left: auto; border: 1px solid rgba(212,175,123,0.55); background: none; color: #f0dfbf; border-radius: 99px; padding: 8px 18px; font: inherit; font-size: 12px; cursor: pointer; transition: background .3s, color .3s; }
+.st-ask:hover { background: #d4af7b; color: #15130f; }
+.st-comments { margin-top: 22px; }
+.st-comment-form { gap: 0; margin-bottom: 8px; border-bottom: 1px solid rgba(212,175,123,0.25); }
+.st-comment-form input { background: none; border: 0; border-radius: 0; padding: 10px 0; font-size: 13px; }
+.st-comment-form button { background: none; color: rgba(212,175,123,0.9); padding: 0 0 0 12px; font-weight: 400; font-size: 12px; }
+.st-comment { padding: 14px 0; border-top: 0; }
+.st-comment.is-author { background: none; padding-left: 0; padding-right: 0; }
+.st-comment-head { font-size: 12px; color: rgba(242,235,223,0.55); }
+.st-comment-head b { font-weight: 500; color: rgba(246,239,226,0.85); }
+.st-badge { padding: 0; background: none; font-size: 9.5px; letter-spacing: 0.12em; color: rgba(212,175,123,0.8); }
+.st-comment-likes { font-size: 11px; color: rgba(242,235,223,0.35); }
+.st-comment p { font-size: 13.5px; line-height: 1.65; color: rgba(242,235,223,0.72); }
+.st-empty { font-size: 12px; color: rgba(242,235,223,0.35); }
+.st-note { margin-top: 40px; font-size: 10px; color: rgba(242,235,223,0.28); }
+@media (max-width: 700px) {
+  .st-panel { padding: 40px 22px 56px; }
+  .st-close { margin: -24px -8px 0 0; }
+  .st-headline { font-size: 27px; }
+  .st-note-row { grid-template-columns: 1fr; gap: 4px; }
+  .st-actions { flex-wrap: wrap; gap: 16px; }
+}

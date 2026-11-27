@@ -38,29 +38,29 @@
     }
     const events = (data.events || []).map((event, index) => `
       <li class="al-event is-${esc(event.kind || 'life')}" data-al-event="${index}">
-        <span class="al-dot"></span>
-        <div class="al-year">${esc(event.year)}<em>${esc(KIND_LABEL[event.kind] || '')}</em></div>
-        <div class="al-title">${esc(event.title)}</div>
-        <div class="al-detail">${esc(event.detail)}</div>
+        <span class="al-year">${esc(event.year)}</span>
+        <div class="al-body">
+          <div class="al-title">${esc(event.title)}</div>
+          ${event.detail ? `<div class="al-detail">${esc(event.detail)}</div>` : ''}
+        </div>
       </li>`).join('');
     const works = (data.works || []).map((work, index) => `
       <li class="al-work" data-al-work="${index}">
-        <div class="al-work-title">${esc(work.title)}</div>
-        <div class="al-work-year">${esc(work.year || '')}</div>
-        <div class="al-work-note">${esc(work.note || '')}</div>
+        <span class="al-work-title">${esc(work.title)}</span>
+        <span class="al-work-year">${esc(work.year || '')}</span>
+        ${work.note ? `<div class="al-work-note">${esc(work.note)}</div>` : ''}
       </li>`).join('');
+    const quote = data.quote ? String(data.quote).replace(/^["“]|["”]$/g, '') : '';
     root.innerHTML = `
       <div class="al-head">
-        <div class="al-kicker">Life &amp; works</div>
         <div class="al-name">${esc(person.name || data.slug)}</div>
         ${person.meta ? `<div class="al-meta">${esc(person.meta)}</div>` : ''}
-        <div class="al-tagline">${esc(data.tagline || '')}</div>
-        ${data.quote ? `<blockquote class="al-quote">“${esc(String(data.quote).replace(/^["“]|["”]$/g, ''))}”</blockquote>` : ''}
+        ${quote ? `<p class="al-quote">“${esc(quote)}”</p>` : ''}
       </div>
       <div class="al-mention" hidden></div>
-      <div class="al-section">Timeline</div>
+      <div class="al-section">Life</div>
       <ol class="al-timeline">${events}</ol>
-      ${works ? `<div class="al-section">Selected works</div><ul class="al-works">${works}</ul>` : ''}
+      ${works ? `<div class="al-section">Works</div><ul class="al-works">${works}</ul>` : ''}
     `;
     root.dataset.slug = data.slug;
     root.scrollTop = 0;
@@ -114,7 +114,7 @@
     });
     if (mention) {
       mention.hidden = false;
-      mention.innerHTML = `<span>Just mentioned</span>${hits.map(hit => `<b>${esc(hit.label)}</b>`).join('')}`;
+      mention.innerHTML = `<span>Mentioned</span> ${hits.map(hit => esc(hit.label)).join('<i>·</i>')}`;
     }
     return hits.length;
   }

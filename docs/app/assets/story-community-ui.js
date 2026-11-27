@@ -337,8 +337,8 @@ window.StoryCommunityScene = StoryCommunityScene;
     const all = [...mine, ...(story.comments || [])];
     root.querySelector('[data-st-comment-count]').textContent = all.length;
     root.querySelector('.st-comments-list').innerHTML = all.map(c => `<div class="st-comment${c.is_author ? ' is-author' : ''}${c.mine ? ' is-mine' : ''}">
-      <div class="st-comment-head"><b>${esc(c.name)}</b>${c.is_author ? '<span class="st-badge">Author</span>' : ''}${c.mine ? '<span class="st-badge">You</span>' : ''}<span class="st-comment-likes">♥ ${esc(c.likes ?? 0)}</span></div>
-      <p>${esc(c.text)}</p></div>`).join('') || '<p class="st-meta">No comments yet.</p>';
+      <div class="st-comment-head"><b>${esc(c.name)}</b>${c.is_author ? '<span class="st-badge">author</span>' : ''}${c.mine ? '<span class="st-badge">you</span>' : ''}<span class="st-comment-likes">${esc(c.likes ?? 0)} ♥</span></div>
+      <p>${esc(c.text)}</p></div>`).join('') || '<p class="st-empty">No comments yet.</p>';
   }
 
   async function open(user, advisor) {
@@ -353,52 +353,46 @@ window.StoryCommunityScene = StoryCommunityScene;
     const participants = story.participants?.length ? story.participants : [...new Set(turns.map(t => t.speaker).filter(s => s !== 'user'))];
     const isTable = story.mode === 'roundtable' || participants.length > 1;
     const sum = story.summary || {};
-    const positions = (sum.positions || []).map(p => `<div class="st-position">${imgTag(portrait(p.speaker), speakerName(story, p.speaker))}
-        <div><b>${esc(speakerName(story, p.speaker))}</b><p>${esc(p.stance)}</p></div></div>`).join('');
+    const positions = (sum.positions || []).map(p => `<li class="st-position">${imgTag(portrait(p.speaker), speakerName(story, p.speaker))}
+        <div><b>${esc(speakerName(story, p.speaker))}</b><p>${esc(p.stance)}</p></div></li>`).join('');
     const chat = turns.map(turn => {
-      const mine = turn.speaker === 'user';
       if (turn.speaker === 'system') return `<div class="st-sys">${esc(turn.text)}</div>`;
-      return `<div class="st-msg ${mine ? 'is-user' : ''}">${mine ? imgTag(story.avatar, story.name) : imgTag(portrait(turn.speaker), speakerName(story, turn.speaker))}
-        <div class="st-bubble"><span class="st-who">${esc(speakerName(story, turn.speaker))}</span>${esc(turn.text)}</div></div>`;
+      const mine = turn.speaker === 'user';
+      return `<div class="st-line${mine ? ' is-user' : ''}"><span class="st-who">${esc(speakerName(story, turn.speaker))}</span><p>${esc(turn.text)}</p></div>`;
     }).join('');
-    const cast = participants.map(slug => `<span class="st-cast-chip">${imgTag(portrait(slug), speakerName(story, slug))}${esc(speakerName(story, slug))}</span>`).join('');
+    const who = [story.age && `${story.age}`, story.role, story.city].filter(Boolean).map(esc).join(', ');
+    const notes = [
+      sum.tension && ['The sticking point', sum.tension],
+      sum.conclusion && ['Where it ended', sum.conclusion],
+      story.outcome && ['What happened next', story.outcome],
+    ].filter(Boolean).map(([k, v]) => `<div class="st-note-row"><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
     root.innerHTML = `<div class="st-panel">
       <button class="st-close" type="button" aria-label="Close">×</button>
-      <div class="st-head">${imgTag(story.avatar, story.name)}<div>
-        <div class="st-name">${esc(story.name)}</div>
-        <div class="st-meta">${[story.age && `${story.age}`, story.role, story.city].filter(Boolean).map(esc).join(' · ')}</div>
-        <div class="st-meta">${esc(date)} · ${turns.length} messages</div></div></div>
-      <div class="st-kicker">${isTable ? 'Roundtable' : 'One-on-one'} · ${esc(participants.map(s => speakerName(story, s)).join(', '))}</div>
-      <div class="st-headline">${esc(story.headline)}</div>
-      <div class="st-question">“${esc(story.question)}”</div>
-      <div class="st-cast">${cast}</div>
-      <section class="st-summary">
-        <div class="st-summary-label">Summary</div>
-        <p class="st-tldr">${esc(sum.tldr || story.context)}</p>
-        ${positions ? `<div class="st-summary-label">${isTable ? 'Where each voice landed' : 'The advisor’s position'}</div><div class="st-positions">${positions}</div>` : ''}
-        ${sum.tension ? `<div class="st-summary-label">The sticking point</div><p class="st-tension">${esc(sum.tension)}</p>` : ''}
-        ${sum.conclusion ? `<div class="st-summary-label">Where it ended</div><p class="st-conclusion">${esc(sum.conclusion)}</p>` : ''}
-        ${story.outcome ? `<div class="st-summary-label">What happened next</div><p class="st-outcome">${esc(story.outcome)}</p>` : ''}
-        <div class="st-tags">${(story.topics || []).map(tag => `<span>${esc(tag)}</span>`).join('')}</div>
+      <header class="st-top">
+        <div class="st-byline">${imgTag(story.avatar, story.name)}<span><b>${esc(story.name)}</b>${who ? ` · ${who}` : ''}</span></div>
+        <div class="st-kicker">${isTable ? 'Roundtable' : 'One-on-one'} with ${esc(participants.map(s => speakerName(story, s)).join(', '))}${date ? ` · ${esc(date)}` : ''}</div>
+        <h2 class="st-headline">${esc(story.headline)}</h2>
+        <p class="st-question">“${esc(story.question)}”</p>
+      </header>
+      <p class="st-tldr">${esc(sum.tldr || story.context || '')}</p>
+      ${positions ? `<ul class="st-positions">${positions}</ul>` : ''}
+      ${notes ? `<dl class="st-notes">${notes}</dl>` : ''}
+      <section class="st-convo">
+        <div class="st-label">The conversation <span>${turns.length}</span></div>
+        <div class="st-transcript">${chat}</div>
       </section>
       <div class="st-actions">
-        <button type="button" class="st-act" data-st-like>♥ <b></b></button>
-        <button type="button" class="st-act" data-st-jump-comments>💬 <b data-st-comment-count></b></button>
-        <button type="button" class="st-act" data-st-share>↗ Share</button>
+        <button type="button" class="st-act" data-st-like><span class="st-heart">♥</span> <b></b></button>
+        <button type="button" class="st-act" data-st-jump-comments>Comments <b data-st-comment-count></b></button>
+        <button type="button" class="st-act" data-st-share>Share</button>
         <span class="st-share-tip" hidden>Link copied</span>
+        <button class="st-ask" type="button" data-st-ask>Ask your own</button>
       </div>
       <section class="st-comments">
-        <div class="st-summary-label">Comments</div>
-        <form class="st-comment-form"><input name="c" placeholder="Add a thought…" autocomplete="off"><button type="submit">Post</button></form>
+        <form class="st-comment-form"><input name="c" placeholder="Add a thought" autocomplete="off"><button type="submit">Post</button></form>
         <div class="st-comments-list"></div>
       </section>
-      <details class="st-transcript-wrap">
-        <summary>Full conversation · ${turns.length} messages</summary>
-        <div class="st-transcript">${chat}</div>
-      </details>
-      <div class="st-foot"><span>${esc(story.saves ?? 0)} saved · ${esc(story.shares ?? 0)} shared</span>
-        <button class="story-read" type="button" data-st-ask>Ask my own version ↗</button></div>
-      <div class="st-note">Illustrative story — the user is fictional; advisor replies are AI personas.</div>
+      <div class="st-note">Illustrative story. The person is fictional; advisor replies are AI personas.</div>
     </div>`;
     renderSocial(root, story);
     root.querySelector('.st-panel').scrollTop = 0;

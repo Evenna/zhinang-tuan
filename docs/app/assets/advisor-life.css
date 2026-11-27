@@ -90,3 +90,44 @@
   .roundtable-view.has-life { grid-template-columns: minmax(0, 1fr); padding-right: clamp(18px, 4vw, 54px); }
   .roundtable-view.has-life .roundtable-life { display: none; }
 }
+
+/* v11: quieter life panel — year | title rows, details only when mentioned or hovered. */
+.advisor-life { padding: 30px 26px 48px; }
+.al-head { padding-bottom: 22px; border-bottom: 1px solid rgba(212,175,123,0.14); }
+.al-name { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 24px; line-height: 1.15; margin: 0; color: #f6efe2; letter-spacing: -0.005em; }
+.al-meta { font-size: 10px; letter-spacing: 0.14em; color: rgba(242,235,223,0.4); margin-top: 8px; }
+.al-quote { margin: 16px 0 0; padding: 0; border: 0; font-family: Georgia, serif; font-style: italic; font-size: 13px; line-height: 1.65; color: rgba(242,235,223,0.62); }
+.al-kicker, .al-tagline, .al-dot { display: none; }
+.al-section { margin: 26px 0 8px; font-size: 9.5px; letter-spacing: 0.24em; color: rgba(212,175,123,0.7); display: block; }
+.al-section::after { display: none; }
+.al-timeline { padding: 0; }
+.al-timeline::before { display: none; }
+.al-event { display: grid; grid-template-columns: 52px 1fr; gap: 14px; align-items: baseline; margin: 0; padding: 10px 0; border-radius: 0; border-top: 1px solid rgba(255,255,255,0.05); background: none; box-shadow: none; transition: color 400ms ease; }
+.al-event:first-child { border-top: 0; }
+.al-year { display: block; font-family: inherit; font-size: 11px; font-weight: 400; letter-spacing: 0.04em; color: rgba(212,175,123,0.75); font-variant-numeric: tabular-nums; }
+.al-title { font-size: 12.5px; font-weight: 400; color: rgba(246,239,226,0.82); margin: 0; line-height: 1.5; }
+.al-detail { max-height: 0; overflow: hidden; opacity: 0; margin: 0; font-size: 11.5px; line-height: 1.6; color: rgba(242,235,223,0.5); transition: max-height 500ms ease, opacity 400ms ease, margin 400ms ease; }
+.al-event:hover .al-detail, .al-event.is-hit .al-detail { max-height: 120px; opacity: 1; margin-top: 4px; }
+.al-event.is-turning .al-title { color: #f6efe2; }
+.al-event.is-hit { background: none; box-shadow: none; }
+.al-event.is-hit .al-year { color: #ffcf7a; }
+.al-event.is-hit .al-title { color: #fff7e8; }
+.al-event.is-hit .al-detail { color: rgba(246,239,226,0.72); }
+.al-works { display: block; }
+.al-work { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 9px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.05); border-radius: 0; background: none; }
+.al-work:first-child { border-top: 0; }
+.al-work-title { font-family: Georgia, serif; font-style: italic; font-size: 12.5px; color: rgba(246,239,226,0.82); }
+.al-work-year { font-size: 10.5px; color: rgba(212,175,123,0.6); margin: 0; font-variant-numeric: tabular-nums; }
+.al-work-note { grid-column: 1 / -1; max-height: 0; overflow: hidden; opacity: 0; margin: 0; font-size: 11px; color: rgba(242,235,223,0.5); transition: max-height 500ms ease, opacity 400ms ease; }
+.al-work:hover .al-work-note, .al-work.is-hit .al-work-note { max-height: 80px; opacity: 1; }
+.al-work.is-hit { background: none; border-color: rgba(255,255,255,0.05); }
+.al-work.is-hit .al-work-title { color: #ffcf7a; }
+.is-pulse { animation: alGlow 1.6s ease; }
+@keyframes alGlow { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+.al-mention { position: sticky; top: -30px; margin: 0 -26px; padding: 10px 26px; background: rgba(14,12,9,0.94); border: 0; border-bottom: 1px solid rgba(212,175,123,0.12); font-size: 11.5px; color: rgba(246,239,226,0.8); display: block; animation: alIn 500ms ease; }
+.al-mention span { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(212,175,123,0.8); margin-right: 8px; }
+.al-mention i { font-style: normal; color: rgba(212,175,123,0.5); margin: 0 7px; }
+.roundtable-life-tabs { gap: 18px; padding: 20px 26px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.roundtable-life-tab { border: 0; border-bottom: 1px solid transparent; border-radius: 0; padding: 0 0 10px; background: none; font-size: 11px; color: rgba(242,235,223,0.45); transition: color 300ms ease, border-color 300ms ease; }
+.roundtable-life-tab:hover { color: rgba(242,235,223,0.8); }
+.roundtable-life-tab.is-active { background: none; color: #f6efe2; border-color: #d4af7b; }
