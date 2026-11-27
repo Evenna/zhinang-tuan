@@ -35,7 +35,7 @@
       extra: d.seats.length > 1 ? `<span class="ag-niche-x" data-ag-kick="${esc(s)}" role="button" title="Send off the floor">×</span>` : '',
     });
     const row = [...camp('for'), ...camp('undecided'), ...camp('against')].map((s) => `<div class="ag-seat-col">${person(s)}${tag(d.stances[s])}</div>`).join('');
-    const pull = d.seats.length < MAX_SEATS ? '<div class="ag-seat-col"><button type="button" class="ag-slot ag-slot--sm" data-ag-pull title="Pull someone in">+</button></div>' : '';
+    const pull = d.seats.length < MAX_SEATS ? '<div class="ag-seat-col"><button type="button" class="ag-slot ag-slot--sm" data-ag-pull title="Invite someone">+</button><span class="ag-slot-cap">Invite</span></div>' : '';
     return `<div class="ag-stage-motion">${esc(d.motion)}</div>
       ${tallyBar(tallyOf(d.seats, d.stances))}
       <div class="ag-seat-row">${row}${pull}</div>`;
@@ -46,6 +46,7 @@
       <input id="agAsk" maxlength="400" placeholder="${AG.target ? `Say something to ${esc(nameOf(AG.target))}…` : 'Say something to the floor — or tap a face to talk to one'}">
       <button type="submit" class="ag-send" ${AG.busy ? 'disabled' : ''} aria-label="Send">↑</button>
       <span class="ag-comp-sep"></span>
+      <button type="button" class="ag-comp-act" data-ag-pull ${d.seats.length >= MAX_SEATS ? 'title="The floor holds five — send someone off first"' : ''}>+ Invite</button>
       <button type="button" class="ag-comp-act" data-ag-next ${AG.busy ? 'disabled' : ''}>Next round</button>
       <button type="button" class="ag-comp-act is-gold" data-ag-close ${AG.busy || !d.round ? 'disabled' : ''}>Verdict</button>`;
   }
@@ -231,7 +232,10 @@
     AG.busy = false;
     refreshStage();
     refreshComposer();
+    const next = (d._queue || []).shift();
+    if (next && d.seats.includes(next)) await runRound({ question: ENTRANCE, target: next });
   }
+  const ENTRANCE = 'You have just joined this debate. Give your opening position on the motion and respond to what has been said so far.';
   function shuffle(a) { for (let i = a.length - 1; i > 0; i -= 1) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
   function ask(text) {
@@ -264,14 +268,20 @@
     const d = AG.debate;
     if (!d || d.seats.includes(slug)) return;
     if (d.seats.length >= MAX_SEATS) return flash('The floor holds five. Send someone off first.');
-    if (AG.busy) return flash('Wait until this exchange ends.');
     d.seats.push(slug);
+    if (AG.busy) { // joins now, speaks as soon as the current speaker finishes
+      d._queue = d._queue || [];
+      d._queue.push(slug);
+      const t = { speaker: 'system', text: `${nameOf(slug)} steps onto the floor` };
+      d.transcript.push(t); appendHTML(turnHTML(t)); refreshStage();
+      return;
+    }
     const t = { speaker: 'system', text: `${nameOf(slug)} steps onto the floor` };
     d.transcript.push(t);
     appendHTML(turnHTML(t));
     refreshStage();
     if (!d.round) return;
-    await runRound({ question: 'You have just joined this debate. Give your opening position on the motion and respond to what has been said so far.', target: slug });
+    await runRound({ question: ENTRANCE, target: slug });
   }
   A.pullIn = pullIn;
 
@@ -448,7 +458,7 @@
     if (el('[data-ag-invite]')) return openPicker('hall');
     if (el('[data-ag-open]')) return startDebate();
     if ((n = el('[data-ag-read]'))) return openReader(n.dataset.agRead);
-    if (el('[data-ag-pull]')) return openPicker('debate');
+    if (el('[data-ag-pull]')) { if (AG.debate && AG.debate.seats.length >= MAX_SEATS) return flash('The floor holds five — hover a face and tap × to send someone off first.'); return openPicker('debate'); }
     if ((n = el('[data-ag-kick]'))) return kick(n.dataset.agKick);
     if ((n = el('[data-ag-at]'))) { AG.target = AG.target === n.dataset.agAt ? null : n.dataset.agAt; refreshStage(); refreshComposer(); return document.getElementById('agAsk')?.focus(); }
     if (el('[data-ag-untarget]')) { AG.target = null; refreshStage(); refreshComposer(); return document.getElementById('agAsk')?.focus(); }

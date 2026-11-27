@@ -469,7 +469,7 @@
       document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modal && !modal.hidden) closeModal(); });
     }
     modal.querySelector('#agPickSearch').value = '';
-    modal.querySelector('h3').textContent = mode === 'debate' ? 'Pull someone in' : 'Invite to the floor';
+    modal.querySelector('h3').textContent = mode === 'debate' ? 'Invite someone in' : 'Invite to the floor';
     modal.hidden = false;
     renderPicker();
     setTimeout(() => modal.querySelector('#agPickSearch').focus(), 50);

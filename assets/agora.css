@@ -559,3 +559,9 @@
 .ag-debate--v7 .ag-composer { padding: 6px 8px 6px 20px; }
 .ag-debate--v7 .ag-comp-act { padding: 8px 14px; }
 .ag-debate--v7 .ag-log { padding-bottom: 28px; }
+.ag-slot-cap { font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(212,175,123,0.6); margin-top: 6px; }
+.ag-seat-col .ag-slot--sm { transition: border-color 160ms, color 160ms; }
+.ag-seat-col .ag-slot--sm:hover { border-color: var(--ag-gold-hi); color: var(--ag-gold-hi); }
+.ag-seat-col .ag-slot--sm { width: 70px; height: 98px; aspect-ratio: auto; border-radius: 999px 999px 4px 4px; }
+.ag-slot-cap { margin-top: 8px; font-size: 8px; color: rgba(242,235,223,0.7); }
+.ag-debate--v7 .ag-log { margin-top: 14px; }
