@@ -317,3 +317,73 @@
 .ag-debate .ag-colonnade { opacity: 0.14; }
 .ag-camp-empty { display: none; }
 .ag-log { padding-bottom: 20px; }
+
+/* ── v2 feedback: visible thin-line Roman colonnade everywhere ── */
+.ag-colonnade, .ag-hall .ag-colonnade, .ag-debate .ag-colonnade, .ag-verdict .ag-colonnade { opacity: 0.5; }
+.ag-debate .ag-colonnade { height: auto; bottom: 0; -webkit-mask-image: radial-gradient(ellipse 34% 62% at 50% 66%, rgba(0,0,0,0.28), #000 100%); mask-image: radial-gradient(ellipse 34% 62% at 50% 66%, rgba(0,0,0,0.28), #000 100%); }
+.ag-hall .ag-colonnade { -webkit-mask-image: linear-gradient(90deg, #000 0, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.35) 70%, #000 100%); mask-image: linear-gradient(90deg, #000 0, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.35) 70%, #000 100%); }
+
+/* ── Debate floor: compact stage, dialogue gets the room ── */
+.ag-debate-main { padding-top: 16px; padding-bottom: 18px; }
+.ag-stage { padding: 0; }
+.ag-stage-motion { font-size: clamp(20px, 1.9vw, 28px); line-height: 1.15; margin-top: 6px; max-width: 760px; }
+.ag-tally { margin-top: 10px; max-width: 420px; }
+.ag-tally-label { margin-bottom: 4px; }
+.ag-tally-label b { font-size: 13px; }
+.ag-camps { margin-top: 10px; gap: 22px; }
+.ag-camp { gap: 6px; }
+.ag-camp-people { gap: 12px; }
+.ag-camp-people .ag-niche { width: 64px !important; }
+.ag-camp-people .ag-niche-plate { font-size: 7.5px; padding: 3px 5px; margin-top: 5px; min-height: 0; }
+.ag-camp.is-mid .ag-camp-people { min-width: 64px; }
+.ag-stage-base { margin-top: 2px; height: 8px; }
+.ag-log { flex: 1 1 auto; margin-top: 10px; }
+.ag-turn-text { font-size: 15.5px; }
+
+/* ── Right sidebar: bigger arched portraits ── */
+.ag-debate { grid-template-columns: minmax(0, 1fr) 320px; }
+.ag-floor-side { padding: 22px 22px 24px; }
+.ag-seat { grid-template-columns: 72px minmax(0, 1fr) auto; gap: 14px; padding: 12px 0; }
+.ag-seat .ag-niche { width: 72px !important; cursor: default; }
+.ag-seat-name { font-family: 'DM Serif Display', Georgia, serif; font-size: 18px; }
+.ag-seat-at { display: block; margin: 8px 0 0; font-size: 11px; color: rgba(234,220,194,0.7); }
+.ag-seat.is-speaking .ag-niche-arch { box-shadow: 0 0 0 2px var(--ag-gold-hi, #ffcf7a), 0 0 0 5px var(--ag-bg), 0 0 22px rgba(255,207,122,0.35); }
+
+/* ── Index: faint wall of every resident of the hovered theme ── */
+.theme-menu .ag-wall { position: absolute; inset: 0 0 0 30%; z-index: 0; pointer-events: none; display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 18px 16px; padding: 24px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 22%, #000 90%, transparent); }
+.ag-wall .ag-niche { width: 92px !important; cursor: default; opacity: 0; transform: translateY(10px); transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.7,.2,1); }
+.ag-wall .ag-niche-arch { box-shadow: 0 0 0 1px rgba(212,175,123,0.4); filter: grayscale(0.55) brightness(0.8); }
+.ag-wall.is-in .ag-niche { opacity: 0.14; transform: none; }
+.ag-wall.is-in .ag-niche.is-lit { opacity: 0.62; }
+.ag-wall.is-in .ag-niche.is-lit .ag-niche-arch { filter: none; box-shadow: 0 0 0 1.5px var(--ag-gold, #d4af7b), 0 0 0 4px #050505, 0 0 0 5px rgba(212,175,123,0.4); }
+.ag-wall .ag-niche[data-d="1"] { transition-delay: 30ms; } .ag-wall .ag-niche[data-d="2"] { transition-delay: 60ms; } .ag-wall .ag-niche[data-d="3"] { transition-delay: 90ms; }
+.ag-wall .ag-niche[data-d="4"] { transition-delay: 120ms; } .ag-wall .ag-niche[data-d="5"] { transition-delay: 150ms; } .ag-wall .ag-niche[data-d="6"] { transition-delay: 180ms; }
+.ag-wall .ag-niche[data-d="7"] { transition-delay: 210ms; } .ag-wall .ag-niche[data-d="8"] { transition-delay: 240ms; } .ag-wall .ag-niche[data-d="9"] { transition-delay: 270ms; }
+.ag-wall .ag-niche[data-d="10"] { transition-delay: 300ms; } .ag-wall .ag-niche[data-d="11"] { transition-delay: 330ms; }
+#themesPage .theme-index { z-index: 1; }
+#themesPage .theme-aside { z-index: 2; }
+@media (max-width: 980px) { .theme-menu .ag-wall { inset: 0; } .ag-wall .ag-niche { width: 64px !important; } .ag-debate { grid-template-columns: 1fr; } }
+
+/* ── v2b: colonnade frames the floor; dialogue sits on a quiet veil ── */
+.ag-debate .ag-colonnade { top: 44px; opacity: 0.55; -webkit-mask-image: none; mask-image: none; }
+.ag-debate-main > .ag-crumb { position: relative; z-index: 2; }
+.ag-stage { margin: 0 auto; width: min(100%, 880px); padding: 10px 18px 0; background: radial-gradient(ellipse at 50% 40%, rgba(8,6,4,0.85), rgba(8,6,4,0.55) 60%, transparent 80%); }
+.ag-tally > div { min-width: 64px; }
+.ag-tally > div[style*="--n:0"] { flex: 0 0 64px; opacity: 0.5; }
+.ag-tally > div[style*="--n:0"] .ag-tally-bar { opacity: 0.25; }
+.ag-log { position: relative; z-index: 1; margin: 12px auto 0; width: min(100%, 900px); padding: 4px 26px 8px; background: rgba(9,7,5,0.86); border: 1px solid rgba(212,175,123,0.14); border-radius: 6px; box-shadow: 0 0 60px 30px rgba(9,7,5,0.6); }
+.ag-composer { width: min(100%, 900px); margin-left: auto; margin-right: auto; position: relative; z-index: 1; }
+.ag-move { font-size: 11px; color: rgba(234,220,194,0.72); }
+.ag-turn-head .ag-tag { font-size: 9.5px; }
+.ag-seat-at, .ag-side-note { color: rgba(234,220,194,0.72); }
+.ag-composer { margin-top: 14px; }
+.ag-composer::before { display: none; }
+.theme-menu > .ag-colonnade { opacity: 0.3; z-index: 0; }
+.theme-menu .ag-wall { inset: 28px 0 0 31%; align-content: flex-start; gap: 22px 18px; padding: 10px 40px; }
+.ag-wall .ag-niche { width: 84px !important; }
+.ag-wall.is-in .ag-niche { opacity: 0.1; }
+.ag-wall.is-in .ag-niche.is-lit { opacity: 0.55; }
+.theme-menu > .ag-colonnade { opacity: 0.24; -webkit-mask-image: linear-gradient(90deg, transparent 0, transparent 26%, #000 40%); mask-image: linear-gradient(90deg, transparent 0, transparent 26%, #000 40%); }
+.theme-menu .ag-wall { inset: 0 0 0 31%; padding: 36px 40px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 92%, transparent), linear-gradient(180deg, transparent, #000 12%, #000 86%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 18%, #000 92%, transparent), linear-gradient(180deg, transparent, #000 12%, #000 86%, transparent); mask-composite: intersect; }
+.ag-wall.is-in .ag-niche.is-lit { opacity: 0.4; }

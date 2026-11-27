@@ -98,16 +98,30 @@
   const tag = (stance) => `<span class="ag-tag is-${esc(stance || 'undecided')}">${STANCE_LABEL[stance] || 'Undecided'}</span>`;
 
   function colonnade() {
-    let cols = '';
-    for (let i = 0; i < 9; i += 1) {
-      const x = 60 + i * 135;
-      cols += `<rect x="${x}" y="118" width="34" height="500"/><rect x="${x - 8}" y="104" width="50" height="14"/><rect x="${x - 8}" y="618" width="50" height="10"/>`;
-      cols += `<line x1="${x + 11}" y1="124" x2="${x + 11}" y2="612"/><line x1="${x + 23}" y1="124" x2="${x + 23}" y2="612"/>`;
-      if (i < 8) cols += `<path d="M${x + 42} 360 V250 A46.5 46.5 0 0 1 ${x + 135} 250 V360"/>`;
+    // Thin-line Roman architecture: fluted columns with Doric capitals, coffered barrel arch, stepped floor in perspective.
+    const W = 1440, H = 900, cx = 720;
+    let g = '';
+    const column = (x, w, top, bottom) => {
+      let c = `<rect x="${x - 6}" y="${top - 16}" width="${w + 12}" height="9"/><path d="M${x - 2} ${top - 7} Q${x + w / 2} ${top + 4} ${x + w + 2} ${top - 7}"/><rect x="${x}" y="${top - 2}" width="${w}" height="5"/>`;
+      c += `<path d="M${x + 2} ${top + 3} L${x + 4} ${bottom - 8} M${x + w - 2} ${top + 3} L${x + w - 4} ${bottom - 8}"/>`;
+      for (let f = 1; f < 6; f += 1) { const fx = x + (w * f) / 6; c += `<line x1="${fx}" y1="${top + 8}" x2="${fx}" y2="${bottom - 12}" stroke-opacity="0.55"/>`; }
+      c += `<rect x="${x - 2}" y="${bottom - 8}" width="${w + 4}" height="6"/><rect x="${x - 8}" y="${bottom - 2}" width="${w + 16}" height="10"/><rect x="${x - 14}" y="${bottom + 8}" width="${w + 28}" height="12"/>`;
+      return c;
+    };
+    [[52, 70, 120, 790], [196, 54, 170, 760]].forEach(([x, w, t, b]) => { g += column(x, w, t, b) + column(W - x - w, w, t, b); });
+    g += `<path d="M0 92 H${W} M0 102 H${W} M0 112 H${W}"/>`;
+    for (let x = 20; x < W; x += 36) g += `<rect x="${x}" y="72" width="16" height="20" stroke-opacity="0.6"/>`;
+    const r1 = 452, r2 = 416, r3 = 372, sy = 610;
+    g += [r1, r2, r3, r3 - 10].map((r) => `<path d="M${cx - r} ${sy} A${r} ${r} 0 0 1 ${cx + r} ${sy}"/>`).join('');
+    for (let a = 0; a <= 180; a += 9) {
+      const rad = (Math.PI * a) / 180, c = Math.cos(rad), sn = Math.sin(rad);
+      g += `<line x1="${(cx - c * r1).toFixed(1)}" y1="${(sy - sn * r1).toFixed(1)}" x2="${(cx - c * r2).toFixed(1)}" y2="${(sy - sn * r2).toFixed(1)}"/>`;
+      if (a % 18 === 0) g += `<line x1="${(cx - c * r2).toFixed(1)}" y1="${(sy - sn * r2).toFixed(1)}" x2="${(cx - c * r3).toFixed(1)}" y2="${(sy - sn * r3).toFixed(1)}" stroke-opacity="0.5"/>`;
     }
-    return `<div class="ag-colonnade" aria-hidden="true"><svg viewBox="0 0 1220 700" preserveAspectRatio="xMidYMax slice" fill="none" stroke="rgba(212,175,123,0.32)" stroke-width="1">
-      <path d="M20 96 H1200 M20 84 H1200 M40 70 H1180 L610 18 Z"/>${cols}
-      <path d="M0 628 H1220 M0 646 H1220 M0 664 H1220 M0 682 H1220"/></svg></div>`;
+    g += `<path d="M${cx - 14} ${sy - r1 - 2} L${cx} ${sy - r1 - 26} L${cx + 14} ${sy - r1 - 2}"/>`;
+    [810, 826, 846, 870].forEach((y, i) => { g += `<path d="M0 ${y} H${W}" stroke-opacity="${(0.9 - i * 0.15).toFixed(2)}"/>`; });
+    for (let k = -8; k <= 8; k += 1) g += `<line x1="${cx + k * 28}" y1="810" x2="${cx + k * 150}" y2="${H}" stroke-opacity="0.35"/>`;
+    return `<div class="ag-colonnade" aria-hidden="true"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" fill="none" stroke="rgba(212,175,123,0.62)" stroke-width="1">${g}</svg></div>`;
   }
 
   function tallyOf(seats, stances) {
@@ -184,6 +198,7 @@
     if (!hall) { box.innerHTML = ''; return; }
     const meta = document.getElementById('themeAsideMeta');
     if (meta) meta.innerHTML = `<b style="color:var(--ag-gold);font-weight:500">${hall.resident_count}</b> residents · <b style="color:var(--ag-gold);font-weight:500">${hall.debate_count}</b> debates on record`;
+    paintWall(hall);
     box.innerHTML = `
       <div style="margin-top:26px"><span class="ag-pill">Motion of the week</span></div>
       <div class="ag-aside-motion">“${esc(hall.motion)}”</div>
@@ -191,6 +206,39 @@
       <div class="ag-aside-meta"><span class="ag-live-dot"></span><b>${hall.live_count}</b> debating now</div>
       <button class="ag-btn is-solid" type="button" data-ag-enter="${esc(hall.id)}">Enter the hall →</button>`;
   }
+
+  async function paintWall(hall) {
+    const menu = document.querySelector('#themesPage .theme-menu');
+    if (!menu) return;
+    let wall = menu.querySelector('.ag-wall');
+    if (!wall) { wall = document.createElement('div'); wall.className = 'ag-wall'; wall.setAttribute('aria-hidden', 'true'); menu.prepend(wall); }
+    if (!menu.querySelector(':scope > .ag-colonnade')) menu.insertAdjacentHTML('afterbegin', colonnade());
+    if (wall.dataset.hall === hall.id) return;
+    wall.dataset.hall = hall.id;
+    const featured = new Set(hall.featured);
+    const paint = (residents, fade) => {
+      // everyone once (featured spread through the middle rows), then repeat the rest faintly to fill the wall
+      const rest = residents.filter((r) => !featured.has(r.slug));
+      const lit = residents.filter((r) => featured.has(r.slug));
+      const order = [...rest];
+      lit.forEach((r, k) => order.splice(Math.min(order.length, 13 + k * 9), 0, r));
+      const slots = [...order];
+      while (slots.length < 54) slots.push(...rest.length ? rest : residents);
+      if (fade) wall.classList.remove('is-in');
+      wall.innerHTML = slots.slice(0, Math.max(54, order.length)).map((r, i) => niche(r.slug, { width: 84, plate: false, cls: featured.has(r.slug) && i < order.length ? 'is-lit' : '', attrs: `tabindex="-1" data-d="${i % 12}"` })).join('');
+      requestAnimationFrame(() => requestAnimationFrame(() => wall.classList.add('is-in')));
+    };
+    const cached = AG.hallDetail[hall.id]?.residents;
+    if (cached) { paint(cached, true); return; }
+    paint(hall.featured.map((slug) => ({ slug })), true);
+    try {
+      const residents = (await hallDetail(hall.id)).residents;
+      if (residents && wall.dataset.hall === hall.id) paint(residents, false);
+    } catch (e) { /* featured only */ }
+  }
+  // warm all halls so hovering is instant
+  setTimeout(async () => { try { (await halls()).forEach((h) => hallDetail(h.id).catch(() => {})); } catch (e) { /* offline */ } }, 1200);
+
 
   /* ───────── open / close ───────── */
   function setURL(params) {

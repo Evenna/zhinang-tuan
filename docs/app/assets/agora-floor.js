@@ -31,14 +31,13 @@
     const t = tallyOf(d.seats, d.stances);
     const campHTML = (stance, mid = false) => {
       const people = camp(stance);
-      const inner = people.map((s) => niche(s, { width: 98, cls: [d.speaking === s ? 'is-speaking' : '', d.thinking.has(s) ? 'is-thinking' : ''].join(' '), attrs: 'tabindex="-1"' })).join('') || (mid ? '' : '<span class="ag-camp-empty"></span>');
+      const inner = people.map((s) => niche(s, { width: 64, cls: [d.speaking === s ? 'is-speaking' : '', d.thinking.has(s) ? 'is-thinking' : ''].join(' '), attrs: 'tabindex="-1"' })).join('') || (mid ? '' : '<span class="ag-camp-empty"></span>');
       return `<div class="ag-camp${mid ? ' is-mid' : ''}"><div class="ag-camp-people">${inner}</div><div class="ag-camp-label is-${stance}">${STANCE_LABEL[stance]}</div></div>`;
     };
     view.innerHTML = `<div class="ag-debate">${colonnade()}
       <div class="ag-debate-main">
         <div class="ag-crumb"><button type="button" data-ag-back-index>Themes</button><span>/</span><button type="button" data-ag-back-hall>${esc(hall?.title || d.hall)} Hall</button><span>/</span><span>${d.round ? `Round ${d.round}` : 'Opening'}</span></div>
         <div class="ag-stage">
-          <span class="ag-pill">The motion</span>
           <div class="ag-stage-motion">${esc(d.motion)}</div>
           ${tallyBar(t)}
           <div class="ag-camps">${campHTML('for')}${campHTML('undecided', true)}${campHTML('against')}</div>
@@ -53,7 +52,7 @@
       </div>
       <aside class="ag-floor-side">
         <div class="ag-side-head">On the floor · ${d.seats.length} / ${MAX_SEATS}</div>
-        ${[...camp("for"), ...camp("undecided"), ...camp("against")].map((s) => `<div class="ag-seat">${miniAv(s)}<div><div class="ag-seat-name">${esc(nameOf(s))}</div>${tag(d.stances[s])}<button type="button" class="ag-seat-at" data-ag-at="${esc(s)}">Ask directly</button></div>
+        ${[...camp("for"), ...camp("undecided"), ...camp("against")].map((s) => `<div class="ag-seat${d.speaking === s ? ' is-speaking' : ''}">${niche(s, { width: 72, plate: false, attrs: 'tabindex="-1"' })}<div><div class="ag-seat-name">${esc(nameOf(s))}</div>${tag(d.stances[s])}<button type="button" class="ag-seat-at" data-ag-at="${esc(s)}">Ask directly</button></div>
           <button type="button" class="ag-seat-x" data-ag-kick="${esc(s)}" title="Send off the floor" ${AG.busy || d.seats.length <= 1 ? 'disabled' : ''}>×</button></div>`).join('')}
         ${d.seats.length < MAX_SEATS ? `<button type="button" class="ag-pull" data-ag-pull ${AG.busy ? 'disabled' : ''}>+ Pull someone in</button>` : ''}
         <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
